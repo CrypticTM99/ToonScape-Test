@@ -2851,101 +2851,113 @@ echo ========================================
 echo         !location! GENERAL STORE
 echo ========================================
 echo.
-if "!location!"=="LUMBRIDGE" (
-    echo Welcome to Lumbridge General Store!
-    echo.
-    echo Shopkeeper: "Hello adventurer! What can I get for you?"
-    echo.
-    echo Items for sale:
-    echo 1. Bread - 12 coins (Food)
-    echo 2. Bronze Sword - 25 coins (Weapon)
-    echo 3. Wooden Shield - 15 coins (Armor)
-    echo 4. Fishing Rod - 50 coins (Tool)
-    echo 5. Axe - 30 coins (Tool)
-    echo 6. Pickaxe - 40 coins (Tool)
-    echo 7. Health Potion - 35 coins (Consumable)
-    echo 8. Tinderbox - 5 coins (Tool)
-    echo 0. Exit shop
-)
+if "!location!"=="LUMBRIDGE" goto lumbridge_shop
+if "!location!"=="VARROCK" goto varrock_shop
+if "!location!"=="FALADOR" goto falador_shop
+if "!location!"=="ALKHARID" goto alkharid_shop
+if "!location!"=="MAGETOWER" goto magetower_shop
+echo This shop is not available at this location.
+echo.
+echo 0. Exit shop
+goto shop_continue
 
-if "!location!"=="VARROCK" (
-    echo Welcome to Varrock Magic & Sword Shop!
-    echo.
-    echo Shopkeeper: "Finest weapons and magic in Misthalin!"
-    echo.
-    echo Items for sale:
-    echo 1. Iron Sword - 140 coins (Weapon)
-    echo 2. Iron Shield - 112 coins (Armor)
-    echo 3. Steel Sword - 325 coins (Weapon)
-    echo 4. Adamant Sword - 800 coins (Weapon)
-    echo 5. Staff of Fire - 200 coins (Magic Weapon)
-    echo 6. Air Rune - 5 coins (Magic)
-    echo 7. Fire Rune - 8 coins (Magic)
-    echo 8. Water Rune - 6 coins (Magic)
-    echo 9. Earth Rune - 6 coins (Magic)
-    echo 10. Chaos Rune - 15 coins (Magic)
-    echo 11. Wizard Hat - 100 coins (Magic Armor)
-    echo 12. Magic Study Book - 50 coins (Study Material)
-    echo 13. Combat Manual - 45 coins (Study Material)
-    echo 14. Crafting Guide - 40 coins (Study Material)
-    echo 15. Cooking Recipe Book - 35 coins (Study Material)
-    echo 16. Health Potion - 35 coins (Consumable)
-    echo 17. Bread - 12 coins (Food)
-    echo 0. Exit shop
-)
+:lumbridge_shop
+echo Welcome to Lumbridge General Store!
+echo.
+echo Shopkeeper: "Hello adventurer! What can I get for you?"
+echo.
+echo Items for sale:
+echo 1. Bread - 12 coins (Food)
+echo 2. Bronze Sword - 25 coins (Weapon)
+echo 3. Wooden Shield - 15 coins (Armor)
+echo 4. Fishing Rod - 50 coins (Tool)
+echo 5. Axe - 30 coins (Tool)
+echo 6. Pickaxe - 40 coins (Tool)
+echo 7. Health Potion - 35 coins (Consumable)
+echo 8. Tinderbox - 5 coins (Tool)
+echo 0. Exit shop
+goto shop_continue
 
-if "!location!"=="FALADOR" (
-    echo Welcome to Falador Shield Shop!
-    echo.
-    echo Shopkeeper: "Protection for the noble!"
-    echo.
-    echo Items for sale:
-    echo 1. Steel Shield - 300 coins (Armor)
-    echo 2. Adamant Shield - 800 coins (Armor)
-    echo 3. Rune Shield - 1920 coins (Armor)
-    echo 4. White Shield - 1440 coins (Armor)
-    echo 5. Health Potion - 35 coins (Consumable)
-    echo 6. Monk Robes - 20 coins (Clothing)
-    echo 0. Exit shop
-)
+:varrock_shop
+echo Welcome to Varrock Magic & Sword Shop!
+echo.
+echo Shopkeeper: "Finest weapons and magic in Misthalin!"
+echo.
+echo Items for sale:
+echo 1. Iron Sword - 140 coins (Weapon)
+echo 2. Iron Shield - 112 coins (Armor)
+echo 3. Steel Sword - 325 coins (Weapon)
+echo 4. Adamant Sword - 800 coins (Weapon)
+echo 5. Staff of Fire - 200 coins (Magic Weapon)
+echo 6. Air Rune - 5 coins (Magic)
+echo 7. Fire Rune - 8 coins (Magic)
+echo 8. Water Rune - 6 coins (Magic)
+echo 9. Earth Rune - 6 coins (Magic)
+echo 10. Chaos Rune - 15 coins (Magic)
+echo 11. Wizard Hat - 100 coins (Magic Armor)
+echo 12. Magic Study Book - 50 coins (Study Material)
+echo 13. Combat Manual - 45 coins (Study Material)
+echo 14. Crafting Guide - 40 coins (Study Material)
+echo 15. Cooking Recipe Book - 35 coins (Study Material)
+echo 16. Health Potion - 35 coins (Consumable)
+echo 17. Bread - 12 coins (Food)
+echo 0. Exit shop
+goto shop_continue
 
-if "!location!"=="ALKHARID" (
-    echo Welcome to Al Kharid Scimitar Shop!
-    echo.
-    echo Shopkeeper: "Finest curved blades!"
-    echo.
-    echo Items for sale:
-    echo 1. Steel Scimitar - 320 coins (Weapon)
-    echo 2. Adamant Scimitar - 800 coins (Weapon)
-    echo 3. Rune Scimitar - 2560 coins (Weapon)
-    echo 4. Dragon Scimitar - 60000 coins (Weapon)
-    echo 5. Health Potion - 35 coins (Consumable)
-    echo 6. Desert Robes - 40 coins (Clothing)
-    echo 0. Exit shop
-)
+:falador_shop
+echo Welcome to Falador Shield Shop!
+echo.
+echo Shopkeeper: "Protection for the noble!"
+echo.
+echo Items for sale:
+echo 1. Steel Shield - 300 coins (Armor)
+echo 2. Adamant Shield - 800 coins (Armor)
+echo 3. Rune Shield - 1920 coins (Armor)
+echo 4. White Shield - 1440 coins (Armor)
+echo 5. Health Potion - 35 coins (Consumable)
+echo 6. Monk Robes - 20 coins (Clothing)
+echo 0. Exit shop
+goto shop_continue
 
-if "!location!"=="MAGETOWER" (
-    echo Welcome to the Mage Tower Shop!
-    echo.
-    echo Shopkeeper: "Ancient magic awaits you, young apprentice!"
-    echo.
-    echo Items for sale:
-    echo 1. Air Rune - 5 coins (Magic)
-    echo 2. Fire Rune - 8 coins (Magic)
-    echo 3. Water Rune - 6 coins (Magic)
-    echo 4. Earth Rune - 6 coins (Magic)
-    echo 5. Mind Rune - 4 coins (Magic)
-    echo 6. Chaos Rune - 15 coins (Magic)
-    echo 7. Death Rune - 25 coins (Magic)
-    echo 8. Blood Rune - 50 coins (Magic)
-    echo 9. Staff of Air - 150 coins (Magic Weapon)
-    echo 10. Staff of Fire - 200 coins (Magic Weapon)
-    echo 11. Wizard Hat - 100 coins (Magic Armor)
-    echo 12. Magic Robes - 200 coins (Magic Armor)
-    echo 13. Magic Study Book - 50 coins (Study Material)
-    echo 14. Health Potion - 35 coins (Consumable)
-    echo 0. Exit shop
-)
+:alkharid_shop
+echo Welcome to Al Kharid Scimitar Shop!
+echo.
+echo Shopkeeper: "Finest curved blades!"
+echo.
+echo Items for sale:
+echo 1. Steel Scimitar - 320 coins (Weapon)
+echo 2. Adamant Scimitar - 800 coins (Weapon)
+echo 3. Rune Scimitar - 2560 coins (Weapon)
+echo 4. Dragon Scimitar - 60000 coins (Weapon)
+echo 5. Health Potion - 35 coins (Consumable)
+echo 6. Desert Robes - 40 coins (Clothing)
+echo 0. Exit shop
+goto shop_continue
+
+:magetower_shop
+echo Welcome to the Mage Tower Shop!
+echo.
+echo Shopkeeper: "Ancient magic awaits you, young apprentice!"
+echo.
+echo Items for sale:
+echo 1. Air Rune - 5 coins (Magic)
+echo 2. Fire Rune - 8 coins (Magic)
+echo 3. Water Rune - 6 coins (Magic)
+echo 4. Earth Rune - 6 coins (Magic)
+echo 5. Mind Rune - 4 coins (Magic)
+echo 6. Chaos Rune - 15 coins (Magic)
+echo 7. Death Rune - 25 coins (Magic)
+echo 8. Blood Rune - 50 coins (Magic)
+echo 9. Staff of Air - 150 coins (Magic Weapon)
+echo 10. Staff of Fire - 200 coins (Magic Weapon)
+echo 11. Wizard Hat - 100 coins (Magic Armor)
+echo 12. Magic Robes - 200 coins (Magic Armor)
+echo 13. Magic Study Book - 50 coins (Study Material)
+echo 14. Health Potion - 35 coins (Consumable)
+echo 0. Exit shop
+goto shop_continue
+
+:shop_continue
 
 
 
