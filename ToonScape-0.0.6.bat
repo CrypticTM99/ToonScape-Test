@@ -23,12 +23,12 @@ if not exist "savegame.dat" (
     REM Create new game save
     set "gamemode=NEWGAME"
     (
-    echo !gamemode!^>LUMBRIDGE^>1^>10^>10^>0^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>50^>Bronze Sword,Wooden Shield,Bread,Health Potion^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0
+    echo !gamemode!^>LUMBRIDGE^>1^>10^>10^>0^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>50^>Bronze Sword,Wooden Shield,Bread,Health Potion^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0
     ) > savegame.dat
 )
 
 REM Load game data
-for /f "tokens=1-27 delims=>" %%a in (savegame.dat) do (
+for /f "tokens=1-28 delims=>" %%a in (savegame.dat) do (
     set "gamemode=%%a"
     set "location=%%b"
     set "level=%%c"
@@ -53,9 +53,10 @@ for /f "tokens=1-27 delims=>" %%a in (savegame.dat) do (
     set "slayer=%%v"
     set "farming=%%w"
     set "firemaking=%%x"
-    set "coins=%%y"
-    set "inventory=%%z"
-    set "quest_cook=%%{"
+    set "treasure_hunting=%%y"
+    set "coins=%%z"
+    set "inventory=%%{"
+    set "quest_cook=%%|"
 )
 
 
@@ -106,6 +107,8 @@ if "!farming!"=="" set "farming=1"
 if "!farming!"=="0" set "farming=1"
 if "!firemaking!"=="" set "firemaking=1"
 if "!firemaking!"=="0" set "firemaking=1"
+if "!treasure_hunting!"=="" set "treasure_hunting=1"
+if "!treasure_hunting!"=="0" set "treasure_hunting=1"
 if "!coins!"=="" set "coins=50"
 if "!inventory!"=="" set "inventory=Bronze Sword,Wooden Shield,Bread,Health Potion"
 if "!quest_cook!"=="" set "quest_cook=0"
@@ -131,6 +134,7 @@ set /a "prayer_xp=(!prayer! - 1) * 100"
 set /a "slayer_xp=(!slayer! - 1) * 100"
 set /a "farming_xp=(!farming! - 1) * 100"
 set /a "firemaking_xp=(!firemaking! - 1) * 100"
+set /a "treasure_hunting_xp=(!treasure_hunting! - 1) * 100"
 
 REM Calculate combat level
 set /a "combat_level=(!attack!+!strength!+!defence!+!hitpoints!+!ranged!+!magic!)/6"
@@ -366,9 +370,11 @@ echo Gathering Skills:
 set /a "woodcutting_next=!woodcutting! * 100"
 set /a "fishing_next=!fishing! * 100"
 set /a "mining_next=!mining! * 100"
+set /a "treasure_hunting_next=!treasure_hunting! * 100"
 echo Woodcutting: !woodcutting! (!woodcutting_xp!/!woodcutting_next! XP)
 echo Fishing: !fishing! (!fishing_xp!/!fishing_next! XP)
 echo Mining: !mining! (!mining_xp!/!mining_next! XP)
+echo Treasure Hunting: !treasure_hunting! (!treasure_hunting_xp!/!treasure_hunting_next! XP)
 echo.
 echo Artisan Skills:
 set /a "cooking_next=!cooking! * 100"
@@ -795,6 +801,227 @@ pause >nul
 
 goto real_combat
 
+:special_attack
+cls
+call :draw_combat_scene
+echo.
+echo        SPECIAL ATTACKS
+echo ========================================
+echo.
+echo Choose your special attack:
+echo.
+echo 1. Power Strike (Strength XP +13) - High damage, lower accuracy
+echo 2. Charge Attack (Attack XP +25) - Extra damage, uses energy
+echo 3. Defensive Stance (Defence XP +25) - Reduce damage, lower attack
+echo 4. Counter Attack (Defence XP +20, Attack XP +15) - Strike when dodging
+echo 5. Back to combat
+echo.
+set /p special_choice="Choose special attack: "
+
+if "%special_choice%"=="1" (
+    REM Power Strike - High damage, lower accuracy
+    echo.
+    echo You gather your strength for a powerful strike!
+    timeout /t 1 >nul
+    echo You unleash a devastating Power Strike!
+    
+    REM Calculate damage with bonus but lower accuracy
+    set /a "power_damage=!attack! + !strength! + 15"
+    set /a "accuracy_check=!random! %% 100"
+    
+    if !accuracy_check! lss 70 (
+        echo The attack hits with incredible force!
+        echo You deal !power_damage! damage!
+        set /a "enemy_currenthp-=!power_damage!"
+        
+        REM Award Strength XP bonus
+        set /a "strength_xp+=13"
+        set /a "experience+=20"
+        echo You gained 13 Strength experience!
+        
+        if !enemy_currenthp! leq 0 (
+            echo The !enemy_name! is completely destroyed! Look at you go! 
+            echo.
+            echo You defeated the !enemy_name!!
+            echo You gained 75 combat experience!
+            set /a "attack_xp+=25"
+            set /a "strength_xp+=25"
+            set /a "defence_xp+=15"
+            set /a "experience+=75"
+            call :random_loot
+            pause >nul
+            goto combat_training
+        )
+    ) else (
+        echo Your Power Strike misses completely!
+        echo The !enemy_name! dodges your attack!
+    )
+    
+    REM Enemy attacks back
+    if !enemy_currenthp! gtr 0 (
+        echo.
+        call :calculate_damage_direct !enemy_attack! !defence!
+        set "enemy_damage=!damage!"
+        if !enemy_damage! gtr 0 (
+            echo The !enemy_name! attacks you!
+            echo You take !enemy_damage! damage!
+            set /a "currenthp-=!enemy_damage!"
+        )
+    )
+    
+) else if "%special_choice%"=="2" (
+    REM Charge Attack - Extra damage, uses energy
+    echo.
+    echo You charge forward with incredible speed!
+    timeout /t 1 >nul
+    echo You perform a lightning-fast Charge Attack!
+    
+    REM Calculate damage with speed bonus
+    set /a "charge_damage=!attack! + 20"
+    set /a "accuracy_check=!random! %% 100"
+    
+    if !accuracy_check! lss 80 (
+        echo Your charge connects perfectly!
+        echo You deal !charge_damage! damage!
+        set /a "enemy_currenthp-=!charge_damage!"
+        
+        REM Award Attack XP bonus
+        set /a "attack_xp+=25"
+        set /a "experience+=25"
+        echo You gained 25 Attack experience!
+        
+        if !enemy_currenthp! leq 0 (
+            echo The !enemy_name! falls to your charge!
+            echo.
+            echo You defeated the !enemy_name!!
+            echo You gained 75 combat experience!
+            set /a "attack_xp+=25"
+            set /a "strength_xp+=25"
+            set /a "defence_xp+=15"
+            set /a "experience+=75"
+            call :random_loot
+            pause >nul
+            goto combat_training
+        )
+    ) else (
+        echo Your charge misses the target!
+        echo The !enemy_name! sidesteps your attack!
+    )
+    
+    REM Enemy attacks back
+    if !enemy_currenthp! gtr 0 (
+        echo.
+        call :calculate_damage_direct !enemy_attack! !defence!
+        set "enemy_damage=!damage!"
+        if !enemy_damage! gtr 0 (
+            echo The !enemy_name! attacks you!
+            echo You take !enemy_damage! damage!
+            set /a "currenthp-=!enemy_damage!"
+        )
+    )
+    
+) else if "%special_choice%"=="3" (
+    REM Defensive Stance - Reduce damage, lower attack
+    echo.
+    echo You assume a defensive stance!
+    timeout /t 1 >nul
+    echo You enter Defensive Stance - damage reduced, attack lowered!
+    
+    REM Set defensive mode for next enemy attack
+    set "defensive_mode=1"
+    set "defence_bonus=15"
+    
+    REM Award Defence XP bonus
+    set /a "defence_xp+=25"
+    set /a "experience+=25"
+    echo You gained 25 Defence experience!
+    echo Your defence is increased for the next attack!
+    
+    REM Enemy attacks with reduced damage
+    if !enemy_currenthp! gtr 0 (
+        echo.
+        call :calculate_damage_direct !enemy_attack! !defence!
+        set /a "enemy_damage=!damage! - !defence_bonus!"
+        if !enemy_damage! lss 0 set "enemy_damage=0"
+        
+        if !enemy_damage! gtr 0 (
+            echo The !enemy_name! attacks, but your defence reduces the damage!
+            echo You take !enemy_damage! damage (reduced from !damage! damage)!
+            set /a "currenthp-=!enemy_damage!"
+        ) else (
+            echo The !enemy_name!'s attack is completely blocked!
+            echo You take no damage!
+        )
+    )
+    
+    REM Reset defensive mode
+    set "defensive_mode=0"
+    
+) else if "%special_choice%"=="4" (
+    REM Counter Attack - Strike when dodging
+    echo.
+    echo You prepare for a Counter Attack!
+    timeout /t 1 >nul
+    echo You attempt to dodge and counter!
+    
+    REM Calculate dodge chance
+    set /a "dodge_chance=!defence! * 2"
+    set /a "dodge_check=!random! %% 100"
+    
+    if !dodge_chance! gtr !dodge_check! (
+        echo You successfully dodge the attack!
+        echo You counter with a precise strike!
+        
+        REM Calculate counter damage
+        set /a "counter_damage=!attack! + 10"
+        echo You deal !counter_damage! counter damage!
+        set /a "enemy_currenthp-=!counter_damage!"
+        
+        REM Award Defence and Attack XP bonus
+        set /a "defence_xp+=20"
+        set /a "attack_xp+=15"
+        set /a "experience+=35"
+        echo You gained 20 Defence and 15 Attack experience!
+        
+        if !enemy_currenthp! leq 0 (
+            echo The !enemy_name! falls to your counter!
+            echo.
+            echo You defeated the !enemy_name!!
+            echo You gained 75 combat experience!
+            set /a "attack_xp+=25"
+            set /a "strength_xp+=25"
+            set /a "defence_xp+=15"
+            set /a "experience+=75"
+            call :random_loot
+            pause >nul
+            goto combat_training
+        )
+    ) else (
+        echo You fail to dodge the attack!
+        echo The !enemy_name! hits you!
+        
+        REM Enemy attacks normally
+        call :calculate_damage_direct !enemy_attack! !defence!
+        set "enemy_damage=!damage!"
+        if !enemy_damage! gtr 0 (
+            echo You take !enemy_damage! damage!
+            set /a "currenthp-=!enemy_damage!"
+        )
+    )
+    
+) else if "%special_choice%"=="5" (
+    goto real_combat
+) else (
+    echo Invalid choice!
+    pause >nul
+    goto special_attack
+)
+
+echo.
+echo Press any key to continue combat...
+pause >nul
+goto real_combat
+
 :explore_area
 cls
 call :draw_location_scene
@@ -817,8 +1044,9 @@ if "!location!"=="LUMBRIDGE" (
     echo 8. Mining site - Rocks and ores nearby
     echo 9. Lumbridge Catacombs - Underground dungeon
     echo 10. Deep Swamp Dungeon - Dangerous swamp lair
-    echo 11. Random encounter
-    echo 12. Back to main menu
+    echo 11. Treasure Hunting Spot - Search for hidden treasures
+    echo 12. Random encounter
+    echo 13. Back to main menu
     echo.
     set /p explore_choice="What do you investigate? "
     
@@ -885,7 +1113,9 @@ if "!location!"=="LUMBRIDGE" (
         )
         goto explore_area
     )
-    if "!explore_choice!"=="2" (
+    if "!explore_choice!"=="11" (
+        call :lumbridge_treasure_hunting
+    ) else if "!explore_choice!"=="2" (
         echo.
         echo You enter the Lumbridge Church...
         timeout /t 1 >nul
@@ -1588,6 +1818,78 @@ echo Invalid choice! Please select a valid option.
 pause >nul
 goto explore_area
 
+:lumbridge_treasure_hunting
+cls
+call :draw_treasure_hunting_header
+echo.
+echo ========================================
+echo      LUMBRIDGE TREASURE HUNTING
+echo ========================================
+echo.
+echo You search around Lumbridge for hidden treasures...
+echo.
+echo [Searching near the castle walls...]
+timeout /t 1 >nul
+echo [Checking the old well...]
+timeout /t 1 >nul
+echo [Exploring the church grounds...]
+timeout /t 1 >nul
+echo.
+
+REM Treasure hunting success based on treasure hunting level
+set /a "treasure_success=!random! %% 100"
+set /a "success_chance=50 + !treasure_hunting! * 3"
+
+if !treasure_success! lss !success_chance! (
+    REM Successful treasure find
+    set /a "treasure_type=!random! %% 100"
+    
+    if !treasure_type! lss 60 (
+        echo You found some old coins near the castle!
+        set /a "coins_found=!random! %% 15 + 5"
+        set /a "coins+=!coins_found!"
+        echo You gained !coins_found! coins!
+        set /a "treasure_hunting_xp+=20"
+        set /a "experience+=20"
+        echo You gained 20 Treasure Hunting experience!
+        
+    ) else if !treasure_type! lss 85 (
+        echo You found a mysterious old key in the well!
+        if defined inventory (
+            set "inventory=!inventory!,Mysterious Key"
+        ) else (
+            set "inventory=Mysterious Key"
+        )
+        echo You gained 25 Treasure Hunting experience!
+        set /a "treasure_hunting_xp+=25"
+        set /a "experience+=25"
+        
+    ) else (
+        echo You found an ancient artifact in the church grounds!
+        if defined inventory (
+            set "inventory=!inventory!,Ancient Artifact"
+        ) else (
+            set "inventory=Ancient Artifact"
+        )
+        echo You gained 35 Treasure Hunting experience!
+        set /a "treasure_hunting_xp+=35"
+        set /a "experience+=35"
+    )
+    
+    call :check_level_up treasure_hunting !treasure_hunting_xp!
+    
+) else (
+    echo You search thoroughly but find nothing of value.
+    echo The area seems to have been picked clean already.
+    echo.
+    echo You gained 5 Treasure Hunting experience from searching.
+    set /a "treasure_hunting_xp+=5"
+    set /a "experience+=5"
+)
+
+echo.
+pause >nul
+goto explore_area
 
 :travel_menu
 cls
@@ -3206,7 +3508,7 @@ echo.
 
 REM Save all game data
 (
-echo !gamemode!^>!location!^>!level!^>!maxhp!^>!currenthp!^>!experience!^>!attack!^>!strength!^>!defence!^>!hitpoints!^>!ranged!^>!magic!^>!woodcutting!^>!fishing!^>!mining!^>!cooking!^>!smithing!^>!crafting!^>!fletching!^>!herblore!^>!prayer!^>!slayer!^>!farming!^>!firemaking!^>!coins!^>!inventory!^>!quest_cook!
+echo !gamemode!^>!location!^>!level!^>!maxhp!^>!currenthp!^>!experience!^>!attack!^>!strength!^>!defence!^>!hitpoints!^>!ranged!^>!magic!^>!woodcutting!^>!fishing!^>!mining!^>!cooking!^>!smithing!^>!crafting!^>!fletching!^>!herblore!^>!prayer!^>!slayer!^>!farming!^>!firemaking!^>!treasure_hunting!^>!coins!^>!inventory!^>!quest_cook!
 ) > savegame.dat
 
 REM Verify save file was created
@@ -3237,6 +3539,7 @@ echo Hitpoints: !hitpoints! ^| Ranged: !ranged! ^| Magic: !magic!
 echo Woodcutting: !woodcutting! ^| Fishing: !fishing! ^| Mining: !mining!
 echo Cooking: !cooking! ^| Smithing: !smithing! ^| Crafting: !crafting!
 echo Prayer: !prayer! ^| Slayer: !slayer! ^| Farming: !farming!
+echo Firemaking: !firemaking! ^| Treasure Hunting: !treasure_hunting!
 echo.
 echo ========================================
 echo.
@@ -3311,7 +3614,7 @@ goto :eof
 
 :calculate_total_level
 REM Calculate total level as sum of all skill levels
-set /a "level=!attack!+!strength!+!defence!+!hitpoints!+!ranged!+!magic!+!woodcutting!+!fishing!+!mining!+!cooking!+!smithing!+!crafting!+!fletching!+!herblore!+!prayer!+!slayer!+!farming!+!firemaking!"
+set /a "level=!attack!+!strength!+!defence!+!hitpoints!+!ranged!+!magic!+!woodcutting!+!fishing!+!mining!+!cooking!+!smithing!+!crafting!+!fletching!+!herblore!+!prayer!+!slayer!+!farming!+!firemaking!+!treasure_hunting!"
 goto :eof
 
 :calculate_damage
@@ -3398,6 +3701,12 @@ if !current_xp! geq !required_xp! (
     if "!skill_name!"=="hitpoints" (
         set /a "maxhp+=1"
         set /a "currenthp+=1"
+    )
+    
+    REM Special handling for treasure hunting level ups
+    if "!skill_name!"=="treasure_hunting" (
+        echo You've become better at finding hidden treasures!
+        echo Your treasure hunting skills have improved!
     )
 )
 
@@ -5235,6 +5544,272 @@ echo.
 pause >nul
 goto train_skills
 
+:train_treasure_hunting
+cls
+call :draw_treasure_hunting_header
+echo.
+echo ========================================
+echo        TREASURE HUNTING TRAINING
+echo ========================================
+echo.
+echo Welcome to the Treasure Hunting Academy!
+echo.
+echo Choose your treasure hunting method:
+echo.
+echo 1. Metal Detecting (Basic treasure hunting)
+echo 2. Ancient Ruins Exploration (Advanced)
+echo 3. Hidden Cave Search (Expert level)
+echo 4. Back to skills menu
+echo.
+set /p treasure_choice="Choose method: "
+
+if "%treasure_choice%"=="1" (
+    call :metal_detecting
+) else if "%treasure_choice%"=="2" (
+    call :ancient_ruins_exploration
+) else if "%treasure_choice%"=="3" (
+    call :hidden_cave_search
+) else if "%treasure_choice%"=="4" (
+    goto train_skills
+) else (
+    echo Invalid choice!
+    pause >nul
+    goto train_treasure_hunting
+)
+
+:metal_detecting
+cls
+call :draw_treasure_hunting_header
+echo.
+echo ========================================
+echo         METAL DETECTING
+echo ========================================
+echo.
+echo You grab your metal detector and start searching...
+echo.
+echo [Beep... Beep... Beep...]
+timeout /t 2 >nul
+echo.
+echo You found something! Digging...
+timeout /t 1 >nul
+
+REM Metal detecting success based on treasure hunting level
+set /a "detect_success=!random! %% 100"
+set /a "success_chance=60 + !treasure_hunting! * 3"
+
+if !detect_success! lss !success_chance! (
+    REM Successful find
+    set /a "find_type=!random! %% 100"
+    
+    if !find_type! lss 40 (
+        echo You found some old coins!
+        set /a "coins_found=!random! %% 20 + 5"
+        set /a "coins+=!coins_found!"
+        echo You gained !coins_found! coins!
+        set /a "treasure_hunting_xp+=25"
+        set /a "experience+=25"
+        echo You gained 25 Treasure Hunting experience!
+        
+    ) else if !find_type! lss 70 (
+        echo You found a rusty key!
+        if defined inventory (
+            set "inventory=!inventory!,Rusty Key"
+        ) else (
+            set "inventory=Rusty Key"
+        )
+        echo You gained 30 Treasure Hunting experience!
+        set /a "treasure_hunting_xp+=30"
+        set /a "experience+=30"
+        
+    ) else if !find_type! lss 90 (
+        echo You found an ancient coin!
+        if defined inventory (
+            set "inventory=!inventory!,Ancient Coin"
+        ) else (
+            set "inventory=Ancient Coin"
+        )
+        echo You gained 35 Treasure Hunting experience!
+        set /a "treasure_hunting_xp+=35"
+        set /a "experience+=35"
+        
+    ) else (
+        echo You found a valuable artifact!
+        if defined inventory (
+            set "inventory=!inventory!,Valuable Artifact"
+        ) else (
+            set "inventory=Valuable Artifact"
+        )
+        echo You gained 50 Treasure Hunting experience!
+        set /a "treasure_hunting_xp+=50"
+        set /a "experience+=50"
+    )
+    
+    call :check_level_up treasure_hunting !treasure_hunting_xp!
+    
+) else (
+    echo The metal detector was a false alarm.
+    echo You found nothing but dirt.
+    echo.
+    echo You gained 5 Treasure Hunting experience from trying.
+    set /a "treasure_hunting_xp+=5"
+    set /a "experience+=5"
+)
+
+echo.
+pause >nul
+goto train_treasure_hunting
+
+:ancient_ruins_exploration
+cls
+call :draw_treasure_hunting_header
+echo.
+echo ========================================
+echo      ANCIENT RUINS EXPLORATION
+echo ========================================
+echo.
+echo You explore ancient ruins looking for hidden treasures...
+echo.
+echo [Searching through crumbling walls...]
+timeout /t 2 >nul
+echo [Examining old inscriptions...]
+timeout /t 1 >nul
+echo [Checking for secret passages...]
+timeout /t 1 >nul
+echo.
+
+REM Ruins exploration success based on treasure hunting level
+set /a "ruins_success=!random! %% 100"
+set /a "success_chance=40 + !treasure_hunting! * 4"
+
+if !ruins_success! lss !success_chance! (
+    REM Successful exploration
+    set /a "ruins_find=!random! %% 100"
+    
+    if !ruins_find! lss 50 (
+        echo You found ancient scrolls!
+        if defined inventory (
+            set "inventory=!inventory!,Ancient Scrolls"
+        ) else (
+            set "inventory=Ancient Scrolls"
+        )
+        echo You gained 40 Treasure Hunting experience!
+        set /a "treasure_hunting_xp+=40"
+        set /a "experience+=40"
+        
+    ) else if !ruins_find! lss 80 (
+        echo You found a mysterious gem!
+        if defined inventory (
+            set "inventory=!inventory!,Mysterious Gem"
+        ) else (
+            set "inventory=Mysterious Gem"
+        )
+        echo You gained 50 Treasure Hunting experience!
+        set /a "treasure_hunting_xp+=50"
+        set /a "experience+=50"
+        
+    ) else (
+        echo You found a legendary artifact!
+        if defined inventory (
+            set "inventory=!inventory!,Legendary Artifact"
+        ) else (
+            set "inventory=Legendary Artifact"
+        )
+        echo You gained 75 Treasure Hunting experience!
+        set /a "treasure_hunting_xp+=75"
+        set /a "experience+=75"
+    )
+    
+    call :check_level_up treasure_hunting !treasure_hunting_xp!
+    
+) else (
+    echo The ruins are too dangerous to explore further.
+    echo You found nothing but dust and cobwebs.
+    echo.
+    echo You gained 10 Treasure Hunting experience from exploring.
+    set /a "treasure_hunting_xp+=10"
+    set /a "experience+=10"
+)
+
+echo.
+pause >nul
+goto train_treasure_hunting
+
+:hidden_cave_search
+cls
+call :draw_treasure_hunting_header
+echo.
+echo ========================================
+echo        HIDDEN CAVE SEARCH
+echo ========================================
+echo.
+echo You venture into a hidden cave system...
+echo.
+echo [Crawling through narrow passages...]
+timeout /t 2 >nul
+echo [Using your torch to light the way...]
+timeout /t 1 >nul
+echo [Listening for the sound of water...]
+timeout /t 1 >nul
+echo.
+
+REM Cave search success based on treasure hunting level
+set /a "cave_success=!random! %% 100"
+set /a "success_chance=30 + !treasure_hunting! * 5"
+
+if !cave_success! lss !success_chance! (
+    REM Successful cave exploration
+    set /a "cave_find=!random! %% 100"
+    
+    if !cave_find! lss 60 (
+        echo You found a hidden treasure chest!
+        set /a "chest_coins=!random! %% 100 + 50"
+        set /a "coins+=!chest_coins!"
+        echo You found !chest_coins! coins in the chest!
+        set /a "treasure_hunting_xp+=60"
+        set /a "experience+=60"
+        
+    ) else if !cave_find! lss 90 (
+        echo You found a rare mineral deposit!
+        if defined inventory (
+            set "inventory=!inventory!,Rare Mineral"
+        ) else (
+            set "inventory=Rare Mineral"
+        )
+        echo You gained 70 Treasure Hunting experience!
+        set /a "treasure_hunting_xp+=70"
+        set /a "experience+=70"
+        
+    ) else (
+        echo You found a dragon's hoard!
+        set /a "dragon_coins=!random! %% 500 + 200"
+        set /a "coins+=!dragon_coins!"
+        echo You found !dragon_coins! coins in the dragon's hoard!
+        if defined inventory (
+            set "inventory=!inventory!,Dragon Scale"
+        ) else (
+            set "inventory=Dragon Scale"
+        )
+        echo You also found a dragon scale!
+        echo You gained 100 Treasure Hunting experience!
+        set /a "treasure_hunting_xp+=100"
+        set /a "experience+=100"
+    )
+    
+    call :check_level_up treasure_hunting !treasure_hunting_xp!
+    
+) else (
+    echo The cave is too dangerous to explore further.
+    echo You found nothing but darkness and danger.
+    echo.
+    echo You gained 15 Treasure Hunting experience from trying.
+    set /a "treasure_hunting_xp+=15"
+    set /a "experience+=15"
+)
+
+echo.
+pause >nul
+goto train_treasure_hunting
+
 :lumbridge_catacombs
 cls
 echo.
@@ -6299,10 +6874,10 @@ goto :eof
 if "!location!"=="LUMBRIDGE" (
     echo.
     echo    _     _     _     _     _     _     _     _     _
-    echo   ^| ^|   ^| ^|   ^| ^|   ^| ^|   ^| ^|   ^| ^|   ^| ^|   ^| ^|
-    echo   ^| ^|   ^| ^|   ^| ^|   ^| ^|   ^| ^|   ^| ^|   ^| ^|   ^| ^|
-    echo   ^| ^|___^| ^|___^| ^|___^| ^|___^| ^|___^| ^|___^| ^|___^| ^|___^|
-    echo   ^|_____^|_____^|_____^|_____^|_____^|_____^|_____^|_____^|_____^|
+    echo   ^| ^|   ^| ^|   ^| ^|   ^| ^|   ^| ^|   ^| ^|   ^^^_^| ^|   ^| ^|
+    echo   ^| ^|   ^| ^| ^^  ^| ^|   ^| ^|   ^| ^|   ^| ^|   ^| ^|   ^| ^|
+    echo   ^| ^|_^^^__^| ^|___^| ^|___^| ^|___^| ^|___^| ^|__^^_^| ^|___^| ^|___^|
+    echo   ^|_____^|__%%__^_%%^|_____^|_____^|_____^|_____^|_____^|_____^|_____^|
     echo     L     U     M     B     R     I     D     G     E
     echo.
     echo  +================================================+
@@ -7238,6 +7813,22 @@ echo  ^|                                                ^|
 echo  ^|  +==========================================+  ^|
 echo  ^|  ^|           BANK VAULT                   ^|  ^|
 echo  ^|  ^|  [Deposit] [Withdraw] [View] [PIN]     ^|  ^|
+echo  ^|  +==========================================+  ^|
+echo  +================================================+
+goto :eof
+
+:draw_treasure_hunting_header
+echo.
+echo  +================================================+
+echo  ^|           TREASURE HUNTING                    ^|
+echo  ^|                                                ^|
+echo  ^|  [X]  Metal Detector      [O]  Adventurer     ^|
+echo  ^|  [X]  Treasure Map        [O]  Searching...   ^|
+echo  ^|  [X]  Ancient Ruins       [O]  Hidden Caves   ^|
+echo  ^|                                                ^|
+echo  ^|  +==========================================+  ^|
+echo  ^|  ^|           TREASURE VAULT               ^|  ^|
+echo  ^|  ^|  [Detect] [Explore] [Search] [Dig]    ^|  ^|
 echo  ^|  +==========================================+  ^|
 echo  +================================================+
 goto :eof
