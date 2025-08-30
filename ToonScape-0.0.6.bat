@@ -593,7 +593,19 @@ echo Defence: !defence!
 echo.
 echo Combat Options:
 echo 1. Attack with weapon
-echo 2. Special Attack (if available)
+
+REM Check if player has any weapon equipped
+set "has_weapon=0"
+echo !inventory! | findstr /i "Bronze Sword" >nul && set "has_weapon=1"
+echo !inventory! | findstr /i "Iron Sword" >nul && set "has_weapon=1"
+echo !inventory! | findstr /i "Steel Sword" >nul && set "has_weapon=1"
+echo !inventory! | findstr /i "Adamant Sword" >nul && set "has_weapon=1"
+
+if !has_weapon! equ 1 (
+    echo 2. Special Attack (available)
+) else (
+    echo 2. Special Attack (no weapon equipped)
+)
 echo 3. Cast Magic Spell
 echo 4. Eat food to heal
 echo 5. Attempt to run away
@@ -729,6 +741,26 @@ if "%combat_choice%"=="1" (
 
 if "%combat_choice%"=="2" (
     REM Special Attack System
+    if not defined attack_xp set "attack_xp=0"
+    if not defined strength_xp set "strength_xp=0"
+    if not defined defence_xp set "defence_xp=0"
+    if not defined hitpoints_xp set "hitpoints_xp=0"
+    
+    REM Check if player has a weapon equipped
+    set "has_weapon=0"
+    echo !inventory! | findstr /i "Bronze Sword" >nul && set "has_weapon=1"
+    echo !inventory! | findstr /i "Iron Sword" >nul && set "has_weapon=1"
+    echo !inventory! | findstr /i "Steel Sword" >nul && set "has_weapon=1"
+    echo !inventory! | findstr /i "Adamant Sword" >nul && set "has_weapon=1"
+    
+    if !has_weapon! equ 0 (
+        echo.
+        echo You need a weapon equipped to use special attacks!
+        echo.
+        pause >nul
+        goto real_combat
+    )
+    
     call :special_attack
     goto real_combat
 )
@@ -803,41 +835,149 @@ goto real_combat
 
 :special_attack
 cls
-call :draw_combat_scene
 echo.
-echo        SPECIAL ATTACKS
 echo ========================================
+echo         COMBAT - SPECIAL ATTACKS
+echo ========================================
+echo.
+echo Enemy: !enemy_name! (Level !enemy_level!)
+echo Enemy HP: !enemy_currenthp!/!enemy_maxhp!
+echo Your HP: !currenthp!/!maxhp!
 echo.
 echo Choose your special attack:
 echo.
-echo 1. Power Strike (Strength XP +13) - High damage, lower accuracy
-echo 2. Charge Attack (Attack XP +25) - Extra damage, uses energy
-echo 3. Defensive Stance (Defence XP +25) - Reduce damage, lower attack
-echo 4. Counter Attack (Defence XP +20, Attack XP +15) - Strike when dodging
+
+REM Determine weapon type for special attacks
+set "weapon_type=Basic"
+echo !inventory! | findstr /i "Adamant Sword" >nul && set "weapon_type=Adamant"
+echo !inventory! | findstr /i "Steel Sword" >nul && set "weapon_type=Steel"
+echo !inventory! | findstr /i "Iron Sword" >nul && set "weapon_type=Iron"
+echo !inventory! | findstr /i "Bronze Sword" >nul && set "weapon_type=Bronze"
+
+if "!weapon_type!"=="Adamant" (
+    echo 1. Dragon Slash (Strength XP +20) - Devastating strike with high accuracy
+    echo 2. Berserker Rage (Attack XP +30) - Massive damage, temporary defence loss
+    echo 3. Blade Storm (Attack XP +25, Strength XP +15) - Multiple rapid strikes
+    echo 4. Counter Strike (Defence XP +25, Attack XP +20) - Perfect counter attack
+) else if "!weapon_type!"=="Steel" (
+    echo 1. Steel Strike (Strength XP +15) - Powerful strike with good accuracy
+    echo 2. Charge Attack (Attack XP +25) - Extra damage, uses energy
+    echo 3. Defensive Stance (Defence XP +25) - Reduce damage, lower attack
+    echo 4. Counter Attack (Defence XP +20, Attack XP +15) - Strike when dodging
+) else if "!weapon_type!"=="Iron" (
+    echo 1. Iron Strike (Strength XP +13) - Strong strike with moderate accuracy
+    echo 2. Charge Attack (Attack XP +20) - Extra damage, uses energy
+    echo 3. Defensive Stance (Defence XP +20) - Reduce damage, lower attack
+    echo 4. Counter Attack (Defence XP +15, Attack XP +10) - Strike when dodging
+) else (
+    echo 1. Power Strike (Strength XP +10) - High damage, lower accuracy
+    echo 2. Charge Attack (Attack XP +15) - Extra damage, uses energy
+    echo 3. Defensive Stance (Defence XP +15) - Reduce damage, lower attack
+    echo 4. Counter Attack (Defence XP +10, Attack XP +8) - Strike when dodging
+)
+
 echo 5. Back to combat
 echo.
 set /p special_choice="Choose special attack: "
 
 if "%special_choice%"=="1" (
-    REM Power Strike - High damage, lower accuracy
-    echo.
-    echo You gather your strength for a powerful strike!
-    timeout /t 1 >nul
-    echo You unleash a devastating Power Strike!
-    
-    REM Calculate damage with bonus but lower accuracy
-    set /a "power_damage=!attack! + !strength! + 15"
-    set /a "accuracy_check=!random! %% 100"
-    
-    if !accuracy_check! lss 70 (
-        echo The attack hits with incredible force!
-        echo You deal !power_damage! damage!
-        set /a "enemy_currenthp-=!power_damage!"
+    REM Power Strike variants based on weapon type
+    if "!weapon_type!"=="Adamant" (
+        echo.
+        echo You channel the power of your Adamant Sword!
+        timeout /t 1 >nul
+        echo You unleash a devastating Dragon Slash!
         
-        REM Award Strength XP bonus
-        set /a "strength_xp+=13"
-        set /a "experience+=20"
-        echo You gained 13 Strength experience!
+        REM Calculate damage with high bonus and accuracy
+        call :calculate_damage_direct !attack! !enemy_defence!
+        set /a "power_damage=!damage! + 25"
+        set /a "accuracy_check=!random! %% 100"
+        
+        if !accuracy_check! lss 85 (
+            echo The Dragon Slash cuts through your enemy!
+            echo You deal !power_damage! damage!
+            set /a "enemy_currenthp-=!power_damage!"
+            
+            REM Award Strength XP bonus
+            set /a "strength_xp+=20"
+            set /a "experience+=30"
+            echo You gained 20 Strength experience!
+        ) else (
+            echo Your Dragon Slash misses!
+            echo The !enemy_name! dodges your attack!
+        )
+    ) else if "!weapon_type!"=="Steel" (
+        echo.
+        echo You gather your strength for a powerful Steel Strike!
+        timeout /t 1 >nul
+        echo You unleash a devastating Steel Strike!
+        
+        REM Calculate damage with good bonus and accuracy
+        call :calculate_damage_direct !attack! !enemy_defence!
+        set /a "power_damage=!damage! + 20"
+        set /a "accuracy_check=!random! %% 100"
+        
+        if !accuracy_check! lss 80 (
+            echo The Steel Strike hits with incredible force!
+            echo You deal !power_damage! damage!
+            set /a "enemy_currenthp-=!power_damage!"
+            
+            REM Award Strength XP bonus
+            set /a "strength_xp+=15"
+            set /a "experience+=25"
+            echo You gained 15 Strength experience!
+        ) else (
+            echo Your Steel Strike misses!
+            echo The !enemy_name! dodges your attack!
+        )
+    ) else if "!weapon_type!"=="Iron" (
+        echo.
+        echo You gather your strength for a powerful Iron Strike!
+        timeout /t 1 >nul
+        echo You unleash a devastating Iron Strike!
+        
+        REM Calculate damage with moderate bonus and accuracy
+        call :calculate_damage_direct !attack! !enemy_defence!
+        set /a "power_damage=!damage! + 18"
+        set /a "accuracy_check=!random! %% 100"
+        
+        if !accuracy_check! lss 75 (
+            echo The Iron Strike hits with great force!
+            echo You deal !power_damage! damage!
+            set /a "enemy_currenthp-=!power_damage!"
+            
+            REM Award Strength XP bonus
+            set /a "strength_xp+=13"
+            set /a "experience+=20"
+            echo You gained 13 Strength experience!
+        ) else (
+            echo Your Iron Strike misses!
+            echo The !enemy_name! dodges your attack!
+        )
+    ) else (
+        echo.
+        echo You gather your strength for a powerful strike!
+        timeout /t 1 >nul
+        echo You unleash a devastating Power Strike!
+        
+        REM Calculate damage with bonus but lower accuracy
+        call :calculate_damage_direct !attack! !enemy_defence!
+        set /a "power_damage=!damage! + 15"
+        set /a "accuracy_check=!random! %% 100"
+        
+        if !accuracy_check! lss 70 (
+            echo The attack hits with incredible force!
+            echo You deal !power_damage! damage!
+            set /a "enemy_currenthp-=!power_damage!"
+            
+            REM Award Strength XP bonus
+            set /a "strength_xp+=10"
+            set /a "experience+=15"
+            echo You gained 10 Strength experience!
+        ) else (
+            echo Your Power Strike misses!
+            echo The !enemy_name! dodges your attack!
+        )
         
         if !enemy_currenthp! leq 0 (
             echo The !enemy_name! is completely destroyed! Look at you go! 
@@ -852,9 +992,6 @@ if "%special_choice%"=="1" (
             pause >nul
             goto combat_training
         )
-    ) else (
-        echo Your Power Strike misses completely!
-        echo The !enemy_name! dodges your attack!
     )
     
     REM Enemy attacks back
@@ -870,27 +1007,106 @@ if "%special_choice%"=="1" (
     )
     
 ) else if "%special_choice%"=="2" (
-    REM Charge Attack - Extra damage, uses energy
-    echo.
-    echo You charge forward with incredible speed!
-    timeout /t 1 >nul
-    echo You perform a lightning-fast Charge Attack!
-    
-    REM Calculate damage with speed bonus
-    set /a "charge_damage=!attack! + 20"
-    set /a "accuracy_check=!random! %% 100"
-    
-    if !accuracy_check! lss 80 (
-        echo Your charge connects perfectly!
-        echo You deal !charge_damage! damage!
-        set /a "enemy_currenthp-=!charge_damage!"
+    REM Charge Attack variants based on weapon type
+    if "!weapon_type!"=="Adamant" (
+        echo.
+        echo You enter Berserker Rage with your Adamant Sword!
+        timeout /t 1 >nul
+        echo You unleash a devastating Berserker Rage attack!
         
-        REM Award Attack XP bonus
-        set /a "attack_xp+=25"
-        set /a "experience+=25"
-        echo You gained 25 Attack experience!
+        REM Calculate damage with massive bonus
+        call :calculate_damage_direct !attack! !enemy_defence!
+        set /a "charge_damage=!damage! + 35"
+        set /a "accuracy_check=!random! %% 100"
         
-        if !enemy_currenthp! leq 0 (
+        if !accuracy_check! lss 75 (
+            echo Your Berserker Rage devastates the enemy!
+            echo You deal !charge_damage! damage!
+            set /a "enemy_currenthp-=!charge_damage!"
+            
+            REM Award Attack XP bonus
+            set /a "attack_xp+=30"
+            set /a "experience+=40"
+            echo You gained 30 Attack experience!
+        ) else (
+            echo Your Berserker Rage misses!
+            echo The !enemy_name! dodges your attack!
+        )
+    ) else if "!weapon_type!"=="Steel" (
+        echo.
+        echo You charge forward with incredible speed!
+        timeout /t 1 >nul
+        echo You perform a lightning-fast Charge Attack!
+        
+        REM Calculate damage with speed bonus
+        call :calculate_damage_direct !attack! !enemy_defence!
+        set /a "charge_damage=!damage! + 25"
+        set /a "accuracy_check=!random! %% 100"
+        
+        if !accuracy_check! lss 80 (
+            echo Your charge connects perfectly!
+            echo You deal !charge_damage! damage!
+            set /a "enemy_currenthp-=!charge_damage!"
+            
+            REM Award Attack XP bonus
+            set /a "attack_xp+=25"
+            set /a "experience+=25"
+            echo You gained 25 Attack experience!
+        ) else (
+            echo Your charge misses!
+            echo The !enemy_name! sidesteps your attack!
+        )
+    ) else if "!weapon_type!"=="Iron" (
+        echo.
+        echo You charge forward with good speed!
+        timeout /t 1 >nul
+        echo You perform a Charge Attack!
+        
+        REM Calculate damage with moderate bonus
+        call :calculate_damage_direct !attack! !enemy_defence!
+        set /a "charge_damage=!damage! + 22"
+        set /a "accuracy_check=!random! %% 100"
+        
+        if !accuracy_check! lss 78 (
+            echo Your charge connects well!
+            echo You deal !charge_damage! damage!
+            set /a "enemy_currenthp-=!charge_damage!"
+            
+            REM Award Attack XP bonus
+            set /a "attack_xp+=20"
+            set /a "experience+=20"
+            echo You gained 20 Attack experience!
+        ) else (
+            echo Your charge misses!
+            echo The !enemy_name! sidesteps your attack!
+        )
+    ) else (
+        echo.
+        echo You charge forward with speed!
+        timeout /t 1 >nul
+        echo You perform a Charge Attack!
+        
+        REM Calculate damage with basic bonus
+        call :calculate_damage_direct !attack! !enemy_defence!
+        set /a "charge_damage=!damage! + 20"
+        set /a "accuracy_check=!random! %% 100"
+        
+        if !accuracy_check! lss 75 (
+            echo Your charge connects!
+            echo You deal !charge_damage! damage!
+            set /a "enemy_currenthp-=!charge_damage!"
+            
+            REM Award Attack XP bonus
+            set /a "attack_xp+=15"
+            set /a "experience+=15"
+            echo You gained 15 Attack experience!
+        ) else (
+            echo Your charge misses!
+            echo The !enemy_name! sidesteps your attack!
+        )
+    )
+    
+    if !enemy_currenthp! leq 0 (
             echo The !enemy_name! falls to your charge!
             echo.
             echo You defeated the !enemy_name!!
@@ -973,7 +1189,8 @@ if "%special_choice%"=="1" (
         echo You counter with a precise strike!
         
         REM Calculate counter damage
-        set /a "counter_damage=!attack! + 10"
+        call :calculate_damage_direct !attack! !enemy_defence!
+        set /a "counter_damage=!damage! + 10"
         echo You deal !counter_damage! counter damage!
         set /a "enemy_currenthp-=!counter_damage!"
         
@@ -3712,74 +3929,7 @@ if !current_xp! geq !required_xp! (
 
 goto :eof
 
-:special_attack
-REM Special Attack System based on equipped weapon
-call :get_equipment_bonus
-echo.
-echo Available Special Attacks:
-echo.
 
-if "!inventory!" neq "!inventory:Dragon Scimitar=!" (
-    echo 1. Dragon Slice - Double damage attack
-    echo 2. Back to normal attack
-    set /p spec_choice="Choose special: "
-    
-    if "!spec_choice!"=="1" (
-        echo.
-        echo You perform a devastating Dragon Slice!
-        timeout /t 1 >nul
-        call :calculate_damage attack enemy_defence
-        set /a "special_damage=!damage! * 2"
-        echo You deal !special_damage! special damage!
-        set /a "enemy_currenthp-=!special_damage!"
-        
-        if !enemy_currenthp! leq 0 (
-            echo The !enemy_name! is defeated by your special attack!
-            echo You gained 75 combat experience!
-            set /a "attack_xp+=30"
-            set /a "strength_xp+=25"
-            set /a "defence_xp+=15"
-            set /a "experience+=75"
-            call :check_level_up attack !attack_xp!
-            call :check_level_up strength !strength_xp!
-            call :random_loot
-            pause >nul
-            goto combat_training
-        )
-    )
-) else if "!inventory!" neq "!inventory:Rune Scimitar=!" (
-    echo 1. Rune Strike - High accuracy attack
-    echo 2. Back to normal attack
-    set /p spec_choice="Choose special: "
-    
-    if "!spec_choice!"=="1" (
-        echo.
-        echo You perform a precise Rune Strike!
-        timeout /t 1 >nul
-        call :calculate_damage attack enemy_defence
-        set /a "special_damage=!damage! + 3"
-        echo You deal !special_damage! precise damage!
-        set /a "enemy_currenthp-=!special_damage!"
-        
-        if !enemy_currenthp! leq 0 (
-            echo The !enemy_name! falls to your precise strike!
-            echo You gained 60 combat experience!
-            set /a "attack_xp+=25"
-            set /a "strength_xp+=20"
-            set /a "experience+=60"
-            call :check_level_up attack !attack_xp!
-            call :random_loot
-            pause >nul
-            goto combat_training
-        )
-    )
-) else (
-    echo You need a special weapon to use special attacks!
-    echo Available at higher-tier shops.
-)
-echo.
-pause >nul
-goto :eof
 
 :cast_magic_spell
 REM Magic Combat System with runes
