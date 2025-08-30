@@ -253,6 +253,9 @@ if "!location!"=="LUMBRIDGE" echo 12. Bank
 if "!location!"=="VARROCK" echo 12. Bank
 if "!location!"=="FALADOR" echo 12. Bank
 if "!location!"=="ALKHARID" echo 12. Bank
+if "!location!"=="MAGETOWER" echo 10. Magic Shop
+if "!location!"=="MAGETOWER" echo 11. Chat System
+if "!location!"=="MAGETOWER" echo 12. Rune Crafting
 
 echo 0. Save and Exit Game
 echo.
@@ -261,6 +264,8 @@ REM Set prompt based on available options
 if "!location!"=="VARROCK" (
     set /p choice="Choose option (0-12): "
 ) else if "!location!"=="LUMBRIDGE" (
+    set /p choice="Choose option (0-12): "
+) else if "!location!"=="MAGETOWER" (
     set /p choice="Choose option (0-12): "
 ) else (
     set /p choice="Choose option (0-9): "
@@ -291,6 +296,10 @@ if "!location!"=="VARROCK" (
 ) else if "!location!"=="ALKHARID" (
     if "%choice%"=="11" goto crafting_workshop
     if "%choice%"=="12" goto bank
+) else if "!location!"=="MAGETOWER" (
+    if "%choice%"=="10" goto magic_shop
+    if "%choice%"=="11" goto chat_system
+    if "%choice%"=="12" goto rune_crafting
 )
 
 if "%choice%"=="0" goto exit_game
@@ -1210,6 +1219,67 @@ if "!location!"=="ALKHARID" (
         pause >nul
         goto explore_area
     )
+    if "!explore_choice!"=="2" (
+        echo.
+        echo You visit the duel arena...
+        timeout /t 1 >nul
+        echo Warriors are training for combat tournaments.
+        echo You gained 15 experience from watching the training!
+        set /a "experience+=15"
+        pause >nul
+        goto explore_area
+    )
+    if "!explore_choice!"=="3" (
+        echo.
+        echo You approach the scorpion pit...
+        timeout /t 1 >nul
+        echo This dangerous attraction is not for the faint-hearted.
+        echo You gained 10 experience from the thrill!
+        set /a "experience+=10"
+        pause >nul
+        goto explore_area
+    )
+    if "!explore_choice!"=="4" (
+        echo.
+        echo You visit the mining site...
+        timeout /t 1 >nul
+        echo Valuable ores are being extracted from the desert.
+        
+        REM Check if player has a pickaxe
+        call :count_item "Pickaxe"
+        if !item_count! gtr 0 (
+            echo You observe the mining techniques and learn from them.
+            echo You gained 15 Mining experience!
+            set /a "mining_xp+=15"
+            set /a "experience+=15"
+        ) else (
+            echo You watch the mining operations but can't practice without a pickaxe.
+            echo You gained 3 experience from observing.
+            set /a "experience+=3"
+        )
+        pause >nul
+        goto explore_area
+    )
+    if "!explore_choice!"=="5" (
+        echo.
+        echo You venture into the desert...
+        timeout /t 1 >nul
+        echo The vast sand dunes stretch as far as the eye can see.
+        echo You gained 10 experience from the exploration!
+        set /a "experience+=10"
+        pause >nul
+        goto explore_area
+    )
+    if "!explore_choice!"=="6" (
+        echo.
+        echo You encounter a random event!
+        timeout /t 1 >nul
+        echo A desert nomad gives you a water skin worth 2 coins!
+        set /a "coins+=2"
+        echo You gained 2 coins!
+        pause >nul
+        goto explore_area
+    )
     if "!explore_choice!"=="7" goto main_menu
     goto explore_area
 )
@@ -1232,6 +1302,61 @@ if "!location!"=="DRAYNOR" (
         echo You explore the village of Draynor...
         timeout /t 1 >nul
         echo The village is quiet and somewhat spooky.
+        pause >nul
+        goto explore_area
+    )
+    if "!explore_choice!"=="2" (
+        echo.
+        echo You approach Draynor Manor...
+        timeout /t 1 >nul
+        echo The manor looks abandoned and mysterious.
+        echo You gained 10 experience from exploring!
+        set /a "experience+=10"
+        pause >nul
+        goto explore_area
+    )
+    if "!explore_choice!"=="3" (
+        echo.
+        echo You visit the farming fields...
+        timeout /t 1 >nul
+        echo Crops are growing well in the fertile soil.
+        
+        REM Check if player has farming tools (seeds or farming equipment)
+        call :count_item "Seeds"
+        set "has_seeds=!item_count!"
+        call :count_item "Watering Can"
+        set "has_watering_can=!item_count!"
+        
+        if !has_seeds! gtr 0 (
+            echo You study the farming techniques and learn from the crops.
+            echo You gained 10 Farming experience!
+            set /a "farming_xp+=10"
+            set /a "experience+=10"
+        ) else (
+            echo You observe the farming methods but can't practice without seeds.
+            echo You gained 3 experience from observing.
+            set /a "experience+=3"
+        )
+        pause >nul
+        goto explore_area
+    )
+    if "!explore_choice!"=="4" (
+        echo.
+        echo You approach the swamp area...
+        timeout /t 1 >nul
+        echo The waters look dark and dangerous.
+        echo You gained 5 experience from the exploration!
+        set /a "experience+=5"
+        pause >nul
+        goto explore_area
+    )
+    if "!explore_choice!"=="5" (
+        echo.
+        echo You encounter a random event!
+        timeout /t 1 >nul
+        echo You find a small treasure chest with 3 coins!
+        set /a "coins+=3"
+        echo You gained 3 coins!
         pause >nul
         goto explore_area
     )
@@ -1261,7 +1386,194 @@ if "!location!"=="PORTSARIM" (
         pause >nul
         goto explore_area
     )
+    if "!explore_choice!"=="2" (
+        echo.
+        echo You visit the shipyard...
+        timeout /t 1 >nul
+        echo Workers are building and repairing ships.
+        echo You gained 15 experience from watching the construction!
+        set /a "experience+=15"
+        pause >nul
+        goto explore_area
+    )
+    if "!explore_choice!"=="3" (
+        echo.
+        echo You walk to the harbor...
+        timeout /t 1 >nul
+        echo Fishing boats are returning with their catch.
+        
+        REM Check if player has a fishing rod
+        call :count_item "Fishing Rod"
+        if !item_count! gtr 0 (
+            echo You watch the fishing boats and learn from their techniques.
+            echo You gained 10 Fishing experience!
+            set /a "fishing_xp+=10"
+            set /a "experience+=10"
+        ) else (
+            echo You watch the fishing boats but can't practice without a fishing rod.
+            echo You gained 2 experience from observing.
+            set /a "experience+=2"
+        )
+        pause >nul
+        goto explore_area
+    )
+    if "!explore_choice!"=="4" (
+        echo.
+        echo You explore the marketplace...
+        timeout /t 1 >nul
+        echo Exotic goods from distant lands are on display.
+        echo You gained 10 experience from browsing!
+        set /a "experience+=10"
+        pause >nul
+        goto explore_area
+    )
+    if "!explore_choice!"=="5" (
+        echo.
+        echo You walk along the beach...
+        timeout /t 1 >nul
+        echo The sea air is refreshing and the view is beautiful.
+        echo You gained 5 experience from the peaceful walk!
+        set /a "experience+=5"
+        pause >nul
+        goto explore_area
+    )
+    if "!explore_choice!"=="6" (
+        echo.
+        echo You encounter a random event!
+        timeout /t 1 >nul
+        echo A merchant gives you a small gift of 5 coins!
+        set /a "coins+=5"
+        echo You gained 5 coins!
+        pause >nul
+        goto explore_area
+    )
     if "!explore_choice!"=="7" goto main_menu
+    goto explore_area
+)
+
+if "!location!"=="MAGETOWER" (
+    echo You explore the ancient Mage Tower.
+    echo.
+    echo You see:
+    echo 1. The library - Ancient spell books
+    echo 2. The training room - Practice magic
+    echo 3. The rune altar - Create runes
+    echo 4. The tower top - Study the stars
+    echo 5. The mage shop - Magic supplies
+    echo 6. Chat with other mages
+    echo 7. Back to main menu
+    echo.
+    set /p explore_choice="What do you investigate? "
+    
+    if "!explore_choice!"=="1" (
+        echo.
+        echo You enter the ancient library...
+        timeout /t 1 >nul
+        echo Dusty tomes contain forgotten spells and knowledge.
+        echo You gained 30 Magic experience!
+        set /a "magic_xp+=30"
+        set /a "experience+=30"
+        pause >nul
+        goto explore_area
+    )
+    if "!explore_choice!"=="2" (
+        echo.
+        echo You enter the training room...
+        timeout /t 1 >nul
+        echo You practice basic magic spells.
+        echo You gained 25 Magic experience!
+        set /a "magic_xp+=25"
+        set /a "experience+=25"
+        pause >nul
+        goto explore_area
+    )
+    if "!explore_choice!"=="3" (
+        echo.
+        echo You approach the rune altar...
+        timeout /t 1 >nul
+        echo The altar hums with magical energy.
+        echo You can create runes here if you have the materials.
+        pause >nul
+        goto explore_area
+    )
+    if "!explore_choice!"=="4" (
+        echo.
+        echo You climb to the tower top...
+        timeout /t 1 >nul
+        echo The view is spectacular! You can see for miles.
+        echo You gained 15 experience from the climb!
+        set /a "experience+=15"
+        pause >nul
+        goto explore_area
+    )
+    if "!explore_choice!"=="5" (
+        echo.
+        echo You visit the mage shop...
+        timeout /t 1 >nul
+        echo The shopkeeper offers magical supplies and runes.
+        pause >nul
+        goto explore_area
+    )
+    if "!explore_choice!"=="6" (
+        echo.
+        echo You join a conversation with other mages...
+        timeout /t 1 >nul
+        echo They discuss advanced spells and magical theory.
+        echo You gained 20 Magic experience from the discussion!
+        set /a "magic_xp+=20"
+        set /a "experience+=20"
+        pause >nul
+        goto explore_area
+    )
+    if "!explore_choice!"=="7" goto main_menu
+    goto explore_area
+)
+
+if "!location!"=="WILDERNESS" (
+    echo You explore the dangerous Wilderness.
+    echo.
+    echo You see:
+    echo 1. The wilderness wall - Border with civilization
+    echo 2. Dangerous creatures - Monsters and beasts
+    echo 3. Resource nodes - Mining and woodcutting spots
+    echo 4. PvP hotspots - Areas where players fight
+    echo 5. Back to main menu
+    echo.
+    set /p explore_choice="What do you investigate? "
+    
+    if "!explore_choice!"=="1" (
+        echo.
+        echo You approach the wilderness wall...
+        timeout /t 1 >nul
+        echo The wall separates the safe world from danger.
+        pause >nul
+        goto explore_area
+    )
+    if "!explore_choice!"=="2" (
+        echo.
+        echo You encounter dangerous creatures...
+        timeout /t 1 >nul
+        echo Monsters roam freely in this lawless land.
+        pause >nul
+        goto explore_area
+    )
+    if "!explore_choice!"=="3" (
+        echo.
+        echo You find resource nodes...
+        timeout /t 1 >nul
+        echo Valuable resources are scattered throughout the wilderness.
+        pause >nul
+        goto explore_area
+    )
+    if "!explore_choice!"=="4" (
+        echo.
+        echo You approach a PvP hotspot...
+        timeout /t 1 >nul
+        echo This area is known for player combat.
+        pause >nul
+        goto explore_area
+    )
+    if "!explore_choice!"=="5" goto main_menu
     goto explore_area
 )
 
@@ -1290,7 +1602,8 @@ if not "!location!"=="ALKHARID" echo 4. Al Kharid (Desert city)
 if not "!location!"=="DRAYNOR" echo 5. Draynor Village (Small village)
 if not "!location!"=="PORTSARIM" echo 6. Port Sarim (Harbor town)
 echo 7. The Wilderness (Dangerous PvP area)
-echo 8. Back to main menu
+echo 8. Mage Tower (Ancient magic studies)
+echo 9. Back to main menu
 echo.
 set /p travel_choice="Choose location to travel to: "
 
@@ -1360,7 +1673,29 @@ if "!travel_choice!"=="6" if not "!location!"=="PORTSARIM" (
     goto main_menu
 )
 
-if "!travel_choice!"=="8" goto main_menu
+if "!travel_choice!"=="7" if not "!location!"=="WILDERNESS" (
+    echo.
+    echo Traveling to The Wilderness...
+    timeout /t 3 >nul
+    set "location=WILDERNESS"
+    echo Arrived in The Wilderness! This dangerous area is filled with PvP combat.
+    echo.
+    pause >nul
+    goto main_menu
+)
+
+if "!travel_choice!"=="8" if not "!location!"=="MAGETOWER" (
+    echo.
+    echo Traveling to the Mage Tower...
+    timeout /t 3 >nul
+    set "location=MAGETOWER"
+    echo Arrived at the Mage Tower! Ancient magic fills the air.
+    echo.
+    pause >nul
+    goto main_menu
+)
+
+if "!travel_choice!"=="9" goto main_menu
 
 echo Invalid choice!
 pause >nul
@@ -2517,10 +2852,10 @@ echo         !location! GENERAL STORE
 echo ========================================
 echo.
 if "!location!"=="LUMBRIDGE" (
-echo Welcome to Lumbridge General Store!
-echo.
+    echo Welcome to Lumbridge General Store!
+    echo.
     echo Shopkeeper: "Hello adventurer! What can I get for you?"
-echo.
+    echo.
     echo Items for sale:
     echo 1. Bread - 12 coins (Food)
     echo 2. Bronze Sword - 25 coins (Weapon)
@@ -2586,6 +2921,29 @@ if "!location!"=="ALKHARID" (
     echo 4. Dragon Scimitar - 60000 coins (Weapon)
     echo 5. Health Potion - 35 coins (Consumable)
     echo 6. Desert Robes - 40 coins (Clothing)
+    echo 0. Exit shop
+)
+
+if "!location!"=="MAGETOWER" (
+    echo Welcome to the Mage Tower Shop!
+    echo.
+    echo Shopkeeper: "Ancient magic awaits you, young apprentice!"
+    echo.
+    echo Items for sale:
+    echo 1. Air Rune - 5 coins (Magic)
+    echo 2. Fire Rune - 8 coins (Magic)
+    echo 3. Water Rune - 6 coins (Magic)
+    echo 4. Earth Rune - 6 coins (Magic)
+    echo 5. Mind Rune - 4 coins (Magic)
+    echo 6. Chaos Rune - 15 coins (Magic)
+    echo 7. Death Rune - 25 coins (Magic)
+    echo 8. Blood Rune - 50 coins (Magic)
+    echo 9. Staff of Air - 150 coins (Magic Weapon)
+    echo 10. Staff of Fire - 200 coins (Magic Weapon)
+    echo 11. Wizard Hat - 100 coins (Magic Armor)
+    echo 12. Magic Robes - 200 coins (Magic Armor)
+    echo 13. Magic Study Book - 50 coins (Study Material)
+    echo 14. Health Potion - 35 coins (Consumable)
     echo 0. Exit shop
 )
 
@@ -4298,6 +4656,203 @@ if "!shop_location!"=="LUMBRIDGE" (
             echo Not enough coins!
         )
     )
+) else if "!shop_location!"=="MAGETOWER" (
+    REM Handle Mage Tower shop purchases
+    if "!choice!"=="1" (
+        if !coins! geq 5 (
+            set /a "coins-=5"
+            if defined inventory (
+                set "inventory=!inventory!,Air Rune"
+            ) else (
+                set "inventory=Air Rune"
+            )
+            echo You bought an air rune for 5 coins!
+        ) else (
+            echo Not enough coins!
+        )
+    )
+
+    if "!choice!"=="2" (
+        if !coins! geq 8 (
+            set /a "coins-=8"
+            if defined inventory (
+                set "inventory=!inventory!,Fire Rune"
+            ) else (
+                set "inventory=Fire Rune"
+            )
+            echo You bought a fire rune for 8 coins!
+        ) else (
+            echo Not enough coins!
+        )
+    )
+
+    if "!choice!"=="3" (
+        if !coins! geq 6 (
+            set /a "coins-=6"
+            if defined inventory (
+                set "inventory=!inventory!,Water Rune"
+            ) else (
+                set "inventory=Water Rune"
+            )
+            echo You bought a water rune for 6 coins!
+        ) else (
+            echo Not enough coins!
+        )
+    )
+
+    if "!choice!"=="4" (
+        if !coins! geq 6 (
+            set /a "coins-=6"
+            if defined inventory (
+                set "inventory=!inventory!,Earth Rune"
+            ) else (
+                set "inventory=Earth Rune"
+            )
+            echo You bought an earth rune for 6 coins!
+        ) else (
+            echo Not enough coins!
+        )
+    )
+
+    if "!choice!"=="5" (
+        if !coins! geq 4 (
+            set /a "coins-=4"
+            if defined inventory (
+                set "inventory=!inventory!,Mind Rune"
+            ) else (
+                set "inventory=Mind Rune"
+            )
+            echo You bought a mind rune for 4 coins!
+        ) else (
+            echo Not enough coins!
+        )
+    )
+
+    if "!choice!"=="6" (
+        if !coins! geq 15 (
+            set /a "coins-=15"
+            if defined inventory (
+                set "inventory=!inventory!,Chaos Rune"
+            ) else (
+                set "inventory=Chaos Rune"
+            )
+            echo You bought a chaos rune for 15 coins!
+        ) else (
+            echo Not enough coins!
+        )
+    )
+
+    if "!choice!"=="7" (
+        if !coins! geq 25 (
+            set /a "coins-=25"
+            if defined inventory (
+                set "inventory=!inventory!,Death Rune"
+            ) else (
+                set "inventory=Death Rune"
+            )
+            echo You bought a death rune for 25 coins!
+        ) else (
+            echo Not enough coins!
+        )
+    )
+
+    if "!choice!"=="8" (
+        if !coins! geq 50 (
+            set /a "coins-=50"
+            if defined inventory (
+                set "inventory=!inventory!,Blood Rune"
+            ) else (
+                set "inventory=Blood Rune"
+            )
+            echo You bought a blood rune for 50 coins!
+        ) else (
+            echo Not enough coins!
+        )
+    )
+
+    if "!choice!"=="9" (
+        if !coins! geq 150 (
+            set /a "coins-=150"
+            if defined inventory (
+                set "inventory=!inventory!,Staff of Air"
+            ) else (
+                set "inventory=Staff of Air"
+            )
+            echo You bought a staff of air for 150 coins!
+        ) else (
+            echo Not enough coins!
+        )
+    )
+
+    if "!choice!"=="10" (
+        if !coins! geq 200 (
+            set /a "coins-=200"
+            if defined inventory (
+                set "inventory=!inventory!,Staff of Fire"
+            ) else (
+                set "inventory=Staff of Fire"
+            )
+            echo You bought a staff of fire for 200 coins!
+        ) else (
+            echo Not enough coins!
+        )
+    )
+
+    if "!choice!"=="11" (
+        if !coins! geq 100 (
+            set /a "coins-=100"
+            if defined inventory (
+                set "inventory=!inventory!,Wizard Hat"
+            ) else (
+                set "inventory=Wizard Hat"
+            )
+            echo You bought a wizard hat for 100 coins!
+        ) else (
+            echo Not enough coins!
+        )
+    )
+
+    if "!choice!"=="12" (
+        if !coins! geq 200 (
+            set /a "coins-=200"
+            if defined inventory (
+                set "inventory=!inventory!,Magic Robes"
+            ) else (
+                set "inventory=Magic Robes"
+            )
+            echo You bought magic robes for 200 coins!
+        ) else (
+            echo Not enough coins!
+        )
+    )
+
+    if "!choice!"=="13" (
+        if !coins! geq 50 (
+            set /a "coins-=50"
+            if defined inventory (
+                set "inventory=!inventory!,Magic Study Book"
+            ) else (
+                set "inventory=Magic Study Book"
+            )
+            echo You bought a magic study book for 50 coins!
+        ) else (
+            echo Not enough coins!
+        )
+    )
+
+    if "!choice!"=="14" (
+        if !coins! geq 35 (
+            set /a "coins-=35"
+            if defined inventory (
+                set "inventory=!inventory!,Health Potion"
+            ) else (
+                set "inventory=Health Potion"
+            )
+            echo You bought a health potion for 35 coins!
+        ) else (
+            echo Not enough coins!
+        )
+    )
 )
 
 pause >nul
@@ -5886,6 +6441,40 @@ if "!location!"=="LUMBRIDGE" (
     echo  ^|  [OBJ] Boats          [OBJ] Sea Creatures     ^|
     echo  ^|  [OBJ] Maritime       [OBJ] Ocean Life        ^|
     echo  +================================================+
+) else if "!location!"=="MAGETOWER" (
+    echo.
+    echo  +================================================+
+    echo  ^|              MAGE TOWER                       ^|
+    echo  ^|                                                ^|
+    echo  ^|  [O]  Tower           [O]  You               ^|
+    echo  ^|  [NPC] Ancient Magic  [NPC] Level !level!     ^|
+    echo  ^|  [NPC] Knowledge      [NPC] Gold: !coins!     ^|
+    echo  ^|                                                ^|
+    echo  ^|  [OBJ] Library        [OBJ] Training Room     ^|
+    echo  ^|  [OBJ] Spell Books    [OBJ] Magic Practice    ^|
+    echo  ^|  [OBJ] Ancient Tomes  [OBJ] Spell Casting     ^|
+    echo  ^|                                                ^|
+    echo  ^|  [OBJ] Rune Altar     [OBJ] Tower Top         ^|
+    echo  ^|  [OBJ] Rune Crafting  [OBJ] Star Gazing       ^|
+    echo  ^|  [OBJ] Magic Energy   [OBJ] Spectacular View  ^|
+    echo  +================================================+
+) else if "!location!"=="WILDERNESS" (
+    echo.
+    echo  +================================================+
+    echo  ^|              THE WILDERNESS                   ^|
+    echo  ^|                                                ^|
+    echo  ^|  [O]  You             [O]  Danger             ^|
+    echo  ^|  [NPC] PvP Combat     [NPC] Player Killers    ^|
+    echo  ^|  [NPC] High Risk      [NPC] High Reward       ^|
+    echo  ^|                                                ^|
+    echo  ^|  [OBJ] Wilderness     [OBJ] Resource Nodes    ^|
+    echo  ^|  [OBJ] Wall           [OBJ] Valuable Items    ^|
+    echo  ^|  [OBJ] Border         [OBJ] Rich Deposits     ^|
+    echo  ^|                                                ^|
+    echo  ^|  [OBJ] PvP Hotspots   [OBJ] Monsters          ^|
+    echo  ^|  [OBJ] Player Combat  [OBJ] Dangerous Beasts  ^|
+    echo  ^|  [OBJ] High Stakes    [OBJ] Lawless Land      ^|
+    echo  +================================================+
 )
 goto :eof
 
@@ -6999,5 +7588,437 @@ if "!study_choice!"=="5" (
 
 if "!study_choice!"=="6" goto :eof
 
+goto :eof
+
+REM ============================================
+REM     MAGE TOWER FUNCTIONS
+REM ============================================
+
+:magic_shop
+cls
+call :draw_mage_tower_header
+echo.
+echo ========================================
+echo         MAGE TOWER SHOP
+echo ========================================
+echo.
+echo Welcome to the Mage Tower Shop!
+echo.
+echo Shopkeeper: "Ancient magic awaits you, young apprentice!"
+echo.
+echo Items for sale:
+echo 1. Air Rune - 5 coins (Magic)
+echo 2. Fire Rune - 8 coins (Magic)
+echo 3. Water Rune - 6 coins (Magic)
+echo 4. Earth Rune - 6 coins (Magic)
+echo 5. Mind Rune - 4 coins (Magic)
+echo 6. Chaos Rune - 15 coins (Magic)
+echo 7. Death Rune - 25 coins (Magic)
+echo 8. Blood Rune - 50 coins (Magic)
+echo 9. Staff of Air - 150 coins (Magic Weapon)
+echo 10. Staff of Fire - 200 coins (Magic Weapon)
+echo 11. Wizard Hat - 100 coins (Magic Armor)
+echo 12. Magic Robes - 200 coins (Magic Armor)
+echo 13. Magic Study Book - 50 coins (Study Material)
+echo 14. Health Potion - 35 coins (Consumable)
+echo 0. Exit shop
+echo.
+echo Your coins: !coins!
+echo.
+set /p shop_choice="What would you like to buy? "
+
+if "%shop_choice%"=="0" goto main_menu
+
+REM Handle purchases based on location and choice
+call :handle_purchase !shop_choice! !location!
+goto magic_shop
+
+:chat_system
+cls
+call :draw_mage_tower_header
+echo.
+echo ========================================
+echo         MAGE TOWER CHAT SYSTEM
+echo ========================================
+echo.
+echo Welcome to the magical communication network!
+echo.
+echo Chat Channels:
+echo 1. Local Chat (!location!)
+echo 2. Trade Chat (Buying/Selling)
+echo 3. Magic Chat (Spells & Runes)
+echo 4. General Chat (Random)
+echo 5. Back to main menu
+echo.
+set /p chat_choice="Choose chat channel: "
+
+if "!chat_choice!"=="1" (
+    call :local_chat
+) else if "!chat_choice!"=="2" (
+    call :trade_chat
+) else if "!chat_choice!"=="3" (
+    call :magic_chat
+) else if "!chat_choice!"=="4" (
+    call :general_chat
+) else if "!chat_choice!"=="5" (
+    goto main_menu
+) else (
+    echo Invalid choice!
+    pause >nul
+    goto chat_system
+)
+
+:local_chat
+cls
+call :draw_mage_tower_header
+echo.
+echo ========================================
+echo         LOCAL CHAT - !location!
+echo ========================================
+echo.
+echo Recent messages in your area:
+echo.
+echo [NPC] Shopkeeper: "Welcome to !location! How can I help you?"
+echo [NPC] Guard: "Stay safe, adventurer!"
+echo [Player] You: "Hello everyone!"
+echo [NPC] Local: "Nice weather today!"
+echo.
+echo [T]ype a message
+echo [R]efresh chat
+echo [B]ack to chat menu
+echo.
+set /p chat_action="What do you do? "
+
+if /i "!chat_action!"=="t" (
+    echo.
+    set /p "chat_message="Type your message: "
+    echo [Player] You: "!chat_message!"
+    echo Message sent to local chat!
+    pause >nul
+    goto local_chat
+) else if /i "!chat_action!"=="r" (
+    echo.
+    echo Refreshing chat...
+    timeout /t 1 >nul
+    echo [NPC] New messages appear...
+    pause >nul
+    goto local_chat
+) else if /i "!chat_action!"=="b" (
+    goto chat_system
+) else (
+    echo Invalid choice!
+    pause >nul
+    goto local_chat
+)
+
+:trade_chat
+cls
+call :draw_mage_tower_header
+echo.
+echo ========================================
+echo         TRADE CHAT
+echo ========================================
+echo.
+echo Recent trade messages:
+echo.
+echo [WTB] Looking for: Steel Sword, paying 300 coins
+echo [WTS] Selling: Iron Ore x10, 50 coins each
+echo [WTB] Need: Magic Runes, any type
+echo [WTS] Selling: Health Potions x5, 30 coins each
+echo [WTB] Looking for: Woodcutting Axe
+echo.
+echo [P]ost a trade message
+echo [R]efresh chat
+echo [B]ack to chat menu
+echo.
+set /p trade_action="What do you do? "
+
+if /i "!trade_action!"=="p" (
+    echo.
+    echo What type of trade message?
+    echo [B]uy - Want to Buy (WTB)
+    echo [S]ell - Want to Sell (WTS)
+    echo [C]ancel - Back to trade chat
+    echo.
+    set /p trade_type="Choose type (B/S/C): "
+    
+    if /i "!trade_type!"=="b" (
+        echo.
+        set /p "wtb_item="What do you want to buy? "
+        set /p "wtb_price="How much will you pay? "
+        echo [WTB] Looking for: !wtb_item!, paying !wtb_price! coins
+        echo Trade message posted!
+        pause >nul
+        goto trade_chat
+    ) else if /i "!trade_type!"=="s" (
+        echo.
+        set /p "wts_item="What do you want to sell? "
+        set /p "wts_price="How much do you want? "
+        echo [WTS] Selling: !wts_item!, !wts_price! coins
+        echo Trade message posted!
+        pause >nul
+        goto trade_chat
+    ) else if /i "!trade_type!"=="c" (
+        goto trade_chat
+    ) else (
+        echo Invalid choice!
+        pause >nul
+        goto trade_chat
+    )
+) else if /i "!trade_action!"=="r" (
+    echo.
+    echo Refreshing trade chat...
+    timeout /t 1 >nul
+    echo [NPC] New trade offers appear...
+    pause >nul
+    goto trade_chat
+) else if /i "!trade_action!"=="b" (
+    goto chat_system
+) else (
+    echo Invalid choice!
+    pause >nul
+    goto trade_chat
+)
+
+:magic_chat
+cls
+call :draw_mage_tower_header
+echo.
+echo ========================================
+echo         MAGIC CHAT
+echo ========================================
+echo.
+echo Recent magic discussions:
+echo.
+echo [Mage] "Anyone know the best way to train Magic?"
+echo [Mage] "I'm looking for Death Runes, anyone selling?"
+echo [Mage] "Just learned Fire Bolt spell!"
+echo [Mage] "Magic training at the tower is great!"
+echo [Mage] "Anyone want to practice PvP magic?"
+echo.
+echo [P]ost a magic message
+echo [R]efresh chat
+echo [B]ack to chat menu
+echo.
+set /p magic_action="What do you do? "
+
+if /i "!magic_action!"=="p" (
+    echo.
+    set /p "magic_message="Type your magic message: "
+    echo [Mage] You: "!magic_message!"
+    echo Message sent to magic chat!
+    pause >nul
+    goto magic_chat
+) else if /i "!magic_action!"=="r" (
+    echo.
+    echo Refreshing magic chat...
+    timeout /t 1 >nul
+    echo [NPC] New magic discussions appear...
+    pause >nul
+    goto magic_chat
+) else if /i "!magic_action!"=="b" (
+    goto chat_system
+) else (
+    echo Invalid choice!
+    pause >nul
+    goto magic_chat
+)
+
+:general_chat
+cls
+call :draw_mage_tower_header
+echo.
+echo ========================================
+echo         GENERAL CHAT
+echo ========================================
+echo.
+echo Recent general messages:
+echo.
+echo [Player] "Anyone want to go slaying together?"
+echo [Player] "Just completed Cook's Assistant quest!"
+echo [Player] "The Grand Exchange is so busy today!"
+echo [Player] "Anyone know where to find iron ore?"
+echo [Player] "Great XP rates at the training grounds!"
+echo.
+echo [T]ype a message
+echo [R]efresh chat
+echo [B]ack to chat menu
+echo.
+set /p general_action="What do you do? "
+
+if /i "!general_action!"=="t" (
+    echo.
+    set /p "general_message="Type your message: "
+    echo [Player] You: "!general_message!"
+    echo Message sent to general chat!
+    pause >nul
+    goto general_chat
+) else if /i "!general_action!"=="r" (
+    echo.
+    echo Refreshing general chat...
+    timeout /t 1 >nul
+    echo [NPC] New messages appear...
+    pause >nul
+    goto general_chat
+) else if /i "!general_action!"=="b" (
+    goto chat_system
+) else (
+    echo Invalid choice!
+    pause >nul
+    goto general_chat
+)
+
+:rune_crafting
+cls
+call :draw_mage_tower_header
+echo.
+echo ========================================
+echo         RUNE CRAFTING
+echo ========================================
+echo.
+echo Welcome to the Rune Crafting Altar!
+echo.
+echo You can create runes here if you have the materials.
+echo.
+echo Available Rune Types:
+echo 1. Air Rune (Requires: Pure Essence)
+echo 2. Fire Rune (Requires: Pure Essence)
+echo 3. Water Rune (Requires: Pure Essence)
+echo 4. Earth Rune (Requires: Pure Essence)
+echo 5. Mind Rune (Requires: Pure Essence)
+echo 6. Chaos Rune (Requires: Pure Essence)
+echo 7. Death Rune (Requires: Pure Essence)
+echo 8. Blood Rune (Requires: Pure Essence)
+echo 0. Back to main menu
+echo.
+set /p rune_choice="Choose rune to craft: "
+
+if "!rune_choice!"=="0" goto main_menu
+
+REM Check if player has Pure Essence
+call :count_item "Pure Essence"
+if !item_count! lss 1 (
+    echo You need Pure Essence to craft runes!
+    echo You can buy it from the shop or find it while mining.
+    pause >nul
+    goto rune_crafting
+)
+
+REM Craft the chosen rune
+if "!rune_choice!"=="1" (
+    call :remove_item "Pure Essence"
+    if defined inventory (
+        set "inventory=!inventory!,Air Rune"
+    ) else (
+        set "inventory=Air Rune"
+    )
+    echo You successfully crafted an Air Rune!
+    set /a "runecrafting_xp+=15"
+    set /a "experience+=15"
+    echo You gained 15 Runecrafting experience!
+) else if "!rune_choice!"=="2" (
+    call :remove_item "Pure Essence"
+    if defined inventory (
+        set "inventory=!inventory!,Fire Rune"
+    ) else (
+        set "inventory=Fire Rune"
+    )
+    echo You successfully crafted a Fire Rune!
+    set /a "runecrafting_xp+=15"
+    set /a "experience+=15"
+    echo You gained 15 Runecrafting experience!
+) else if "!rune_choice!"=="3" (
+    call :remove_item "Pure Essence"
+    if defined inventory (
+        set "inventory=!inventory!,Water Rune"
+    ) else (
+        set "inventory=Water Rune"
+    )
+    echo You successfully crafted a Water Rune!
+    set /a "runecrafting_xp+=15"
+    set /a "experience+=15"
+    echo You gained 15 Runecrafting experience!
+) else if "!rune_choice!"=="4" (
+    call :remove_item "Pure Essence"
+    if defined inventory (
+        set "inventory=!inventory!,Earth Rune"
+    ) else (
+        set "inventory=Earth Rune"
+    )
+    echo You successfully crafted an Earth Rune!
+    set /a "runecrafting_xp+=15"
+    set /a "experience+=15"
+    echo You gained 15 Runecrafting experience!
+) else if "!rune_choice!"=="5" (
+    call :remove_item "Pure Essence"
+    if defined inventory (
+        set "inventory=!inventory!,Mind Rune"
+    ) else (
+        set "inventory=Mind Rune"
+    )
+    echo You successfully crafted a Mind Rune!
+    set /a "runecrafting_xp+=15"
+    set /a "experience+=15"
+    echo You gained 15 Runecrafting experience!
+) else if "!rune_choice!"=="6" (
+    call :remove_item "Pure Essence"
+    call :remove_item "Pure Essence"
+    if defined inventory (
+        set "inventory=!inventory!,Chaos Rune"
+    ) else (
+        set "inventory=Chaos Rune"
+    )
+    echo You successfully crafted a Chaos Rune!
+    set /a "runecrafting_xp+=25"
+    set /a "experience+=25"
+    echo You gained 25 Runecrafting experience!
+) else if "!rune_choice!"=="7" (
+    call :remove_item "Pure Essence"
+    call :remove_item "Pure Essence"
+    if defined inventory (
+        set "inventory=!inventory!,Death Rune"
+    ) else (
+        set "inventory=Death Rune"
+    )
+    echo You successfully crafted a Death Rune!
+    set /a "runecrafting_xp+=35"
+    set /a "experience+=35"
+    echo You gained 35 Runecrafting experience!
+) else if "!rune_choice!"=="8" (
+    call :remove_item "Pure Essence"
+    call :remove_item "Pure Essence"
+    call :remove_item "Pure Essence"
+    if defined inventory (
+        set "inventory=!inventory!,Blood Rune"
+    ) else (
+        set "inventory=Blood Rune"
+    )
+    echo You successfully crafted a Blood Rune!
+    set /a "runecrafting_xp+=50"
+    set /a "experience+=50"
+    echo You gained 50 Runecrafting experience!
+) else (
+    echo Invalid choice!
+    pause >nul
+    goto rune_crafting
+)
+
+pause >nul
+goto rune_crafting
+
+:draw_mage_tower_header
+echo.
+echo  +================================================+
+echo  ^|               MAGE TOWER                      ^|
+echo  ^|                                                ^|
+echo  ^|  [O]  Tower         [O]  You                 ^|
+echo  ^|  [NPC] Ancient Magic [NPC] Level !level!      ^|
+echo  ^|  [NPC] Knowledge     [NPC] Gold: !coins!      ^|
+echo  ^|                                                ^|
+echo  ^|  +==========================================+  ^|
+echo  ^|  ^|           MAGICAL STUDIES              ^|  ^|
+echo  ^|  ^|  [Shop] [Chat] [Craft] [Study]        ^|  ^|
+echo  ^|  +==========================================+  ^|
+echo  +================================================+
 goto :eof
 
