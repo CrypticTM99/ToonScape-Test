@@ -1,292 +1,186 @@
-# ToonScape - 0.0.6 (Created by CrypticTM)
+# ToonScape - RuneScape Fangame v0.0.6
 
-A comprehensive single-player RuneScape-inspired game built in C++ using SFML.
+A complete single-player RuneScape-inspired experience built entirely in Windows Batch scripting. Experience the magic of RuneScape in a nostalgic text-based format with ASCII graphics, real combat mechanics, and full progression systems.
 
-## Features
+**Created by CrypticTM** - This is a fan-made game and is not affiliated with Jagex or RuneScape.
 
-### Core Gameplay
-- **Character Creation**: Customize your character's appearance, class, and starting stats
-- **Skill System**: 23 skills including combat, gathering, and production skills
-- **Combat System**: Turn-based combat with melee, ranged, and magic styles
-- **Inventory Management**: 28-slot inventory with item stacking and organization
-- **Equipment System**: 13 equipment slots for weapons, armor, and accessories
+## 🎮 Game Overview
 
-### World & Environment
-- **Open World**: 1000x1000 tile world with various biomes and locations
-- **Towns & Cities**: Visit iconic locations like Lumbridge, Varrock, and Falador
-- **Dungeons & Arenas**: Challenge yourself in various combat and skill-based areas
-- **Dynamic Weather**: Day/night cycle with changing weather conditions
-- **Resource Nodes**: Mining, woodcutting, fishing, and farming locations
+ToonScape brings the beloved RuneScape experience to your Windows command prompt. Start your journey in the peaceful town of Lumbridge and explore a world filled with adventure, combat, skills, and quests - all through the power of batch scripting!
 
-### Items & Crafting
-- **Weapons**: Swords, axes, bows, staves, and more with unique properties
-- **Tools**: Specialized tools for gathering and crafting activities
-- **Food & Potions**: Consumables for healing and stat boosting
-- **Armor**: Defensive equipment with different protection types
-- **Crafting**: Create items using gathered materials and skills
+## ✨ Features
 
-### Enemies & Combat
-- **Diverse Enemies**: Goblins, orcs, dragons, skeletons, and more
-- **AI Behavior**: Intelligent enemy AI with aggro, leashing, and pathfinding
-- **Loot System**: Enemy drops with rarity-based item generation
-- **Combat Mechanics**: Attack speed, damage calculation, and critical hits
+### 🌍 **World & Locations**
+- **Lumbridge** - Peaceful starting town with castle, church, and catacombs
+- **Varrock** - Bustling major city with Grand Exchange, sewers, and museum
+- **Falador** - White city of knights with castle and marketplace
+- **Al Kharid** - Desert city with unique desert-themed content
+- **Magic Tower** - Arcane location with magic shop and rune crafting
+- **The Wilderness** - Dangerous PvP area with high-risk, high-reward gameplay
 
-### Skills & Progression
-- **Combat Skills**: Attack, Strength, Defence, Hitpoints, Ranged, Prayer, Magic
-- **Gathering Skills**: Mining, Woodcutting, Fishing, Farming, Hunter
-- **Production Skills**: Smithing, Crafting, Cooking, Herblore, Fletching
-- **Support Skills**: Agility, Thieving, Slayer, Runecrafting, Construction
+### ⚔️ **Combat System**
+- **Real-time Combat** - Turn-based battles with strategic depth
+- **Multiple Enemy Types** - Goblins, Giant Rats, Chickens, and more
+- **Combat Training** - Practice dummies for safe skill training
+- **PvP Wilderness** - Player vs Player combat in dangerous areas
+- **Combat Skills** - Attack, Strength, Defence, Hitpoints, Ranged, Magic
 
-### User Interface
-- **Modern UI**: Clean, intuitive interface with smooth animations
-- **Inventory Management**: Drag-and-drop item management
-- **Skill Interface**: Visual skill progression and experience tracking
-- **Map System**: Minimap and world map with location markers
-- **Settings Menu**: Customizable graphics, audio, and control options
+### 🛠️ **Skill System (23 Skills)**
+- **Combat Skills**: Attack, Strength, Defence, Hitpoints, Ranged, Magic
+- **Gathering Skills**: Woodcutting, Fishing, Mining, Treasure Hunting
+- **Artisan Skills**: Cooking, Smithing, Crafting, Fletching, Herblore
+- **Support Skills**: Prayer, Slayer, Farming, Firemaking
 
-## Building the Project
+### 🎒 **Gameplay Systems**
+- **Character Progression** - Level up skills and gain experience
+- **Inventory Management** - 28-slot inventory with item management
+- **Equipment System** - Weapons, armor, and accessories
+- **Quest System** - Story-driven quests with rewards
+- **Shop System** - Buy and sell items in various locations
+- **Bank System** - Store your valuables safely
+- **Save System** - Automatic progress saving
 
-### Prerequisites
+### 🏰 **Special Locations**
+- **Grand Exchange** - Trade hub in Varrock
+- **Crafting Workshops** - Create items in various cities
+- **Player Houses** - Personal space in Lumbridge
+- **Underground Areas** - Lumbridge Catacombs, Varrock Sewers
+- **Combat Arenas** - Training grounds for combat practice
 
-- **Windows Batch , Windows Terminal**
+## 🚀 Getting Started
 
-## Contributing
+### **Requirements**
+- Windows 10/11
+- Windows Command Prompt or PowerShell
+- No additional software needed!
 
-This is a personal project, but suggestions and feedback are welcome. The project follows these development principles:
+### **Installation**
+1. Download the game files
+2. Double-click `ToonScape-0.0.6_backup.bat` to start
+3. The game will automatically create a save file on first run
 
-- **Clean Code**: Well-structured, readable, and maintainable code
-- **Performance**: Efficient algorithms and data structures
-- **Modularity**: Clear separation of concerns and reusable components
-- **Documentation**: Comprehensive code documentation and comments
+### **How to Play**
+1. **Start New Game** - Begin your adventure in Lumbridge
+2. **Explore** - Visit different locations and discover new areas
+3. **Train Skills** - Use the training options to improve your abilities
+4. **Combat** - Fight enemies to gain experience and loot
+5. **Complete Quests** - Take on challenges for rewards
+6. **Save Progress** - Your game automatically saves as you play
 
-## License
+## 🎯 Game Controls
 
-This project is for educational and personal use only. It is inspired by RuneScape but is not affiliated with Jagex Ltd. or the official RuneScape game. Please don't sue me Jagex <3 
+### **Main Menu Navigation**
+- Use number keys (1-13) to select options
+- Navigate through different game systems
+- Access location-specific features
 
-## Acknowledgments
+### **Combat Controls**
+- Choose attack styles and targets
+- Manage health and resources
+- Use items during battle
 
-- **Jagex Ltd.**: For creating the original RuneScape game
-- **SFML Team**: For the excellent multimedia library
-- **C++ Community**: For the powerful programming language and tools
+### **Skill Training**
+- Select training methods
+- Choose skill focus areas
+- Monitor experience gains
 
-## Support
+## 🌟 Game Mechanics
 
-If you encounter any issues or have questions:
+### **Experience System**
+- Skills level from 1 to 99
+- Experience requirements increase with each level
+- Higher levels unlock new abilities and content
 
-1. Check the build instructions above
-2. Ensure all dependencies are properly installed
-3. Verify your compiler supports C++17
-4. Check that SFML is properly linked
+### **Combat Mechanics**
+- Turn-based combat with initiative
+- Equipment affects attack and defence
+- Different enemy types have unique behaviors
+- PvP combat in Wilderness areas
 
-For development questions or suggestions, feel free to open an issue or discussion.
+### **Economy System**
+- Gold-based currency
+- Item values based on rarity and utility
+- Trading through shops and Grand Exchange
+- Loot drops from enemies and activities
 
----
+### **Quest System**
+- Story-driven objectives
+- Skill requirements and item collection
+- Experience and item rewards
+- Access to new areas and content
 
-Keeping the old README available here. 
-
-OLD README STARTS BELOW -------->>> 
----
----
-
---- 
-- ~~**CMake**: Version 3.16 or higher~~
-- ~~**SFML**: Version 2.5 or higher~~
-- ~~**OpenGL**: Compatible graphics drivers~~
-
-### Windows Build Instructions
-
-1. **Install Dependencies**:
-   ```bash
-   # Install vcpkg (if not already installed)
-   git clone https://github.com/Microsoft/vcpkg.git
-   cd vcpkg
-   ./bootstrap-vcpkg.bat
-   
-   # Install SFML
-   ./vcpkg install sfml:x64-windows
-   ./vcpkg integrate install
-   ```
-
-2. **Build the Project**:
-   ```bash
-   mkdir build
-   cd build
-   cmake .. -DCMAKE_TOOLCHAIN_FILE=[path_to_vcpkg]/scripts/buildsystems/vcpkg.cmake
-   cmake --build . --config Release
-   ```
-
-### Linux Build Instructions
-
-1. **Install Dependencies**:
-   ```bash
-   # Ubuntu/Debian
-   sudo apt-get update
-   sudo apt-get install build-essential cmake libsfml-dev libopengl-dev
-   
-   # Fedora
-   sudo dnf install gcc-c++ cmake SFML-devel mesa-libGL-devel
-   
-   # Arch Linux
-   sudo pacman -S base-devel cmake sfml
-   ```
-
-2. **Build the Project**:
-   ```bash
-   mkdir build
-   cd build
-   cmake ..
-   make -j$(nproc)
-   ```
-
-### macOS Build Instructions
-
-1. **Install Dependencies**:
-   ```bash
-   # Install Homebrew (if not already installed)
-   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-   
-   # Install dependencies
-   brew install cmake sfml
-   ```
-
-2. **Build the Project**:
-   ```bash
-   mkdir build
-   cd build
-   cmake ..
-   make -j$(sysctl -n hw.ncpu)
-   ```
-
-## Project Structure
+## 📁 File Structure
 
 ```
 ToonScape/
-├── CMakeLists.txt          # Build configuration
-├── README.md               # This file
-├── include/                # Header files
-│   ├── Constants.h         # Game constants and configuration
-│   ├── Enums.h            # Game enumerations and types
-│   ├── Game.h             # Main game class
-│   ├── Player.h           # Player character class
-│   ├── Item.h             # Item system classes
-│   ├── Inventory.h        # Inventory management
-│   ├── Skill.h            # Skill system
-│   ├── Enemy.h            # Enemy AI and behavior
-│   ├── LoginScreen.h      # Login interface
-│   ├── CharacterCreation.h # Character creation interface
-│   ├── World.h            # World management
-│   ├── UI.h               # User interface system
-│   ├── Audio.h            # Audio management
-│   ├── Map.h              # Map and navigation
-│   ├── Town.h             # Town and city management
-│   ├── Arena.h            # Combat arenas
-│   ├── SpawnManager.h     # Enemy spawning
-│   ├── QuestSystem.h      # Quest management
-│   └── SaveSystem.h       # Save/load functionality
-├── src/                    # Source files
-│   ├── main.cpp           # Entry point
-│   ├── Game.cpp           # Main game implementation
-│   ├── Player.cpp         # Player implementation
-│   ├── Item.cpp           # Item system implementation
-│   ├── Inventory.cpp      # Inventory implementation
-│   ├── Skill.cpp          # Skill system implementation
-│   ├── Enemy.cpp          # Enemy implementation
-│   ├── LoginScreen.cpp    # Login screen implementation
-│   ├── CharacterCreation.cpp # Character creation implementation
-│   ├── World.cpp          # World implementation
-│   ├── UI.cpp             # UI implementation
-│   ├── Audio.cpp          # Audio implementation
-│   ├── Map.cpp            # Map implementation
-│   ├── Town.cpp           # Town implementation
-│   ├── Arena.cpp          # Arena implementation
-│   ├── SpawnManager.cpp   # Spawn manager implementation
-│   ├── QuestSystem.cpp    # Quest system implementation
-│   └── SaveSystem.cpp     # Save system implementation
-└── assets/                 # Game assets
-    ├── textures/           # Image textures
-    ├── sounds/             # Audio files
-    └── fonts/              # Font files
+├── ToonScape-0.0.6.bat (Optional) 
+|--- ToonScape0.0.6Dev.exe   # Main game file
+├── savegame.dat                    # Save file (auto-generated)
+├── assets/                         # Game assets
+│   ├── sounds/                     # Audio files
+│   └── textures/                   # Visual assets
+├── build/                          # Build files
+├── include/                        # C++ header files from other builds
+├── src/                           # C++ source files from other builds
+└── Various build and utility scripts
 ```
 
-## Controls
+## 🎵 Audio Features
 
-### General
-- **WASD/Arrow Keys**: Move character
-- **Shift**: Run/Walk toggle
-- **Escape**: Pause menu
-- **I**: Open/close inventory
-- **M**: Open/close map
-- **C**: Open/close character panel
-- **K**: Open/close skills panel
-- **Q**: Open/close quest log
+The game doesnt include a music player because the developer decided to toss it at a wall messing the whole thing up! 
+Jokes aside I will add this back later:
+- ~~**Lumbridge Theme** - Peaceful town music that could play in background~~
+- ~~**Varrock Theme** - Busy autmosphere that is similiar to the original~~
+- ~~**Wilderness Theme** - Dangerous area music~~
+- ~~**Magic Tower Theme** - Arcane ambiance~~
+- ~~**Combat Sounds** - Attack and battle effects~~
 
-### Combat
-- **Left Click**: Attack enemy
-- **Right Click**: Interact with object/enemy
-- **1-9**: Use ability/special attack
-- **Space**: Auto-attack toggle
+## 🔧 Development
 
-### Inventory
-- **Left Click**: Select item
-- **Right Click**: Use item
-- **Drag & Drop**: Move items between slots
-- **Shift + Click**: Split stack
-- **Ctrl + Click**: Quick equip
+This project demonstrates advanced Windows batch scripting techniques:
+- Complex game logic in batch files
+- File-based save systems
+- ASCII art and text-based graphics
+- Modular code structure
+- Cross-platform compatibility considerations (will need to move away from strict batch, will keep the ASCII feel to it)
 
-## Game Mechanics
+## 📜 License & Legal
 
-### Experience & Leveling
-- Skills level from 1 to 99
-- Experience follows RuneScape's formula
-- Higher levels unlock new abilities and content
-- Virtual levels can exceed 99 for certain activities
+**Important**: This is a fan-made game created for educational and entertainment purposes. It is inspired by RuneScape but is not affiliated with Jagex Ltd. or the official RuneScape game.
 
-### Combat System
-- Turn-based combat with initiative
-- Three combat styles: Melee, Ranged, Magic
-- Equipment affects attack and defence bonuses
-- Special abilities unlock at higher levels
+- **Educational Use**: Learn advanced batch scripting techniques
+- **Personal Use**: Enjoy the game on your own systems
+- **No Commercial Use**: Not for profit or commercial distribution
+- **Respect Original**: Inspired by but separate from official RuneScape
 
-### Economy
-- Gold-based economy system
-- Items have varying values based on rarity and utility
-- Trading system between players (future multiplayer)
-- Grand Exchange style market (planned)
+## 🙏 Acknowledgments
 
-### Quests
-- Story-driven quests with multiple objectives
-- Skill requirements and item collection
-- Rewards include experience, items, and access to new areas
-- Quest points system for tracking progress
+- **Jagex Ltd.** - For creating the original RuneScape game
+- **RuneScape Community** - For inspiration and nostalgia
+- **Batch Scripting Community** - For pushing the limits of what's possible
 
-## Development Status
+## 🆘 Support & Issues
 
-### Completed
-- [x] Project structure and build system
-- [x] Core class definitions and architecture
-- [x] Basic game framework
-- [x] Input handling system
-- [x] Resource management system
-- [x] Core gameplay implementation
-- [x] Graphics and rendering system
-- [x] Audio system implementation
-- [x] UI system development
-- [x] World generation and management
-- [x] Enemy AI and combat system
-- [x] Skill system implementation
-- [x] Quest system
-- [x] Save/load functionality
+If you encounter any issues:
+1. Ensure you're running on Windows
+2. Check that the batch file has proper permissions
+3. Verify all game files are present
+4. Try running as administrator if needed
 
-### In Progress
-- [ ] Performance optimization
-- [ ] Additional content and features
+## 🌟 Future Plans
 
-### Planned
-- [ ] Multiplayer support
-- [ ] Advanced AI behaviors
-- [ ] Modding system
-- [ ] Mobile port
-- [ ] Console ports
+The developer continues to work on improvements:
+- Additional locations and content
+- Enhanced combat mechanics
+- More quest lines and story content
+- Performance optimizations
+- Community feedback integration
+
+---
+
+**Ready to start your RuneScape adventure?** Download the game and begin your journey in the world of ToonScape!
+
+*"Adventure awaits in Toonscape (Jagex pls no sue<3)"* - CrypticTM 
 
 
 
