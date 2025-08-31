@@ -665,7 +665,7 @@ echo.
 
 set /p combat_choice="Choose action: "
 
-if "%combat_choice%"=="1" (
+if "!combat_choice!"=="1" (
     REM Player attacks
     call :calculate_damage attack enemy_defence
     set "player_damage=!damage!"
@@ -791,7 +791,7 @@ if "%combat_choice%"=="1" (
     goto real_combat
 )
 
-if "%combat_choice%"=="2" (
+if "!combat_choice!"=="2" (
     REM Special Attack System
     if not defined attack_xp set "attack_xp=0"
     if not defined strength_xp set "strength_xp=0"
@@ -817,13 +817,13 @@ if "%combat_choice%"=="2" (
     goto real_combat
 )
 
-if "%combat_choice%"=="3" (
+if "!combat_choice!"=="3" (
     REM Magic Combat System
     call :cast_magic_spell
     goto real_combat
 )
 
-if "%combat_choice%"=="4" (
+if "!combat_choice!"=="4" (
     REM Check for food
     call :count_item "Bread"
     if !item_count! equ 0 (
@@ -850,7 +850,7 @@ if "%combat_choice%"=="4" (
     )
 )
 
-if "%combat_choice%"=="5" (
+if "!combat_choice!"=="5" (
     REM Attempt to run
     set /a "run_chance=!random! %% 100"
     if !run_chance! lss 70 (
@@ -883,7 +883,11 @@ pause >nul
     )
 )
 
-goto real_combat
+) else (
+    echo Invalid choice! Please select 1-5.
+    timeout /t 2 >nul
+    goto real_combat
+)
 
 :special_attack
 cls
@@ -6456,7 +6460,7 @@ echo 3. Exit the dungeon
 echo.
 set /p swamp_choice="Choose action: "
 
-if "%swamp_choice%"=="1" (
+if "!swamp_choice!"=="1" (
     REM Dangerous dungeon combat
     set /a "danger_encounter=!random! %% 3"
     if !danger_encounter! equ 0 (
@@ -6489,7 +6493,7 @@ if "%swamp_choice%"=="1" (
     )
 )
 
-if "%swamp_choice%"=="2" (
+if "!swamp_choice!"=="2" (
     REM Treasure in swamp
     set /a "swamp_treasure=!random! %% 100"
     if !swamp_treasure! lss 20 (
@@ -6534,7 +6538,7 @@ if "%swamp_choice%"=="2" (
     goto deep_swamp_dungeon
 )
 
-if "%swamp_choice%"=="3" (
+if "!swamp_choice!"=="3" (
     echo.
     echo You make your way back through the swamp...
     timeout /t 1 >nul
@@ -6544,7 +6548,11 @@ if "%swamp_choice%"=="3" (
     goto explore_area
 )
 
-goto deep_swamp_dungeon
+) else (
+    echo Invalid choice! Please select 1-3.
+    timeout /t 2 >nul
+    goto deep_swamp_dungeon
+)
 
 :varrock_sewers
 cls
@@ -6565,7 +6573,7 @@ echo 3. Exit the sewers
 echo.
 set /p sewer_choice="Choose action: "
 
-if "%sewer_choice%"=="1" (
+if "!sewer_choice!"=="1" (
     REM Sewer combat encounter
     set /a "sewer_encounter=!random! %% 4"
     if !sewer_encounter! equ 0 (
@@ -6616,7 +6624,7 @@ if "%sewer_choice%"=="1" (
     )
 )
 
-if "%sewer_choice%"=="2" (
+if "!sewer_choice!"=="2" (
     REM Treasure in sewers
     set /a "sewer_treasure=!random! %% 100"
     if !sewer_treasure! lss 25 (
@@ -6692,7 +6700,7 @@ echo 3. Exit the dungeon
 echo.
 set /p taverley_choice="Choose action: "
 
-if "%taverley_choice%"=="1" (
+if "!taverley_choice!"=="1" (
     REM Elite dungeon combat
     set /a "elite_encounter=!random! %% 3"
     if !elite_encounter! equ 0 (
@@ -6725,7 +6733,7 @@ if "%taverley_choice%"=="1" (
     )
 )
 
-if "%taverley_choice%"=="2" (
+if "!taverley_choice!"=="2" (
     REM Treasure in Taverley
     set /a "taverley_treasure=!random! %% 100"
     if !taverley_treasure! lss 15 (
@@ -6770,7 +6778,7 @@ if "%taverley_choice%"=="2" (
     goto taverley_dungeon
 )
 
-if "%taverley_choice%"=="3" (
+if "!taverley_choice!"=="3" (
     echo.
     echo You make your way back to the surface...
     timeout /t 1 >nul
@@ -6780,7 +6788,11 @@ if "%taverley_choice%"=="3" (
     goto explore_area
 )
 
-goto taverley_dungeon
+) else (
+    echo Invalid choice! Please select 1-3.
+    timeout /t 2 >nul
+    goto taverley_dungeon
+)
 
 :dwarven_mines
 cls
@@ -6801,7 +6813,7 @@ echo 3. Exit the mines
 echo.
 set /p dwarven_choice="Choose action: "
 
-if "%dwarven_choice%"=="1" (
+if "!dwarven_choice!"=="1" (
     REM Mining encounter
     set /a "mine_encounter=!random! %% 4"
     if !mine_encounter! equ 0 (
@@ -6852,7 +6864,7 @@ if "%dwarven_choice%"=="1" (
     )
 )
 
-if "%dwarven_choice%"=="2" (
+if "!dwarven_choice!"=="2" (
     REM Dwarven artifacts
     set /a "dwarven_treasure=!random! %% 100"
     if !dwarven_treasure! lss 30 (
@@ -6901,7 +6913,7 @@ if "%dwarven_choice%"=="2" (
     goto dwarven_mines
 )
 
-if "%dwarven_choice%"=="3" (
+if "!dwarven_choice!"=="3" (
     echo.
     echo You head back to the surface...
     timeout /t 1 >nul
@@ -6911,7 +6923,11 @@ if "%dwarven_choice%"=="3" (
     goto explore_area
 )
 
-goto dwarven_mines
+) else (
+    echo Invalid choice! Please select 1-3.
+    timeout /t 2 >nul
+    goto dwarven_mines
+)
 
 :cook_food
 REM Replace raw food with cooked food
@@ -8966,7 +8982,12 @@ if /i "!trade_action!"=="p" (
     echo [NPC] New trade offers appear...
     pause >nul
     goto trade_chat
-) else if /i "!trade_action!"=="b" (
+) else if /i "!trade_action!"=="c" (
+    goto chat_system
+) else if /i "!trade_action!"=="4" (
+    echo.
+    echo Secret option activated! Returning to chat menu...
+    timeout /t 1 >nul
     goto chat_system
 ) else (
     echo Invalid choice!
