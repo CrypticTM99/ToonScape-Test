@@ -30,6 +30,7 @@ echo.
 echo ========================================
 echo         TOON-SCAPE LOGIN SCREEN
 echo ========================================
+echo ========================================
 echo.
 echo Welcome to TOON-SCAPE - RuneScape in Batch!
 echo.
@@ -37,6 +38,7 @@ echo This is a fan-made game by CrypticTM
 echo  You may notice some familiar characters, places, and items from Runescape
 echo.
 echo ========================================
+echo.========================================
 echo.
 echo Please enter your credentials(or create an "account"):
 echo.
@@ -215,7 +217,8 @@ echo ========================================
     echo      WELCOME TO TOON-SCAPE!
 echo ========================================
 echo.
-echo Welcome to a familiar world in Batch format! This is a fan made game by CrypticTM that is not affiliated with Jagex or RuneScape.
+echo Welcome to a familiar world in Batch format! 
+echo  This is a fan made game by CrypticTM that is not affiliated with Jagex or RuneScape.
 echo.
     echo You awaken in Lumbridge, a peaceful town.
     echo The sun is shining and birds are chirping.
@@ -7546,7 +7549,7 @@ if "!location!"=="LUMBRIDGE" (
     echo  +================================================+
     echo  ^|              LUMBRIDGE TOWN                  ^|
     echo  ^|                                                ^|
-    echo  ^|  [O]  Castle          [O]  Church             ^|
+    echo  ^|  [dOd]  Castle          [O]  Church             ^|
     echo  ^|  [NPC] Guards         [NPC] Father Aereck     ^|
     echo  ^|  [NPC] Duke Horacio   [NPC] Prayer Training   ^|
     echo  ^|                                                ^|
@@ -7602,7 +7605,7 @@ if "!location!"=="LUMBRIDGE" (
     echo  ^|  [NPC] Royal Guards   [NPC] Combat Training   ^|
     echo  ^|                                                ^|
     echo  ^|  [OBJ] Scorpion Pit   [OBJ] Mining Site       ^|
-    echo  ^|  [OBJ] Dangerous      [OBJ] Valuable Ores     ^|
+    echo  ^|  [DANGER] Dangerous   [OBJ] Valuable Ores     ^|
     echo  ^|  [OBJ] Attraction     [OBJ] Rich Deposits     ^|
     echo  ^|                                                ^|
     echo  ^|  [OBJ] Desert         [OBJ] Sand Dunes        ^|
@@ -7945,7 +7948,7 @@ if "%item_choice%"=="9" (
         )
         echo You bought tin ore for 18 coins!
     ) else (
-        echo Not enough coins!
+        echo Not enough coins in your inventory!
     )
 )
 
@@ -7959,7 +7962,7 @@ if "%item_choice%"=="10" (
         )
         echo You bought logs for 22 coins!
     ) else (
-        echo Not enough coins!
+        echo Not enough coins in your inventory!
     )
 )
 
