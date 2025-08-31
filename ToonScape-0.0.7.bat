@@ -20,6 +20,39 @@ REM     RUNECSCAPE FANMADE VERSION 0.0.6
 REM ============================================
 REM A complete RuneScape-like experience in batch!
 
+REM Show login screen first
+call :show_login_screen
+
+:show_login_screen
+cls
+color 0A
+echo.
+echo ========================================
+echo         TOON-SCAPE LOGIN SCREEN
+echo ========================================
+echo.
+echo Welcome to TOON-SCAPE - RuneScape in Batch!
+echo.
+echo This is a fan-made game by CrypticTM
+echo  You may notice some familiar characters, places, and items from Runescape
+echo.
+echo ========================================
+echo.
+echo Please enter your credentials(or create an "account"):
+echo.
+set /p "username=Username: "
+set /p "password=Password: "
+echo.
+echo [Authenticating...]
+timeout /t 2 >nul
+echo.
+echo Welcome back, !username! ^(or new player^)!
+echo.
+echo Press any key to continue to the game...
+pause >nul
+cls
+call :draw_title_screen
+
 REM Initialize game data
 if not exist "savegame.dat" (
     REM Create new game save
@@ -27,6 +60,19 @@ if not exist "savegame.dat" (
     (
     echo !gamemode!^>LUMBRIDGE^>1^>10^>10^>0^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>50^>Bronze Sword,Wooden Shield,Bread,Health Potion^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>1
     ) > savegame.dat
+)
+
+REM Check if character data exists
+if not exist "character.dat" (
+    set "character_created=0"
+) else (
+    set "character_created=1"
+    for /f "tokens=1-4 delims=>" %%a in (character.dat) do (
+        set "player_name=%%a"
+        set "player_gender=%%b"
+        set "player_identity=%%c"
+        set "player_hair_color=%%d"
+    )
 )
 
 REM Load game data
@@ -7336,11 +7382,83 @@ REM     ASCII GRAPHICS FUNCTIONS
 REM ============================================
 
 :draw_title_screen
+cls
+color 0A
 echo.
-echo.   
-echo                           TOON-SCAPE - RuneScape in Batch!
-echo                             Created by CrypticTM 
 echo.
+echo    ========================================    ========================================
+echo    ========================================    ========================================
+echo    ========================================    ========================================
+echo    ========================================    ========================================
+echo    ========================================    ========================================
+echo    ========================================    ========================================
+echo.
+echo                                    ==   TOON-SCAPE   ==
+echo.
+echo                                  RUNESCAPE IN BATCH FORMAT
+echo.
+echo                            ========================================
+echo                            ========================================
+echo                            ========================================
+echo.
+echo                                    Created by CrypticTM
+echo                              Fan-made- Not affiliated
+echo                                   w/ Jagex or RuneScape
+echo.
+echo.
+echo                           ========================================
+echo.
+echo                                    [1] Start New Game
+echo                                    [2] Load Saved Game
+echo                                    [3] View Credits
+echo                                    [4] Exit Game
+echo.
+echo                           ========================================
+echo.
+set /p "title_choice=Choose an option (1-4): "
+
+if "!title_choice!"=="1" (
+    echo.
+    echo Starting new adventure...
+    timeout /t 2 >nul
+    cls
+    goto :eof
+) else if "!title_choice!"=="2" (
+    echo.
+    echo Loading saved game...
+    timeout /t 2 >nul
+    cls
+    goto :eof
+) else if "!title_choice!"=="3" (
+    cls
+    echo.
+    echo ========================================
+    echo                CREDITS
+    echo ========================================
+    echo.
+    echo Game Design and Programming: CrypticTM
+    echo Game Concept: RuneScape Fan Game
+    echo Platform: Windows Batch Script
+    echo Version: 0.0.6
+    echo.
+    echo This is a fan-made game created for educational
+    echo and entertainment purposes. It is not affiliated
+    echo with Jagex Ltd. or RuneScape.
+    echo.
+    echo Press any key to return to title screen...
+    pause >nul
+    call :draw_title_screen
+) else if "!title_choice!"=="4" (
+    echo.
+    echo Thank you for playing TOON-SCAPE!
+    echo.
+    pause >nul
+    exit
+) else (
+    echo Invalid choice! Please select 1-4.
+    timeout /t 2 >nul
+    call :draw_title_screen
+)
 goto :eof
 
 :draw_location_header
