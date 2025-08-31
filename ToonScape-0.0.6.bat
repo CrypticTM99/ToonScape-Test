@@ -1,7 +1,9 @@
 @echo off
-title TOON-SCAPE - RuneScape in Batch!
-color 0A
 setlocal enabledelayedexpansion
+title TOON-SCAPE - RuneScape in Batch!
+
+:start_game
+color 0A
 
 REM ============================================
 REM     TOON-SCAPE - FULL SINGLEPLAYER RUNESCAPE EXPERIENCE
@@ -23,12 +25,12 @@ if not exist "savegame.dat" (
     REM Create new game save
     set "gamemode=NEWGAME"
     (
-    echo !gamemode!^>LUMBRIDGE^>1^>10^>10^>0^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>50^>Bronze Sword,Wooden Shield,Bread,Health Potion^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0
+    echo !gamemode!^>LUMBRIDGE^>1^>10^>10^>0^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>1^>50^>Bronze Sword,Wooden Shield,Bread,Health Potion^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>0^>1
     ) > savegame.dat
 )
 
 REM Load game data
-for /f "tokens=1-28 delims=>" %%a in (savegame.dat) do (
+for /f "tokens=1-31 delims=>" %%a in (savegame.dat) do (
     set "gamemode=%%a"
     set "location=%%b"
     set "level=%%c"
@@ -184,7 +186,7 @@ echo.
     REM Update save file to mark as started
     set "gamemode=STARTED"
     (
-    echo !gamemode!^>!location!^>!level!^>!maxhp!^>!currenthp!^>!experience!^>!attack!^>!strength!^>!defence!^>!hitpoints!^>!ranged!^>!magic!^>!woodcutting!^>!fishing!^>!mining!^>!cooking!^>!smithing!^>!crafting!^>!fletching!^>!herblore!^>!prayer!^>!slayer!^>!farming!^>!coins!^>!inventory!^>!quest_cook!
+    echo !gamemode!^>!location!^>!level!^>!maxhp!^>!currenthp!^>!experience!^>!attack!^>!strength!^>!defence!^>!hitpoints!^>!ranged!^>!magic!^>!woodcutting!^>!fishing!^>!mining!^>!cooking!^>!smithing!^>!crafting!^>!fletching!^>!herblore!^>!prayer!^>!slayer!^>!farming!^>!firemaking!^>!treasure_hunting!^>!coins!^>!inventory!^>!quest_cook!
     ) > savegame.dat
 ) else (
 echo.
@@ -247,19 +249,19 @@ echo 8. Quest Journal
 echo 9. Travel to Another Location
 
 REM Location-specific options
-if "!location!"=="VARROCK" echo 10. Grand Exchange (GE)
-if "!location!"=="LUMBRIDGE" echo 10. Player House
-if "!location!"=="LUMBRIDGE" echo 11. Crafting Workshop
-if "!location!"=="VARROCK" echo 11. Crafting Workshop
-if "!location!"=="FALADOR" echo 11. Crafting Workshop
-if "!location!"=="ALKHARID" echo 11. Crafting Workshop
-if "!location!"=="LUMBRIDGE" echo 12. Bank
-if "!location!"=="VARROCK" echo 12. Bank
-if "!location!"=="FALADOR" echo 12. Bank
-if "!location!"=="ALKHARID" echo 12. Bank
-if "!location!"=="MAGETOWER" echo 10. Magic Shop
-if "!location!"=="MAGETOWER" echo 11. Chat System
-if "!location!"=="MAGETOWER" echo 12. Rune Crafting
+if "!location!"=="VARROCK" echo 11. Grand Exchange (GE)
+if "!location!"=="LUMBRIDGE" echo 11. Player House
+if "!location!"=="LUMBRIDGE" echo 12. Crafting Workshop
+if "!location!"=="VARROCK" echo 12. Crafting Workshop
+if "!location!"=="FALADOR" echo 12. Crafting Workshop
+if "!location!"=="ALKHARID" echo 12. Crafting Workshop
+if "!location!"=="LUMBRIDGE" echo 13. Bank
+if "!location!"=="VARROCK" echo 13. Bank
+if "!location!"=="FALADOR" echo 13. Bank
+if "!location!"=="ALKHARID" echo 13. Bank
+if "!location!"=="MAGETOWER" echo 11. Magic Shop
+if "!location!"=="MAGETOWER" echo 12. Chat System
+if "!location!"=="MAGETOWER" echo 13. Rune Crafting
 
 echo 0. Save and Exit Game
 echo.
@@ -287,23 +289,23 @@ if "%choice%"=="9" goto travel_menu
 
 REM Handle location-specific options
 if "!location!"=="VARROCK" (
-    if "%choice%"=="10" goto grand_exchange
-    if "%choice%"=="11" goto crafting_workshop
-    if "%choice%"=="12" goto bank
+    if "%choice%"=="11" goto grand_exchange
+    if "%choice%"=="12" goto crafting_workshop
+    if "%choice%"=="13" goto bank
 ) else if "!location!"=="LUMBRIDGE" (
-    if "%choice%"=="10" goto player_house
-    if "%choice%"=="11" goto crafting_workshop
-    if "%choice%"=="12" goto bank
+    if "%choice%"=="11" goto player_house
+    if "%choice%"=="12" goto crafting_workshop
+    if "%choice%"=="13" goto bank
 ) else if "!location!"=="FALADOR" (
-    if "%choice%"=="11" goto crafting_workshop
-    if "%choice%"=="12" goto bank
+    if "%choice%"=="12" goto crafting_workshop
+    if "%choice%"=="13" goto bank
 ) else if "!location!"=="ALKHARID" (
-    if "%choice%"=="11" goto crafting_workshop
-    if "%choice%"=="12" goto bank
+    if "%choice%"=="12" goto crafting_workshop
+    if "%choice%"=="13" goto bank
 ) else if "!location!"=="MAGETOWER" (
-    if "%choice%"=="10" goto magic_shop
-    if "%choice%"=="11" goto chat_system
-    if "%choice%"=="12" goto rune_crafting
+    if "%choice%"=="11" goto magic_shop
+    if "%choice%"=="12" goto chat_system
+    if "%choice%"=="13" goto rune_crafting
 )
 
 if "%choice%"=="0" goto exit_game
@@ -339,6 +341,8 @@ echo Hitpoints: !hitpoints!
 echo Ranged: !ranged!
 echo Magic: !magic!
 echo.
+echo Settings:
+echo Music: Disabled (Music system removed)
 echo.
 echo Press any key to return to main menu...
 pause >nul
@@ -578,7 +582,7 @@ echo        COMBAT: !enemy_name!
 echo ========================================
 echo.
 echo You encounter a !enemy_name!!
-echo.
+
 echo Enemy Stats:
 echo Level: !enemy_level!
 echo Hitpoints: !enemy_currenthp!/!enemy_maxhp!
@@ -3725,7 +3729,7 @@ echo.
 
 REM Save all game data
 (
-echo !gamemode!^>!location!^>!level!^>!maxhp!^>!currenthp!^>!experience!^>!attack!^>!strength!^>!defence!^>!hitpoints!^>!ranged!^>!magic!^>!woodcutting!^>!fishing!^>!mining!^>!cooking!^>!smithing!^>!crafting!^>!fletching!^>!herblore!^>!prayer!^>!slayer!^>!farming!^>!firemaking!^>!treasure_hunting!^>!coins!^>!inventory!^>!quest_cook!
+echo !gamemode!^>!location!^>!level!^>!maxhp!^>!currenthp!^>!experience!^>!attack!^>!strength!^>!defence!^>!hitpoints!^>!ranged!^>!magic!^>!woodcutting!^>!fishing!^>!mining!^>!cooking!^>!smithing!^>!crafting!^>!fletching!^>!herblore!^>!prayer!^>!slayer!^>!farming!^>!firemaking!^>!treasure_hunting!^>!coins!^>!inventory!^>!quest_cook!^>!music_enabled!^>!music_volume!^>!current_track!
 ) > savegame.dat
 
 REM Verify save file was created
@@ -8758,6 +8762,366 @@ if "!rune_choice!"=="1" (
 
 pause >nul
 goto rune_crafting
+
+:music_player
+cls
+call :draw_music_header
+echo.
+echo ========================================
+echo         MUSIC PLAYER
+echo ========================================
+echo.
+REM Initialize music variables if not set
+if not defined music_volume set "music_volume=50"
+if not defined current_track set "current_track=Lumbridge"
+
+echo Current Status: 
+if "!music_enabled!"=="1" (
+    echo Music: [ON] - Background music is playing
+    echo Current Track: !current_track! Theme
+    echo Volume: !music_volume!%%
+    echo Status: Running with admin privileges
+) else (
+    echo Music: [OFF] - Background music is disabled
+    echo Last Track: !current_track! Theme
+    echo Volume: !music_volume!%%
+    echo Status: No admin privileges - Music requires admin access
+    echo.
+    echo Note: To enable music, restart the game and choose 'Y' for admin privileges
+)
+echo.
+echo Music Options:
+echo 1. Toggle Music On/Off
+echo 2. Change Music Track
+echo 3. Adjust Volume
+echo 4. Back to main menu
+echo.
+set /p music_choice="Choose option: "
+
+if "%music_choice%"=="1" (
+    if "!music_enabled!"=="1" (
+        set "music_enabled=0"
+        echo.
+        echo Music turned OFF
+        echo Background music has been disabled.
+        call :stop_music
+    ) else (
+        echo.
+        echo Cannot enable music without admin privileges!
+        echo.
+        echo To enable music:
+        echo 1. Exit the game
+        echo 2. Restart the game
+        echo 3. Choose 'Y' when asked about admin privileges
+        echo.
+        echo Music will remain disabled for this session.
+        pause >nul
+        goto music_player
+    )
+    echo.
+    echo Music settings saved automatically.
+    REM Save game to persist music settings
+    call :save_game_settings
+    pause >nul
+    goto music_player
+)
+
+if "%music_choice%"=="2" (
+    echo.
+    echo Available Music Tracks:
+    echo 1. Lumbridge Theme (Peaceful town music)
+    echo 2. Varrock Theme (Busy city music)
+    echo 3. Combat Theme (Battle music)
+    echo 4. Wilderness Theme (Dangerous area music)
+    echo 5. Mage Tower Theme (Magical music)
+    echo 6. Random Track
+    echo 7. Back to music player
+    echo.
+    set /p track_choice="Choose track: "
+    
+    if "!track_choice!"=="1" (
+        set "current_track=Lumbridge"
+        echo.
+        echo Now playing: Lumbridge Theme
+        if "!music_enabled!"=="1" call :play_lumbridge_music
+        echo Track changed to Lumbridge Theme
+    ) else if "!track_choice!"=="2" (
+        set "current_track=Varrock"
+        echo.
+        echo Now playing: Varrock Theme
+        if "!music_enabled!"=="1" call :play_varrock_music
+        echo Track changed to Varrock Theme
+    ) else if "!track_choice!"=="3" (
+        set "current_track=Combat"
+        echo.
+        echo Now playing: Combat Theme
+        if "!music_enabled!"=="1" call :play_combat_music
+        echo Track changed to Combat Theme
+    ) else if "!track_choice!"=="4" (
+        set "current_track=Wilderness"
+        echo.
+        echo Now playing: Wilderness Theme
+        if "!music_enabled!"=="1" call :play_wilderness_music
+        echo Track changed to Wilderness Theme
+    ) else if "!track_choice!"=="5" (
+        set "current_track=MageTower"
+        echo.
+        echo Now playing: Mage Tower Theme
+        if "!music_enabled!"=="1" call :play_magetower_music
+        echo Track changed to Mage Tower Theme
+    ) else if "!track_choice!"=="6" (
+        set /a "random_track=!random! %% 5 + 1"
+        if !random_track! equ 1 (
+            set "current_track=Lumbridge"
+            echo.
+            echo Now playing: Lumbridge Theme (Random)
+            if "!music_enabled!"=="1" call :play_lumbridge_music
+            echo Random track selected: Lumbridge Theme
+        ) else if !random_track! equ 2 (
+            set "current_track=Varrock"
+            echo.
+            echo Now playing: Varrock Theme (Random)
+            if "!music_enabled!"=="1" call :play_varrock_music
+            echo Random track selected: Varrock Theme
+        ) else if !random_track! equ 3 (
+            set "current_track=Combat"
+            echo.
+            echo Now playing: Combat Theme (Random)
+            if "!music_enabled!"=="1" call :play_combat_music
+            echo Random track selected: Combat Theme
+        ) else if !random_track! equ 4 (
+            set "current_track=Wilderness"
+            echo.
+            echo Now playing: Wilderness Theme (Random)
+            if "!music_enabled!"=="1" call :play_wilderness_music
+            echo Random track selected: Wilderness Theme
+        ) else (
+            set "current_track=MageTower"
+            echo.
+            echo Now playing: Mage Tower Theme (Random)
+            if "!music_enabled!"=="1" call :play_magetower_music
+            echo Random track selected: Mage Tower Theme
+        )
+    ) else if "!track_choice!"=="7" (
+        goto music_player
+    ) else (
+        echo Invalid choice!
+        pause >nul
+        goto music_player
+    )
+    echo.
+    echo Track selection saved automatically.
+    REM Save game to persist track selection
+    call :save_game_settings
+    pause >nul
+    goto music_player
+)
+
+if "%music_choice%"=="3" (
+    echo.
+    echo Volume Control:
+    echo 1. Low Volume (25%%)
+    echo 2. Medium Volume (50%%)
+    echo 3. High Volume (75%%)
+    echo 4. Maximum Volume (100%%)
+    echo 5. Back to music player
+    echo.
+    set /p volume_choice="Choose volume level: "
+    
+    if "!volume_choice!"=="1" (
+        set "music_volume=25"
+        echo.
+        echo Volume set to 25%%
+        echo Note: Volume control affects future music playback
+    ) else if "!volume_choice!"=="2" (
+        set "music_volume=50"
+        echo.
+        echo Volume set to 50%%
+        echo Note: Volume control affects future music playback
+    ) else if "!volume_choice!"=="3" (
+        set "music_volume=75"
+        echo.
+        echo Volume set to 75%%
+        echo Note: Volume control affects future music playback
+    ) else if "!volume_choice!"=="4" (
+        set "music_volume=100"
+        echo.
+        echo Volume set to 100%%
+        echo Note: Volume control affects future music playback
+    ) else if "!volume_choice!"=="5" (
+        goto music_player
+    ) else (
+        echo Invalid choice!
+        pause >nul
+        goto music_player
+    )
+    echo.
+    echo Volume settings saved automatically.
+    REM Save game to persist volume settings
+    call :save_game_settings
+    pause >nul
+    goto music_player
+)
+
+if "%music_choice%"=="4" goto main_menu
+
+echo Invalid choice!
+pause >nul
+goto music_player
+
+:draw_music_header
+echo.
+echo  +================================================+
+echo  ^|               MUSIC PLAYER                   ^|
+echo  ^|                                                ^|
+echo  ^|  [♪]  Music       [♪]  Volume Control        ^|
+echo  ^|  [♪]  Tracks      [♪]  Playlist              ^|
+echo  ^|  [♪]  Settings    [♪]  Now Playing           ^|
+echo  ^|                                                ^|
+echo  ^|  +==========================================+  ^|
+echo  ^|  ^|           AUDIO CONTROLS                ^|  ^|
+echo  ^|  ^|  [ON/OFF] [Track] [Vol] [Back]        ^|  ^|
+echo  ^|  +==========================================+  ^|
+echo  +================================================+
+goto :eof
+
+:play_music
+REM Play background music based on current location
+REM Only play if music is enabled
+if "!music_enabled!"=="1" (
+    if "!location!"=="LUMBRIDGE" (
+        call :play_lumbridge_music
+    ) else if "!location!"=="VARROCK" (
+        call :play_varrock_music
+    ) else if "!location!"=="WILDERNESS" (
+        call :play_wilderness_music
+    ) else if "!location!"=="MAGETOWER" (
+        call :play_magetower_music
+    ) else (
+        call :play_combat_music
+    )
+) else (
+    echo [♪] Music is disabled for this session.
+)
+goto :eof
+
+:play_lumbridge_music
+REM Play peaceful Lumbridge theme using PowerShell SoundPlayer (working method)
+REM Skip if audio system is disabled
+if "!audio_system!"=="disabled" (
+    echo [♪] Audio system disabled - running without admin privileges
+    timeout /t 2 >nul
+    goto :eof
+)
+
+echo [♪] Playing: Lumbridge Theme - Peaceful town music
+if exist "assets\sounds\lumbridge_theme.wav" (
+    powershell -Command "try { (New-Object Media.SoundPlayer 'assets\sounds\lumbridge_theme.wav').PlaySync() } catch { $null }" 2>nul
+) else (
+    REM Fallback to system sounds for peaceful theme
+    rundll32 user32.dll,MessageBeep 0x40
+    timeout /t 1 >nul
+    rundll32 user32.dll,MessageBeep 0x40
+    echo [♪] A gentle melody fills the air...
+)
+timeout /t 2 >nul
+goto :eof
+
+:play_varrock_music
+REM Play busy city theme using PowerShell SoundPlayer (working method)
+REM Skip if audio system is disabled
+if "!audio_system!"=="disabled" (
+    echo [♪] Audio system disabled - running without admin privileges
+    timeout /t 2 >nul
+    goto :eof
+)
+
+echo [♪] Playing: Varrock Theme - Busy city music
+if exist "assets\sounds\varrock_theme.mp3" (
+    powershell -Command "try { (New-Object Media.SoundPlayer 'assets\sounds\varrock_theme.mp3').PlaySync() } catch { $null }" 2>nul
+) else (
+    REM Fallback to system sounds for busy city theme
+    rundll32 user32.dll,MessageBeep 0x30
+    timeout /t 1 >nul
+    rundll32 user32.dll,MessageBeep 0x30
+    echo [♪] The sounds of a bustling marketplace echo around you...
+)
+timeout /t 2 >nul
+goto :eof
+
+:play_combat_music
+REM Play combat theme using PowerShell SoundPlayer (working method)
+REM Skip if audio system is disabled
+if "!audio_system!"=="disabled" (
+    echo [♪] Audio system disabled - running without admin privileges
+    timeout /t 2 >nul
+    goto :eof
+)
+
+echo [♪] Playing: Combat Theme - Battle music
+if exist "assets\sounds\combat_theme.mp3" (
+    powershell -Command "try { (New-Object Media.SoundPlayer 'assets\sounds\combat_theme.mp3').PlaySync() } catch { $null }" 2>nul
+) else (
+    REM Fallback to system sounds for combat theme
+    rundll32 user32.dll,MessageBeep 0x40
+    timeout /t 1 >nul
+    rundll32 user32.dll,MessageBeep 0x30
+    echo [♪] The drums of war beat in your ears...
+)
+timeout /t 2 >nul
+goto :eof
+
+:play_wilderness_music
+REM Play dangerous wilderness theme using PowerShell SoundPlayer (working method)
+REM Skip if audio system is disabled
+if "!audio_system!"=="disabled" (
+    echo [♪] Audio system disabled - running without admin privileges
+    timeout /t 2 >nul
+    goto :eof
+)
+
+echo [♪] Playing: Wilderness Theme - Dangerous area music
+if exist "assets\sounds\wilderness_theme.mp3" (
+    powershell -Command "try { (New-Object Media.SoundPlayer 'assets\sounds\wilderness_theme.mp3').PlaySync() } catch { $null }" 2>nul
+) else (
+    REM Fallback to system sounds for wilderness theme
+    rundll32 user32.dll,MessageBeep 0x20
+    timeout /t 1 >nul
+    rundll32 user32.dll,MessageBeep 0x20
+    echo [♪] Dark and foreboding tones surround you...
+)
+timeout /t 2 >nul
+goto :eof
+
+:play_magetower_music
+REM Play magical theme using PowerShell SoundPlayer (working method)
+REM Skip if audio system is disabled
+if "!audio_system!"=="disabled" (
+    echo [♪] Audio system disabled - running without admin privileges
+    timeout /t 2 >nul
+    goto :eof
+)
+
+echo [♪] Playing: Mage Tower Theme - Magical music
+if exist "assets\sounds\magetower_theme.wav" (
+    powershell -Command "try { (New-Object Media.SoundPlayer 'assets\sounds\magetower_theme.wav').PlaySync() } catch { $null }" 2>nul
+) else (
+    REM Fallback to system sounds for magical theme
+    rundll32 user32.dll,MessageBeep 0x50
+    timeout /t 1 >nul
+    rundll32 user32.dll,MessageBeep 0x20
+    echo [♪] Mystical melodies dance through the air...
+)
+timeout /t 2 >nul
+goto :eof
+
+:stop_music
+REM Stop any playing music
+echo [♪] Music stopped
+echo [♪] Silence returns...
+REM Note: PowerShell SoundPlayer automatically stops when the command completes
+timeout /t 1 >nul
+goto :eof
 
 :draw_mage_tower_header
 echo.
