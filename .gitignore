@@ -1,32 +1,266 @@
-# Prerequisites
-*.d
+# ============================================
+# TOONSCAPE FANGAME BY CRYPTICTM - (NEW)GITIGNORE FOR PRIVATE INFO 
+# ============================================
+# This file prevents private/sensitive information and unnecessary files
+# from being committed to the git repository
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+# ============================================
+# PRIVATE INFORMATION & SAVE FILES
+# ============================================
+# Player save files and progress data
+*.sav
+*.save
+*.dat
+*.data
+*.txt
+!README.txt
+!CHANGELOG.txt
+!LICENSE.txt
 
-# Precompiled Headers
-*.gch
-*.pch
+# Game state files
+game_state.*
+player_data.*
+inventory.*
+skills.*
+quests.*
+location.*
+coins.*
+level.*
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
+# ============================================
+# WINDOWS SYSTEM FILES
+# ============================================
+# Windows thumbnail cache files
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
 
-# Fortran module files
-*.mod
-*.smod
+# Dump file
+*.stackdump
 
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
+# Folder config file
+[Dd]esktop.ini
 
-# Executables
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk
+
+# ============================================
+# TEMPORARY FILES
+# ============================================
+# Temporary files created by text editors
+*~
+*.tmp
+*.temp
+*.swp
+*.swo
+*#
+
+# Backup files
+*.bak
+*.backup
+*_backup.*
+*_old.*
+*_previous.*
+
+# Auto-save files
+*.autosave
+*.auto
+
+# ============================================
+# DEVELOPMENT & EDITOR FILES
+# ============================================
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# Notepad++
+*.session
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+.vim/
+*.viminfo
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# ============================================
+# LOG FILES
+# ============================================
+# Game logs and debugging
+*.log
+*.log.*
+logs/
+debug/
+error_logs/
+
+# ============================================
+# CONFIGURATION FILES WITH SENSITIVE DATA
+# ============================================
+# Configuration files that might contain private info
+config.ini
+settings.ini
+preferences.ini
+*.cfg
+*.conf
+
+# API keys and tokens
+*.key
+*.token
+*.secret
+secrets.txt
+api_keys.txt
+
+# ============================================
+# MEDIA & ASSETS (OPTIONAL)
+# ============================================
+# Uncomment these if you don't want to track media files
+# *.mp3
+# *.wav
+# *.ogg
+# *.png
+# *.jpg
+# *.jpeg
+# *.gif
+# *.bmp
+# *.ico
+
+# ============================================
+# COMPILED & EXECUTABLE FILES
+# ============================================
+# Compiled batch files (if you ever compile them)
 *.exe
-*.out
-*.app
+*.com
+*.bat.bak
+
+# ============================================
+# VERSION CONTROL
+# ============================================
+# Git internal files (shouldn't be needed, but just in case)
+.git/
+.gitignore.bak
+
+# ============================================
+# OPERATING SYSTEM SPECIFIC
+# ============================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ============================================
+# GAME-SPECIFIC FILES TO IGNORE
+# ============================================
+# High scores and leaderboards
+highscores.*
+leaderboard.*
+scores.*
+
+# Player statistics
+stats.*
+statistics.*
+player_stats.*
+
+# Chat logs (if multiplayer features are added)
+chat_logs/
+chat_history.*
+
+# Mod files and custom content
+mods/
+custom/
+user_content/
+
+# ============================================
+# BACKUP & ARCHIVE FILES
+# ============================================
+# Archive files
+*.zip
+*.rar
+*.7z
+*.tar
+*.gz
+*.bz2
+
+# Backup archives
+backup_*.zip
+backup_*.rar
+*_backup_*.zip
+
+# ============================================
+# TESTING & DEVELOPMENT
+# ============================================
+# Test files
+test_*
+*_test.*
+testing/
+debug_versions/
+
+# Development notes
+dev_notes.txt
+todo.txt
+ideas.txt
+notes.txt
+
+# ============================================
+# EXCEPTIONS - FILES TO ALWAYS TRACK
+# ============================================
+# Always track these important files
+!README.md
+!README.txt
+!CHANGELOG.md
+!CHANGELOG.txt
+!LICENSE
+!LICENSE.txt
+!CONTRIBUTING.md
+!CONTRIBUTING.txt
+
+# Always track the main game file
+!ToonScape-*.bat
+!ToonScape-*.cmd
+
+# Always track documentation
+!docs/
+!*.md
+!*.txt

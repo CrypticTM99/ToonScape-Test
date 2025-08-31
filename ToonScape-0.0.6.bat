@@ -246,7 +246,8 @@ echo 5. Combat Training
 echo 6. Visit Local Shop
 echo 7. Train Skills
 echo 8. Quest Journal
-echo 9. Travel to Another Location
+echo 9. Quest Hub (Accept New Quests)
+echo 10. Travel to Another Location
 
 REM Location-specific options
 if "!location!"=="VARROCK" echo 11. Grand Exchange (GE)
@@ -285,7 +286,8 @@ if "%choice%"=="5" goto combat_training
 if "%choice%"=="6" goto visit_shop
 if "%choice%"=="7" goto train_skills
 if "%choice%"=="8" goto quest_log
-if "%choice%"=="9" goto travel_menu
+if "%choice%"=="9" goto quest_hub
+if "%choice%"=="10" goto travel_menu
 
 REM Handle location-specific options
 if "!location!"=="VARROCK" (
@@ -3594,43 +3596,197 @@ if "%quest_cook%"=="2" (
     echo.
 )
 
+REM Show other active quests
+if defined quest_sheep_shearer if "%quest_sheep_shearer%"=="1" (
+    echo 2. [IN PROGRESS] Sheep Shearer
+    echo    You need to collect: 20 Balls of Wool
+    echo    Status: In Progress
+    echo.
+)
+
+if defined quest_rune_mysteries if "%quest_rune_mysteries%"=="1" (
+    echo 3. [IN PROGRESS] Rune Mysteries
+    echo    You need to collect: 10 Air Runes, 5 Mind Runes, 3 Chaos Runes
+    echo    Status: In Progress
+    echo.
+)
+
+if defined quest_dragon_slayer if "%quest_dragon_slayer%"=="1" (
+    echo 4. [IN PROGRESS] Dragon Slayer
+    echo    You need to defeat the dragon in Crandor
+    echo    Status: In Progress
+    echo.
+)
+
+if defined quest_lost_city if "%quest_lost_city%"=="1" (
+    echo 5. [IN PROGRESS] Lost City
+    echo    You need to craft special items and cut ancient trees
+    echo    Status: In Progress
+    echo.
+)
+
+if defined quest_restless_ghost if "%quest_restless_ghost%"=="1" (
+    echo 6. [IN PROGRESS] The Restless Ghost
+    echo    You need to help the ghost find peace
+    echo    Status: In Progress
+    echo.
+)
+
+if defined quest_imp_catcher if "%quest_imp_catcher%"=="1" (
+    echo 7. [IN PROGRESS] Imp Catcher
+    echo    You need to collect: Red, Yellow, Blue, and Black Beads
+    echo    Status: In Progress
+    echo.
+)
+
+if defined quest_white_knight if "%quest_white_knight%"=="1" (
+    echo 8. [IN PROGRESS] White Knight Quest
+    echo    You need to investigate dark magic reports
+    echo    Status: In Progress
+    echo.
+)
+
+if defined quest_prince_ali if "%quest_prince_ali%"=="1" (
+    echo 9. [IN PROGRESS] Prince Ali Rescue
+    echo    You need to rescue Prince Ali from kidnappers
+    echo    Status: In Progress
+    echo.
+)
+
+if defined quest_pirates_treasure if "%quest_pirates_treasure%"=="1" (
+    echo 10. [IN PROGRESS] Pirate's Treasure
+    echo    You need to find the missing map pieces and solve riddles
+    echo    Status: In Progress
+    echo.
+)
+
 echo Available Quests:
 echo.
-echo 2. [AVAILABLE] Sheep Shearer
-echo    Collect wool from sheep for a farmer
-echo    Talk to the farmer north of Lumbridge
-echo    Requirements: None
-echo    Reward: 60 coins, 150 Crafting XP
+REM Sheep Shearer
+if defined quest_sheep_shearer if "%quest_sheep_shearer%"=="2" (
+    echo 2. [COMPLETED] Sheep Shearer
+    echo    You successfully collected the wool!
+    echo    Reward: 60 coins, 150 Crafting XP
+    echo    Status: Completed
+) else (
+    echo 2. [AVAILABLE] Sheep Shearer
+    echo    Collect wool from sheep for a farmer
+    echo    Talk to Farmer Fred north of Lumbridge
+    echo    Requirements: None
+    echo    Reward: 60 coins, 150 Crafting XP
+)
 echo.
-echo 3. [AVAILABLE] Rune Mysteries
-echo    Investigate mysterious runes found near Lumbridge
-echo    Talk to the wizard in the Wizards' Tower
-echo    Requirements: None
-echo    Reward: 1,000 XP in all skills
+REM Rune Mysteries
+if defined quest_rune_mysteries if "%quest_rune_mysteries%"=="2" (
+    echo 3. [COMPLETED] Rune Mysteries
+    echo    You successfully investigated the runes!
+    echo    Reward: 1,000 XP in all skills
+    echo    Status: Completed
+) else (
+    echo 3. [AVAILABLE] Rune Mysteries
+    echo    Investigate mysterious runes found near Lumbridge
+    echo    Talk to Wizard Traiborn in the Wizards' Tower
+    echo    Requirements: None
+    echo    Reward: 1,000 XP in all skills
+)
 echo.
-echo 4. [AVAILABLE] Dragon Slayer
-echo    Slay the dragon in Crandor
-echo    Talk to the Guildmaster in Champions' Guild
-echo    Requirements: Combat level 30+
-echo    Reward: Dragon Slayer Cape, 18,650 XP
+REM Dragon Slayer
+if defined quest_dragon_slayer if "%quest_dragon_slayer%"=="2" (
+    echo 4. [COMPLETED] Dragon Slayer
+    echo    You successfully defeated the dragon!
+    echo    Reward: Dragon Slayer Cape, 18,650 XP
+    echo    Status: Completed
+) else (
+    echo 4. [AVAILABLE] Dragon Slayer
+    echo    Slay the dragon in Crandor
+    echo    Talk to the Guildmaster in Champions' Guild
+    echo    Requirements: Combat level 30+
+    echo    Reward: Dragon Slayer Cape, 18,650 XP
+)
 echo.
-echo 5. [AVAILABLE] Lost City
-echo    Find the legendary lost city of Zanaris
-echo    Talk to the adventurers in Lumbridge
-echo    Requirements: Crafting level 31+, Woodcutting level 36+
-echo    Reward: Dramen Staff, 5,000 XP
+REM Lost City
+if defined quest_lost_city if "%quest_lost_city%"=="2" (
+    echo 5. [COMPLETED] Lost City
+    echo    You successfully found Zanaris!
+    echo    Reward: Dramen Staff, 5,000 XP
+    echo    Status: Completed
+) else (
+    echo 5. [AVAILABLE] Lost City
+    echo    Find the legendary lost city of Zanaris
+    echo    Talk to the adventurers near Lumbridge Swamp
+    echo    Requirements: Crafting level 31+, Woodcutting level 36+
+    echo    Reward: Dramen Staff, 5,000 XP
+)
 echo.
-echo 6. [AVAILABLE] The Restless Ghost
-echo    Help a ghost find peace in Lumbridge
-echo    Talk to Father Aereck in the Lumbridge Church
-echo    Requirements: None
-echo    Reward: 125 Prayer XP, Amulet of Ghostspeak
+REM The Restless Ghost
+if defined quest_restless_ghost if "%quest_restless_ghost%"=="2" (
+    echo 6. [COMPLETED] The Restless Ghost
+    echo    You successfully helped the ghost find peace!
+    echo    Reward: 125 Prayer XP, Amulet of Ghostspeak
+    echo    Status: Completed
+) else (
+    echo 6. [AVAILABLE] The Restless Ghost
+    echo    Help a ghost find peace in Lumbridge
+    echo    Talk to Father Aereck in the Lumbridge Church
+    echo    Requirements: None
+    echo    Reward: 125 Prayer XP, Amulet of Ghostspeak
+)
 echo.
-echo 7. [AVAILABLE] Imp Catcher
-echo    Catch imps and return their beads
-echo    Talk to Wizard Mizgog in the Wizards' Tower
-echo    Requirements: None
-echo    Reward: 875 Magic XP, Amulet of Accuracy
+REM Imp Catcher
+if defined quest_imp_catcher if "%quest_imp_catcher%"=="2" (
+    echo 7. [COMPLETED] Imp Catcher
+    echo    You successfully caught all the imps!
+    echo    Reward: 875 Magic XP, Amulet of Accuracy
+    echo    Status: Completed
+) else (
+    echo 7. [AVAILABLE] Imp Catcher
+    echo    Catch imps and return their beads
+    echo    Talk to Wizard Mizgog in the Wizards' Tower
+    echo    Requirements: None
+    echo    Reward: 875 Magic XP, Amulet of Accuracy
+)
+echo.
+REM White Knight Quest
+if defined quest_white_knight if "%quest_white_knight%"=="2" (
+    echo 8. [COMPLETED] White Knight Quest
+    echo    You successfully investigated the dark magic!
+    echo    Reward: White Knight Armor, 1,000 XP
+    echo    Status: Completed
+) else (
+    echo 8. [AVAILABLE] White Knight Quest
+    echo    Investigate dark magic reports for the White Knights
+    echo    Talk to Sir Tiffy in Falador Castle
+    echo    Requirements: Combat level 20+
+    echo    Reward: White Knight Armor, 1,000 XP
+)
+echo.
+REM Prince Ali Rescue
+if defined quest_prince_ali if "%quest_prince_ali%"=="2" (
+    echo 9. [COMPLETED] Prince Ali Rescue
+    echo    You successfully rescued Prince Ali!
+    echo    Reward: 1,000 coins, 500 XP
+    echo    Status: Completed
+) else (
+    echo 9. [AVAILABLE] Prince Ali Rescue
+    echo    Rescue Prince Ali from kidnappers
+    echo    Talk to Osman in Al Kharid Palace
+    echo    Requirements: None
+    echo    Reward: 1,000 coins, 500 XP
+)
+echo.
+REM Pirate's Treasure
+if defined quest_pirates_treasure if "%quest_pirates_treasure%"=="2" (
+    echo 10. [COMPLETED] Pirate's Treasure
+    echo    You successfully found the pirate's treasure!
+    echo    Reward: 2,000 coins, Pirate's Hat, 1,000 XP
+    echo    Status: Completed
+) else (
+    echo 10. [AVAILABLE] Pirate's Treasure
+    echo    Find a pirate's treasure on a mysterious island
+    echo    Talk to Redbeard Frank in Port Sarim
+    echo    Requirements: None
+    echo    Reward: 2,000 coins, Pirate's Hat, 1,000 XP
+)
 echo.
 echo [C]omplete Quest - [B]ack to main menu
 set /p quest_choice="Choose action: "
@@ -3641,12 +3797,175 @@ if /i "!quest_choice!"=="c" (
     set /p quest_number="Which quest number to complete? "
     if "!quest_number!"=="1" if "%quest_cook%"=="1" (
         call :check_quest_completion
+    ) else if "!quest_number!"=="2" if defined quest_sheep_shearer if "%quest_sheep_shearer%"=="1" (
+        call :check_sheep_shearer_completion
+    ) else if "!quest_number!"=="3" if defined quest_rune_mysteries if "%quest_rune_mysteries%"=="1" (
+        call :check_rune_mysteries_completion
+    ) else if "!quest_number!"=="4" if defined quest_dragon_slayer if "%quest_dragon_slayer%"=="1" (
+        call :check_dragon_slayer_completion
+    ) else if "!quest_number!"=="5" if defined quest_lost_city if "%quest_lost_city%"=="1" (
+        call :check_lost_city_completion
+    ) else if "!quest_number!"=="6" if defined quest_restless_ghost if "%quest_restless_ghost%"=="1" (
+        call :check_restless_ghost_completion
+    ) else if "!quest_number!"=="7" if defined quest_imp_catcher if "%quest_imp_catcher%"=="1" (
+        call :check_imp_catcher_completion
+    ) else if "!quest_number!"=="8" if defined quest_white_knight if "%quest_white_knight%"=="1" (
+        call :check_white_knight_completion
+    ) else if "!quest_number!"=="9" if defined quest_prince_ali if "%quest_prince_ali%"=="1" (
+        call :check_prince_ali_completion
+    ) else if "!quest_number!"=="10" if defined quest_pirates_treasure if "%quest_pirates_treasure%"=="1" (
+        call :check_pirates_treasure_completion
+    ) else (
+        echo.
+        echo You can't complete that quest yet, or it's not in progress.
+        echo.
+        pause >nul
     )
 )
 
 if /i "!quest_choice!"=="b" goto main_menu
 
 goto quest_log
+
+:quest_hub
+cls
+call :draw_quest_hub_header
+echo.
+echo ========================================
+echo         QUEST HUB - ACCEPT NEW QUESTS
+echo ========================================
+echo.
+echo Welcome to the Quest Hub! Here you can find and accept new quests.
+echo.
+echo Available Quest Givers:
+echo.
+echo 1. [LUMBRIDGE] Cook's Assistant - Talk to the baker near Lumbridge Castle
+echo 2. [LUMBRIDGE] Sheep Shearer - Talk to Farmer Fred north of Lumbridge
+echo 3. [LUMBRIDGE] Rune Mysteries - Talk to Wizard Traiborn in the Wizards' Tower
+echo 4. [VARROCK] Dragon Slayer - Talk to the Guildmaster in Champions' Guild
+echo 5. [LUMBRIDGE] Lost City - Talk to the adventurers near Lumbridge Swamp
+echo 6. [LUMBRIDGE] The Restless Ghost - Talk to Father Aereck in Lumbridge Church
+echo 7. [LUMBRIDGE] Imp Catcher - Talk to Wizard Mizgog in the Wizards' Tower
+echo 8. [FALADOR] White Knight Quest - Talk to Sir Tiffy in Falador Castle
+echo 9. [ALKHARID] Prince Ali Rescue - Talk to Osman in Al Kharid Palace
+echo 10. [PORTSARIM] Pirate's Treasure - Talk to Redbeard Frank in Port Sarim
+echo.
+echo [T]ravel to quest giver - [B]ack to main menu
+set /p hub_choice="Choose action: "
+
+if /i "!hub_choice!"=="t" (
+    echo.
+    echo Which quest giver would you like to visit?
+    echo.
+    echo 1. Cook's Assistant (Lumbridge)
+    echo 2. Sheep Shearer (Lumbridge)
+    echo 3. Rune Mysteries (Lumbridge)
+    echo 4. Dragon Slayer (Varrock)
+    echo 5. Lost City (Lumbridge)
+    echo 6. The Restless Ghost (Lumbridge)
+    echo 7. Imp Catcher (Lumbridge)
+    echo 8. White Knight Quest (Falador)
+    echo 9. Prince Ali Rescue (Al Kharid)
+    echo 10. Pirate's Treasure (Port Sarim)
+    echo 0. Back to quest hub
+    echo.
+    set /p travel_quest="Choose quest to travel to: "
+    
+    if "!travel_quest!"=="1" (
+        echo.
+        echo Traveling to Lumbridge Castle for Cook's Assistant...
+        timeout /t 2 >nul
+        set "location=LUMBRIDGE"
+        echo You arrive at Lumbridge Castle and find the baker.
+        echo.
+        call :cooks_assistant_quest_giver
+    ) else if "!travel_quest!"=="2" (
+        echo.
+        echo Traveling to Lumbridge for Sheep Shearer...
+        timeout /t 2 >nul
+        set "location=LUMBRIDGE"
+        echo You arrive north of Lumbridge and find Farmer Fred.
+        echo.
+        call :sheep_shearer_quest_giver
+    ) else if "!travel_quest!"=="3" (
+        echo.
+        echo Traveling to Wizards' Tower for Rune Mysteries...
+        timeout /t 2 >nul
+        set "location=LUMBRIDGE"
+        echo You arrive at the Wizards' Tower and find Wizard Traiborn.
+        echo.
+        call :rune_mysteries_quest_giver
+    ) else if "!travel_quest!"=="4" (
+        echo.
+        echo Traveling to Varrock for Dragon Slayer...
+        timeout /t 2 >nul
+        echo You arrive at the Champions' Guild and find the Guildmaster.
+        echo.
+        call :dragon_slayer_quest_giver
+    ) else if "!travel_quest!"=="5" (
+        echo.
+        echo Traveling to Lumbridge Swamp for Lost City...
+        timeout /t 2 >nul
+        set "location=LUMBRIDGE"
+        echo You arrive at Lumbridge Swamp and find the adventurers.
+        echo.
+        call :lost_city_quest_giver
+    ) else if "!travel_quest!"=="6" (
+        echo.
+        echo Traveling to Lumbridge Church for The Restless Ghost...
+        timeout /t 2 >nul
+        set "location=LUMBRIDGE"
+        echo You arrive at Lumbridge Church and find Father Aereck.
+        echo.
+        call :restless_ghost_quest_giver
+    ) else if "!travel_quest!"=="7" (
+        echo.
+        echo Traveling to Wizards' Tower for Imp Catcher...
+        timeout /t 2 >nul
+        set "location=LUMBRIDGE"
+        echo You arrive at the Wizards' Tower and find Wizard Mizgog.
+        echo.
+        call :imp_catcher_quest_giver
+    ) else if "!travel_quest!"=="8" (
+        echo.
+        echo Traveling to Falador for White Knight Quest...
+        timeout /t 2 >nul
+        set "location=FALADOR"
+        echo You arrive at Falador Castle and find Sir Tiffy.
+        echo.
+        call :white_knight_quest_giver
+    ) else if "!travel_quest!"=="9" (
+        echo.
+        echo Traveling to Al Kharid for Prince Ali Rescue...
+        timeout /t 2 >nul
+        set "location=ALKHARID"
+        echo You arrive at Al Kharid Palace and find Osman.
+        echo.
+        call :prince_ali_quest_giver
+    ) else if "!travel_quest!"=="10" (
+        echo.
+        echo Traveling to Port Sarim for Pirate's Treasure...
+        timeout /t 2 >nul
+        set "location=PORTSARIM"
+        echo You arrive at Port Sarim and find Redbeard Frank.
+        echo.
+        call :prince_ali_quest_giver
+    ) else if "!travel_quest!"=="0" (
+        goto quest_hub
+    ) else (
+        echo Invalid choice!
+        pause >nul
+        goto quest_hub
+    )
+) else if /i "!hub_choice!"=="b" (
+    goto main_menu
+) else (
+    echo Invalid choice!
+    pause >nul
+    goto quest_hub
+)
+
+goto quest_hub
 
 :inventory_management
 cls
@@ -9091,6 +9410,1178 @@ if exist "assets\sounds\wilderness_theme.mp3" (
     echo [♪] Dark and foreboding tones surround you...
 )
 timeout /t 2 >nul
+goto :eof
+
+REM ============================================
+REM     QUEST HUB FUNCTIONS
+REM ============================================
+
+:draw_quest_hub_header
+echo.
+echo  +================================================+
+echo  ^|               QUEST HUB                      ^|
+echo  ^|                                                ^|
+echo  ^|  [Q]  Quest      [Q]  You                    ^|
+echo  ^|  [NPC] Givers    [NPC] Level !level!          ^|
+echo  ^|  [NPC] Hub       [NPC] Gold: !coins!          ^|
+echo  ^|                                                ^|
+echo  ^|  +==========================================+  ^|
+echo  ^|  ^|           QUEST ACCEPTANCE              ^|  ^|
+echo  ^|  ^|  [Travel] [Accept] [Info] [Back]       ^|  ^|
+echo  ^|  +==========================================+  ^|
+echo  +================================================+
+goto :eof
+
+:cooks_assistant_quest_giver
+echo ========================================
+echo         COOK'S ASSISTANT QUEST
+echo ========================================
+echo.
+echo You approach the baker in Lumbridge Castle...
+echo.
+echo Baker: "Oh, thank goodness you're here!"
+echo "I've run out of ingredients for the Duke's birthday cake!"
+echo "I need an egg, a pot of flour, and a bucket of milk."
+echo "Can you help me find these items?"
+echo.
+echo Quest Requirements: None
+echo Quest Reward: 300 XP Cooking, 500 coins, Chef's Hat
+echo.
+if "%quest_cook%"=="0" (
+    echo [A]ccept quest
+    echo [D]ecline quest
+    echo [B]ack to quest hub
+    echo.
+    set /p cook_choice="What do you do? "
+    
+    if /i "!cook_choice!"=="a" (
+        echo.
+        echo "Wonderful! Please find me:"
+        echo "- An egg (from the chicken coop)"
+        echo "- A pot of flour (from the windmill)"
+        echo "- A bucket of milk (from the dairy farm)"
+        echo.
+        echo The Cook's Assistant quest has begun!
+        set "quest_cook=1"
+        echo.
+        pause >nul
+        goto quest_hub
+    ) else if /i "!cook_choice!"=="d" (
+        echo.
+        echo "Oh... well, if you change your mind..."
+        echo.
+        pause >nul
+        goto quest_hub
+    ) else if /i "!cook_choice!"=="b" (
+        goto main_menu
+    ) else (
+        echo Invalid choice!
+        pause >nul
+        goto main_menu
+    )
+) else if "%quest_cook%"=="1" (
+    echo "Have you found all the ingredients yet?"
+    echo "I still need: Egg, Flour, and Milk"
+    echo.
+    echo [C]heck progress - [B]ack to quest hub
+    set /p cook_choice="What do you do? "
+    
+    if /i "!cook_choice!"=="c" (
+        call :check_quest_completion
+        pause >nul
+        goto quest_hub
+    ) else if /i "!cook_choice!"=="b" (
+        goto main_menu
+    ) else (
+        echo Invalid choice!
+        pause >nul
+        goto main_menu
+    )
+) else (
+    echo "Thank you again for helping me!"
+    echo "The Duke's birthday cake was a success!"
+    echo.
+    echo [B]ack to quest hub
+    set /p cook_choice="What do you do? "
+    
+    if /i "!cook_choice!"=="b" (
+        goto main_menu
+    ) else (
+        echo Invalid choice!
+        pause >nul
+        goto main_menu
+    )
+)
+
+:sheep_shearer_quest_giver
+echo ========================================
+echo         SHEEP SHEARER QUEST
+echo ========================================
+echo.
+echo You find Farmer Fred north of Lumbridge...
+echo.
+echo Farmer Fred: "Hello there, young adventurer!"
+echo "I need help with my sheep. They're getting wooly and need shearing."
+echo "Could you collect 20 balls of wool for me?"
+echo.
+echo Quest Requirements: None
+echo Quest Reward: 60 coins, 150 Crafting XP
+echo.
+if not defined quest_sheep_shearer set "quest_sheep_shearer=0"
+if "%quest_sheep_shearer%"=="0" (
+    echo [A]ccept quest
+    echo [D]ecline quest
+    echo [B]ack to quest hub
+    echo.
+    set /p sheep_choice="What do you do? "
+    
+    if /i "!sheep_choice!"=="a" (
+        echo.
+        echo "Excellent! You'll need to shear sheep to get wool."
+        echo "You can find sheep in the fields north of Lumbridge."
+        echo "Use shears if you have them, or buy some from the shop."
+        echo.
+        echo The Sheep Shearer quest has begun!
+        set "quest_sheep_shearer=1"
+        echo.
+        pause >nul
+        goto quest_hub
+    ) else if /i "!sheep_choice!"=="d" (
+        echo.
+        echo "No problem, maybe another time..."
+        echo.
+        pause >nul
+        goto quest_hub
+    ) else if /i "!sheep_choice!"=="b" (
+        goto main_menu
+    ) else (
+        echo Invalid choice!
+        pause >nul
+        goto main_menu
+    )
+) else if "%quest_sheep_shearer%"=="1" (
+    echo "How's the wool collecting going?"
+    echo "I need 20 balls of wool."
+    echo.
+    echo [C]heck progress - [B]ack to quest hub
+    set /p sheep_choice="What do you do? "
+    
+    if /i "!sheep_choice!"=="c" (
+        call :check_sheep_shearer_completion
+        pause >nul
+        goto quest_hub
+    ) else if /i "!sheep_choice!"=="b" (
+        goto main_menu
+    ) else (
+        echo Invalid choice!
+        pause >nul
+        goto main_menu
+    )
+) else (
+    echo "Thanks for all that wool! My sheep are much happier now."
+    echo.
+    echo [B]ack to quest hub
+    set /p sheep_choice="What do you do? "
+    
+    if /i "!sheep_choice!"=="b" (
+        goto main_menu
+    ) else (
+        echo Invalid choice!
+        pause >nul
+        goto main_menu
+    )
+)
+
+:rune_mysteries_quest_giver
+echo ========================================
+echo         RUNE MYSTERIES QUEST
+echo ========================================
+echo.
+echo You find Wizard Traiborn in the Wizards' Tower...
+echo.
+echo Wizard Traiborn: "Ah, a curious mind!"
+echo "I've been studying mysterious runes found near Lumbridge."
+echo "Could you investigate these runes and bring me some samples?"
+echo "I need 10 air runes, 5 mind runes, and 3 chaos runes."
+echo.
+echo Quest Requirements: None
+echo Quest Reward: 1,000 XP in all skills
+echo.
+if not defined quest_rune_mysteries set "quest_rune_mysteries=0"
+if "%quest_rune_mysteries%"=="0" (
+    echo [A]ccept quest
+    echo [D]ecline quest
+    echo [B]ack to quest hub
+    echo.
+    set /p rune_choice="What do you do? "
+    
+    if /i "!rune_choice!"=="a" (
+        echo.
+        echo "Wonderful! You can find runes by mining essence and crafting them,"
+        echo "or by defeating monsters. The Wizards' Tower has a rune shop too."
+        echo.
+        echo The Rune Mysteries quest has begun!
+        set "quest_rune_mysteries=1"
+        echo.
+        pause >nul
+        goto quest_hub
+    ) else if /i "!rune_choice!"=="d" (
+        echo.
+        echo "Perhaps magic isn't your calling..."
+        echo.
+        pause >nul
+        goto quest_hub
+    ) else if /i "!rune_choice!"=="b" (
+        goto main_menu
+    ) else (
+        echo Invalid choice!
+        pause >nul
+        goto main_menu
+    )
+) else if "%quest_rune_mysteries%"=="1" (
+    echo "Have you found the runes I need?"
+    echo "I need: 10 Air Runes, 5 Mind Runes, 3 Chaos Runes"
+    echo.
+    echo [C]heck progress - [B]ack to quest hub
+    set /p rune_choice="What do you do? "
+    
+    if /i "!rune_choice!"=="c" (
+        call :check_rune_mysteries_completion
+        pause >nul
+        goto quest_hub
+    ) else if /i "!rune_choice!"=="b" (
+        goto main_menu
+    ) else (
+        echo Invalid choice!
+        pause >nul
+        goto main_menu
+    )
+) else (
+    echo "Excellent work! These runes will help my research greatly."
+    echo.
+    echo [B]ack to quest hub
+    set /p rune_choice="What do you do? "
+    
+    if /i "!rune_choice!"=="b" (
+        goto main_menu
+    ) else (
+        echo Invalid choice!
+        pause >nul
+        goto main_menu
+    )
+)
+
+:dragon_slayer_quest_giver
+echo ========================================
+echo         DRAGON SLAYER QUEST
+echo ========================================
+echo.
+echo You find the Guildmaster in the Champions' Guild...
+echo.
+echo Guildmaster: "Ah, a brave warrior approaches!"
+echo "I have a quest that only the strongest can undertake."
+echo "There's a dragon terrorizing the island of Crandor."
+echo "You'll need to be at least combat level 30 to attempt this."
+echo.
+echo Quest Requirements: Combat level 30+
+echo Quest Reward: Dragon Slayer Cape, 18,650 XP
+echo.
+echo Your current combat level: !combat_level!
+echo.
+if not defined quest_dragon_slayer set "quest_dragon_slayer=0"
+if "%quest_dragon_slayer%"=="0" (
+    if !combat_level! geq 30 (
+        echo [A]ccept quest
+        echo [D]ecline quest
+        echo [B]ack to quest hub
+        echo.
+        set /p dragon_choice="What do you do? "
+        
+        if /i "!dragon_choice!"=="a" (
+            echo.
+            echo "Brave indeed! You'll need to gather supplies and prepare for battle."
+            echo "The dragon is on the island of Crandor, accessible by boat from Port Sarim."
+            echo.
+            echo The Dragon Slayer quest has begun!
+            set "quest_dragon_slayer=1"
+            echo.
+            pause >nul
+            goto quest_hub
+        ) else if /i "!dragon_choice!"=="d" (
+            echo.
+            echo "Perhaps you're not ready for such a challenge yet..."
+            echo.
+            pause >nul
+            goto quest_hub
+        ) else if /i "!dragon_choice!"=="b" (
+            goto main_menu
+        ) else (
+            echo Invalid choice!
+            pause >nul
+            goto main_menu
+        )
+    ) else (
+        echo You need to reach combat level 30 before accepting this quest.
+        echo.
+        echo [B]ack to quest hub
+        set /p dragon_choice="What do you do? "
+        
+        if /i "!dragon_choice!"=="b" (
+            goto main_menu
+        ) else (
+            echo Invalid choice!
+            pause >nul
+            goto main_menu
+        )
+    )
+) else if "%quest_dragon_slayer%"=="1" (
+    echo "How goes the dragon hunt?"
+    echo "Remember, you'll need strong armor and weapons for this fight."
+    echo.
+    echo [C]heck progress - [B]ack to quest hub
+    set /p dragon_choice="What do you do? "
+    
+    if /i "!dragon_choice!"=="c" (
+        call :check_dragon_slayer_completion
+        pause >nul
+        goto quest_hub
+    ) else if /i "!dragon_choice!"=="b" (
+        goto quest_hub
+    ) else (
+        echo Invalid choice!
+        pause >nul
+        goto quest_hub
+    )
+) else (
+    echo "You've done it! You're a true dragon slayer!"
+    echo "Wear that cape with pride, warrior."
+    echo.
+    echo [B]ack to quest hub
+    set /p dragon_choice="What do you do? "
+    
+    if /i "!dragon_choice!"=="b" (
+        goto quest_hub
+    ) else (
+        echo Invalid choice!
+        pause >nul
+        goto quest_hub
+    )
+)
+
+REM ============================================
+REM     QUEST COMPLETION FUNCTIONS
+REM ============================================
+
+:check_sheep_shearer_completion
+REM Check if Sheep Shearer quest can be completed
+call :count_item "Ball of Wool"
+if !item_count! geq 20 (
+    echo.
+    echo Congratulations! You have collected 20 balls of wool!
+    echo You return to Farmer Fred and deliver the wool.
+    echo.
+    echo "Perfect! Thank you so much!" says Farmer Fred.
+    echo "Here's your reward:"
+    echo.
+    echo You gained 60 coins!
+    echo You gained 150 Crafting XP!
+    echo.
+
+    REM Award rewards
+    set /a "coins+=60"
+    set /a "crafting_xp+=150"
+    set /a "experience+=150"
+    set "quest_sheep_shearer=2"
+
+    REM Remove quest items
+    for /l %%i in (1,1,20) do (
+        call :remove_item "Ball of Wool"
+    )
+
+    REM Check for level up
+    call :check_level_up crafting !crafting_xp!
+
+    echo.
+    echo Quest completed successfully!
+) else (
+    echo.
+    echo You don't have enough wool yet!
+    echo You have !item_count! balls of wool, but need 20.
+    echo.
+    echo You can get wool by shearing sheep in the fields north of Lumbridge.
+)
+goto :eof
+
+:check_rune_mysteries_completion
+REM Check if Rune Mysteries quest can be completed
+call :count_item "Air Rune"
+set "air_runes=!item_count!"
+call :count_item "Mind Rune"
+set "mind_runes=!item_count!"
+call :count_item "Chaos Rune"
+set "chaos_runes=!item_count!"
+
+if !air_runes! geq 10 if !mind_runes! geq 5 if !chaos_runes! geq 3 (
+    echo.
+    echo Excellent! You have all the runes I need!
+    echo You return to Wizard Traiborn and deliver the runes.
+    echo.
+    echo "Marvelous! These runes are perfect for my research!" says Traiborn.
+    echo "Here's your reward:"
+    echo.
+    echo You gained 1,000 XP in all skills!
+    echo.
+
+    REM Award XP to all skills
+    set /a "attack_xp+=1000"
+    set /a "strength_xp+=1000"
+    set /a "defence_xp+=1000"
+    set /a "hitpoints_xp+=1000"
+    set /a "ranged_xp+=1000"
+    set /a "magic_xp+=1000"
+    set /a "woodcutting_xp+=1000"
+    set /a "fishing_xp+=1000"
+    set /a "mining_xp+=1000"
+    set /a "cooking_xp+=1000"
+    set /a "smithing_xp+=1000"
+    set /a "crafting_xp+=1000"
+    set /a "fletching_xp+=1000"
+    set /a "herblore_xp+=1000"
+    set /a "prayer_xp+=1000"
+    set /a "slayer_xp+=1000"
+    set /a "farming_xp+=1000"
+    set /a "firemaking_xp+=1000"
+    set /a "treasure_hunting_xp+=1000"
+    set /a "experience+=19000"
+
+    REM Remove quest items
+    for /l %%i in (1,1,10) do (
+        call :remove_item "Air Rune"
+    )
+    for /l %%i in (1,1,5) do (
+        call :remove_item "Mind Rune"
+    )
+    for /l %%i in (1,1,3) do (
+        call :remove_item "Chaos Rune"
+    )
+
+    REM Check for level ups
+    call :check_level_up attack !attack_xp!
+    call :check_level_up strength !strength_xp!
+    call :check_level_up defence !defence_xp!
+    call :check_level_up hitpoints !hitpoints_xp!
+    call :check_level_up ranged !ranged_xp!
+    call :check_level_up magic !magic_xp!
+    call :check_level_up woodcutting !woodcutting_xp!
+    call :check_level_up fishing !fishing_xp!
+    call :check_level_up mining !mining_xp!
+    call :check_level_up cooking !cooking_xp!
+    call :check_level_up smithing !smithing_xp!
+    call :check_level_up crafting !crafting_xp!
+    call :check_level_up fletching !fletching_xp!
+    call :check_level_up herblore !herblore_xp!
+    call :check_level_up prayer !prayer_xp!
+    call :check_level_up slayer !slayer_xp!
+    call :check_level_up farming !farming_xp!
+    call :check_level_up firemaking !firemaking_xp!
+    call :check_level_up treasure_hunting !treasure_hunting_xp!
+
+    echo.
+    echo Quest completed successfully!
+    echo All your skills have improved significantly!
+) else (
+    echo.
+    echo You don't have all the runes I need yet!
+    echo.
+    echo You have:
+    echo - Air Runes: !air_runes!/10
+    echo - Mind Runes: !mind_runes!/5
+    echo - Chaos Runes: !chaos_runes!/3
+    echo.
+    echo You can get runes by mining essence and crafting them,"
+    echo "or by defeating monsters. The Wizards' Tower has a rune shop too.
+)
+goto :eof
+
+:check_dragon_slayer_completion
+REM Check if Dragon Slayer quest can be completed
+REM This is a placeholder for the actual dragon slayer completion
+echo.
+echo You haven't completed the Dragon Slayer quest yet.
+echo This quest requires you to travel to Crandor and defeat the dragon.
+echo.
+echo You'll need:
+echo - Strong armor and weapons
+echo - Food and potions
+echo - A boat to Crandor (from Port Sarim)
+echo.
+echo This is an advanced quest that will be implemented in future updates.
+echo.
+goto :eof
+
+:lost_city_quest_giver
+echo ========================================
+echo         LOST CITY QUEST
+echo ========================================
+echo.
+echo You find a group of adventurers near Lumbridge Swamp...
+echo.
+echo Adventurer: "Hey there! We've been searching for the legendary lost city of Zanaris."
+echo "It's said to be hidden somewhere in the swamps, but we need someone with"
+echo "crafting and woodcutting skills to help us find it."
+echo "You'll need at least level 31 Crafting and level 36 Woodcutting."
+echo.
+echo Quest Requirements: Crafting level 31+, Woodcutting level 36+
+echo Quest Reward: Dramen Staff, 5,000 XP
+echo.
+echo Your current levels:
+echo - Crafting: !crafting!
+echo - Woodcutting: !woodcutting!
+echo.
+if not defined quest_lost_city set "quest_lost_city=0"
+if "%quest_lost_city%"=="0" (
+    if !crafting! geq 31 if !woodcutting! geq 36 (
+        echo [A]ccept quest
+        echo [D]ecline quest
+        echo [B]ack to quest hub
+        echo.
+        set /p lost_choice="What do you do? "
+        
+        if /i "!lost_choice!"=="a" (
+            echo.
+            echo "Perfect! You have the skills we need."
+            echo "The lost city is hidden in the deep swamps. You'll need to craft"
+            echo "special items and cut down ancient trees to reveal the path."
+            echo.
+            echo The Lost City quest has begun!
+            set "quest_lost_city=1"
+            echo.
+            pause >nul
+            goto quest_hub
+        ) else if /i "!lost_choice!"=="d" (
+            echo.
+            echo "Maybe you'll change your mind when you're stronger..."
+            echo.
+            pause >nul
+            goto quest_hub
+        ) else if /i "!lost_choice!"=="b" (
+            goto main_menu
+        ) else (
+            echo Invalid choice!
+            pause >nul
+            goto main_menu
+        )
+    ) else (
+        echo You need to improve your skills before accepting this quest.
+        echo.
+        echo [B]ack to quest hub
+        set /p lost_choice="What do you do? "
+        
+        if /i "!lost_choice!"=="b" (
+            goto main_menu
+        ) else (
+            echo Invalid choice!
+            pause >nul
+            goto main_menu
+        )
+    )
+) else if "%quest_lost_city%"=="1" (
+    echo "How goes the search for Zanaris?"
+    echo "Remember, you need to craft special items and cut ancient trees."
+    echo.
+    echo [C]heck progress - [B]ack to quest hub
+    set /p lost_choice="What do you do? "
+    
+    if /i "!lost_choice!"=="c" (
+        call :check_lost_city_completion
+        pause >nul
+        goto quest_hub
+    ) else if /i "!lost_choice!"=="b" (
+        goto main_menu
+    ) else (
+        echo Invalid choice!
+        pause >nul
+        goto main_menu
+    )
+) else (
+    echo "You found Zanaris! The lost city is no longer lost thanks to you!"
+    echo.
+    echo [B]ack to quest hub
+    set /p lost_choice="What do you do? "
+    
+    if /i "!lost_choice!"=="b" (
+        goto main_menu
+    ) else (
+        echo Invalid choice!
+        pause >nul
+        goto main_menu
+    )
+)
+
+:restless_ghost_quest_giver
+echo ========================================
+echo         THE RESTLESS GHOST QUEST
+echo ========================================
+echo.
+echo You find Father Aereck in the Lumbridge Church...
+echo.
+echo Father Aereck: "Ah, a visitor! I have a spiritual matter that needs attention."
+echo "There's a ghost haunting the graveyard who can't find peace."
+echo "I need someone to help the ghost move on to the afterlife."
+echo "This will require prayer and understanding."
+echo.
+echo Quest Requirements: None
+echo Quest Reward: 125 Prayer XP, Amulet of Ghostspeak
+echo.
+if not defined quest_restless_ghost set "quest_restless_ghost=0"
+if "%quest_restless_ghost%"=="0" (
+    echo [A]ccept quest
+    echo [D]ecline quest
+    echo [B]ack to quest hub
+    echo.
+    set /p ghost_choice="What do you do? "
+    
+    if /i "!ghost_choice!"=="a" (
+        echo.
+        echo "Bless you, child. The ghost is in the graveyard behind the church."
+        echo "You'll need to speak with it and help it find peace."
+        echo "The Amulet of Ghostspeak will help you communicate with spirits."
+        echo.
+        echo The Restless Ghost quest has begun!
+        set "quest_restless_ghost=1"
+        echo.
+        pause >nul
+        goto quest_hub
+    ) else if /i "!ghost_choice!"=="d" (
+        echo.
+        echo "Perhaps you're not ready for spiritual matters..."
+        echo.
+        pause >nul
+        goto quest_hub
+    ) else if /i "!ghost_choice!"=="b" (
+        goto main_menu
+    ) else (
+        echo Invalid choice!
+        pause >nul
+        goto main_menu
+    )
+) else if "%quest_restless_ghost%"=="1" (
+    echo "Have you helped the restless ghost find peace?"
+    echo "Check the graveyard behind the church."
+    echo.
+    echo [C]heck progress - [B]ack to quest hub
+    set /p ghost_choice="What do you do? "
+    
+    if /i "!ghost_choice!"=="c" (
+        call :check_restless_ghost_completion
+        pause >nul
+        goto quest_hub
+    ) else if /i "!ghost_choice!"=="b" (
+        goto main_menu
+    ) else (
+        echo Invalid choice!
+        pause >nul
+        goto main_menu
+    )
+) else (
+    echo "You've done a great service to the spirit world."
+    echo "The ghost is now at peace, thanks to you."
+    echo.
+    echo [B]ack to quest hub
+    set /p ghost_choice="What do you do? "
+    
+    if /i "!ghost_choice!"=="b" (
+        goto main_menu
+    ) else (
+        echo Invalid choice!
+        pause >nul
+        goto main_menu
+    )
+)
+
+:imp_catcher_quest_giver
+echo ========================================
+echo         IMP CATCHER QUEST
+echo ========================================
+echo.
+echo You find Wizard Mizgog in the Wizards' Tower...
+echo.
+echo Wizard Mizgog: "Ah, a fellow magic user! I have a problem with imps."
+echo "These mischievous creatures have stolen my magical beads."
+echo "I need you to catch them and return the beads to me."
+echo "You'll need to hunt imps in the wilderness and collect their beads."
+echo.
+echo Quest Requirements: None
+echo Quest Reward: 875 Magic XP, Amulet of Accuracy
+echo.
+if not defined quest_imp_catcher set "quest_imp_catcher=0"
+if "%quest_imp_catcher%"=="0" (
+    echo [A]ccept quest
+    echo [D]ecline quest
+    echo [B]ack to quest hub
+    echo.
+    set /p imp_choice="What do you do? "
+    
+    if /i "!imp_choice!"=="a" (
+        echo.
+        echo "Excellent! The imps can be found in the wilderness areas."
+        echo "They drop different colored beads: red, yellow, blue, and black."
+        echo "I need one of each color to restore my magical items."
+        echo.
+        echo The Imp Catcher quest has begun!
+        set "quest_imp_catcher=1"
+        echo.
+        pause >nul
+        goto quest_hub
+    ) else if /i "!imp_choice!"=="d" (
+        echo.
+        echo "Perhaps you're not ready for magical quests..."
+        echo.
+        pause >nul
+        goto quest_hub
+    ) else if /i "!imp_choice!"=="b" (
+        goto main_menu
+    ) else (
+        echo Invalid choice!
+        pause >nul
+        goto main_menu
+    )
+) else if "%quest_imp_catcher%"=="1" (
+    echo "How goes the imp hunting?"
+    echo "I need: Red bead, Yellow bead, Blue bead, Black bead"
+    echo.
+    echo [C]heck progress - [B]ack to quest hub
+    set /p imp_choice="What do you do? "
+    
+    if /i "!imp_choice!"=="c" (
+        call :check_imp_catcher_completion
+        pause >nul
+        goto quest_hub
+    ) else if /i "!imp_choice!"=="b" (
+        goto main_menu
+    ) else (
+        echo Invalid choice!
+        pause >nul
+        goto main_menu
+    )
+) else (
+    echo "Perfect! My magical items are restored thanks to you."
+    echo "The Amulet of Accuracy will serve you well in combat."
+    echo.
+    echo [B]ack to quest hub
+    set /p imp_choice="What do you do? "
+    
+    if /i "!imp_choice!"=="b" (
+        goto main_menu
+    ) else (
+        echo Invalid choice!
+        pause >nul
+        goto main_menu
+    )
+)
+
+:white_knight_quest_giver
+echo ========================================
+echo         WHITE KNIGHT QUEST
+echo ========================================
+echo.
+echo You find Sir Tiffy in Falador Castle...
+echo.
+echo Sir Tiffy: "Hail, noble adventurer! I have a quest for a true knight."
+echo "The White Knights are investigating reports of dark magic in the area."
+echo "We need someone to investigate and report back to us."
+echo "This quest requires courage and combat skills."
+echo.
+echo Quest Requirements: Combat level 20+
+echo Quest Reward: White Knight Armor, 1,000 XP
+echo.
+echo Your current combat level: !combat_level!
+echo.
+if not defined quest_white_knight set "quest_white_knight=0"
+if "%quest_white_knight%"=="0" (
+    if !combat_level! geq 20 (
+        echo [A]ccept quest
+        echo [D]ecline quest
+        echo [B]ack to quest hub
+        echo.
+        set /p knight_choice="What do you do? "
+        
+        if /i "!knight_choice!"=="a" (
+            echo.
+            echo "Brave knight! You'll need to investigate the dark magic reports."
+            echo "Check the areas around Falador for any suspicious activity."
+            echo "Report back to me with your findings."
+            echo.
+            echo The White Knight Quest has begun!
+            set "quest_white_knight=1"
+            echo.
+            pause >nul
+            goto quest_hub
+        ) else if /i "!knight_choice!"=="d" (
+            echo.
+            echo "Perhaps you're not ready for knightly duties..."
+            echo.
+            pause >nul
+            goto quest_hub
+        ) else if /i "!knight_choice!"=="b" (
+            goto main_menu
+        ) else (
+            echo Invalid choice!
+            pause >nul
+            goto main_menu
+        )
+    ) else (
+        echo You need to reach combat level 20 before accepting this quest.
+        echo.
+        echo [B]ack to quest hub
+        set /p knight_choice="What do you do? "
+        
+        if /i "!knight_choice!"=="b" (
+            goto main_menu
+        ) else (
+            echo Invalid choice!
+            pause >nul
+            goto main_menu
+        )
+    )
+) else if "%quest_white_knight%"=="1" (
+    echo "How goes the investigation?"
+    echo "Have you found any evidence of dark magic?"
+    echo.
+    echo [C]heck progress - [B]ack to quest hub
+    set /p knight_choice="What do you do? "
+    
+    if /i "!knight_choice!"=="c" (
+        call :check_white_knight_completion
+        pause >nul
+        goto quest_hub
+    ) else if /i "!knight_choice!"=="b" (
+        goto main_menu
+    ) else (
+        echo Invalid choice!
+        pause >nul
+        goto main_menu
+    )
+) else (
+    echo "Excellent work, knight! You've proven yourself worthy."
+    echo "Wear the White Knight Armor with pride."
+    echo.
+    echo [B]ack to quest hub
+    set /p knight_choice="What do you do? "
+    
+    if /i "!knight_choice!"=="b" (
+        goto main_menu
+    ) else (
+        echo Invalid choice!
+        pause >nul
+        goto main_menu
+    )
+)
+
+:prince_ali_quest_giver
+echo ========================================
+echo         PRINCE ALI RESCUE QUEST
+echo ========================================
+echo.
+echo You find Osman in Al Kharid Palace...
+echo.
+echo Osman: "Ah, a visitor from the outside world!"
+echo "I have a delicate matter that requires discretion."
+echo "Prince Ali has been kidnapped and is being held for ransom."
+echo "I need someone to help rescue him without causing a diplomatic incident."
+echo.
+echo Quest Requirements: None
+echo Quest Reward: 1,000 coins, 500 XP
+echo.
+if not defined quest_prince_ali set "quest_prince_ali=0"
+if "%quest_prince_ali%"=="0" (
+    echo [A]ccept quest
+    echo [D]ecline quest
+    echo [B]ack to quest hub
+    echo.
+    set /p prince_choice="What do you do? "
+    
+    if /i "!prince_choice!"=="a" (
+        echo.
+        echo "Thank you! Prince Ali is being held in a secret location."
+        echo "You'll need to gather information and plan a rescue."
+        echo "Be careful not to alert the kidnappers."
+        echo.
+        echo The Prince Ali Rescue quest has begun!
+        set "quest_prince_ali=1"
+        echo.
+        pause >nul
+        goto quest_hub
+    ) else if /i "!prince_choice!"=="d" (
+        echo.
+        echo "I understand. This is a dangerous mission..."
+        echo.
+        pause >nul
+        goto quest_hub
+    ) else if /i "!prince_choice!"=="b" (
+        goto main_menu
+    ) else (
+        echo Invalid choice!
+        pause >nul
+        goto main_menu
+    )
+) else if "%quest_prince_ali%"=="1" (
+    echo "How goes the rescue mission?"
+    echo "Have you found Prince Ali's location?"
+    echo.
+    echo [C]heck progress - [B]ack to quest hub
+    set /p prince_choice="What do you do? "
+    
+    if /i "!prince_choice!"=="c" (
+        call :check_prince_ali_completion
+        pause >nul
+        goto quest_hub
+    ) else if /i "!prince_choice!"=="b" (
+        goto main_menu
+    ) else (
+        echo Invalid choice!
+        pause >nul
+        goto main_menu
+    )
+) else (
+    echo "You've done it! Prince Ali is safe and back in the palace."
+    echo "The kingdom owes you a great debt."
+    echo.
+    echo [B]ack to quest hub
+    set /p prince_choice="What do you do? "
+    
+    if /i "!prince_choice!"=="b" (
+        goto main_menu
+    ) else (
+        echo Invalid choice!
+        pause >nul
+        goto main_menu
+    )
+)
+
+:pirates_treasure_quest_giver
+echo ========================================
+echo         PIRATE'S TREASURE QUEST
+echo ========================================
+echo.
+echo You find Redbeard Frank in Port Sarim...
+echo.
+echo Redbeard Frank: "Arr, matey! Looking for adventure on the high seas?"
+echo "I have a map to a pirate's treasure, but I need help to find it."
+echo "The treasure is hidden on a mysterious island, but the map is incomplete."
+echo "You'll need to piece together the clues and brave the dangers."
+echo.
+echo Quest Requirements: None
+echo Quest Reward: 2,000 coins, Pirate's Hat, 1,000 XP
+echo.
+if not defined quest_pirates_treasure set "quest_pirates_treasure=0"
+if "%quest_pirates_treasure%"=="0" (
+    echo [A]ccept quest
+    echo [D]ecline quest
+    echo [B]ack to quest hub
+    echo.
+    set /p pirate_choice="What do you do? "
+    
+    if /i "!pirate_choice!"=="a" (
+        echo.
+        echo "Excellent! Here's the treasure map, but it's missing some pieces."
+        echo "You'll need to find the missing map fragments and solve the riddles."
+        echo "The treasure is said to be guarded by sea monsters!"
+        echo.
+        echo The Pirate's Treasure quest has begun!
+        set "quest_pirates_treasure=1"
+        echo.
+        pause >nul
+        goto quest_hub
+    ) else if /i "!pirate_choice!"=="d" (
+        echo.
+        echo "No problem, matey. Maybe another time..."
+        echo.
+        pause >nul
+        goto quest_hub
+    ) else if /i "!pirate_choice!"=="b" (
+        goto main_menu
+    ) else (
+        echo Invalid choice!
+        pause >nul
+        goto main_menu
+    )
+) else if "%quest_pirates_treasure%"=="1" (
+    echo "How goes the treasure hunt?"
+    echo "Have you found the missing map pieces?"
+    echo.
+    echo [C]heck progress - [B]ack to quest hub
+    set /p pirate_choice="What do you do? "
+    
+    if /i "!pirate_choice!"=="c" (
+        call :check_pirates_treasure_completion
+        pause >nul
+        goto quest_hub
+    ) else if /i "!pirate_choice!"=="b" (
+        goto main_menu
+    ) else (
+        echo Invalid choice!
+        pause >nul
+        goto main_menu
+    )
+) else (
+    echo "You found the treasure! You're a true pirate now, matey!"
+    echo "Wear that hat with pride and enjoy your riches."
+    echo.
+    echo [B]ack to quest hub
+    set /p pirate_choice="What do you do? "
+    
+    if /i "!pirate_choice!"=="b" (
+        goto main_menu
+    ) else (
+        echo Invalid choice!
+        pause >nul
+        goto main_menu
+    )
+)
+
+REM ============================================
+REM     MISSING QUEST COMPLETION FUNCTIONS
+REM ============================================
+
+:check_lost_city_completion
+REM Check if Lost City quest can be completed
+REM This is a placeholder for the actual lost city completion
+echo.
+echo You haven't completed the Lost City quest yet.
+echo This quest requires you to craft special items and cut ancient trees.
+echo.
+echo You'll need:
+echo - High crafting and woodcutting skills
+echo - Special crafting materials
+echo - Ancient tree locations
+echo.
+echo This is an advanced quest that will be implemented in future updates.
+echo.
+goto :eof
+
+:check_restless_ghost_completion
+REM Check if Restless Ghost quest can be completed
+REM This is a placeholder for the actual ghost completion
+echo.
+echo You haven't completed the Restless Ghost quest yet.
+echo This quest requires you to help a ghost find peace.
+echo.
+echo You'll need:
+echo - Prayer skills
+echo - Amulet of Ghostspeak
+echo - Visit the graveyard
+echo.
+echo This is an advanced quest that will be implemented in future updates.
+echo.
+goto :eof
+
+:check_imp_catcher_completion
+REM Check if Imp Catcher quest can be completed
+call :count_item "Red Bead"
+set "red_beads=!item_count!"
+call :count_item "Yellow Bead"
+set "yellow_beads=!item_count!"
+call :count_item "Blue Bead"
+set "blue_beads=!item_count!"
+call :count_item "Black Bead"
+set "black_beads=!item_count!"
+
+if !red_beads! geq 1 if !yellow_beads! geq 1 if !blue_beads! geq 1 if !black_beads! geq 1 (
+    echo.
+    echo Excellent! You have all the beads I need!
+    echo You return to Wizard Mizgog and deliver the beads.
+    echo.
+    echo "Perfect! My magical items are restored!" says Mizgog.
+    echo "Here's your reward:"
+    echo.
+    echo You gained 875 Magic XP!
+    echo You received an Amulet of Accuracy!
+    echo
+
+    REM Award rewards
+    set /a "magic_xp+=875"
+    set /a "experience+=875"
+    set "quest_imp_catcher=2"
+
+    REM Add Amulet of Accuracy to inventory
+    if defined inventory (
+        set "inventory=!inventory!,Amulet of Accuracy"
+    ) else (
+        set "inventory=Amulet of Accuracy"
+    )
+
+    REM Remove quest items
+    call :remove_item "Red Bead"
+    call :remove_item "Yellow Bead"
+    call :remove_item "Blue Bead"
+    call :remove_item "Black Bead"
+
+    REM Check for level up
+    call :check_level_up magic !magic_xp!
+
+    echo.
+    echo Quest completed successfully!
+) else (
+    echo.
+    echo You don't have all the beads I need yet!
+    echo.
+    echo You have:
+    echo - Red Beads: !red_beads!/1
+    echo - Yellow Beads: !yellow_beads!/1
+    echo - Blue Beads: !blue_beads!/1
+    echo - Black Beads: !black_beads!/1
+    echo.
+    echo You can get beads by hunting imps in the wilderness areas.
+)
+goto :eof
+
+:check_white_knight_completion
+REM Check if White Knight quest can be completed
+REM This is a placeholder for the actual white knight completion
+echo.
+echo You haven't completed the White Knight quest yet.
+echo This quest requires you to investigate dark magic reports.
+echo.
+echo You'll need:
+echo - Combat skills
+echo - Investigation abilities
+echo - Report back to Sir Tiffy
+echo.
+echo This is an advanced quest that will be implemented in future updates.
+echo.
+goto :eof
+
+:check_prince_ali_completion
+REM Check if Prince Ali Rescue quest can be completed
+REM This is a placeholder for the actual prince ali completion
+echo.
+echo You haven't completed the Prince Ali Rescue quest yet.
+echo This quest requires you to rescue Prince Ali from kidnappers.
+echo.
+echo You'll need:
+echo - Stealth and combat skills
+echo - Information gathering
+echo - Rescue planning
+echo.
+echo This is an advanced quest that will be implemented in future updates.
+echo.
+goto :eof
+
+:check_pirates_treasure_completion
+REM Check if Pirate's Treasure quest can be completed
+REM This is a placeholder for the actual pirate treasure completion
+echo.
+echo You haven't completed the Pirate's Treasure quest yet.
+echo This quest requires you to find a pirate's treasure.
+echo.
+echo You'll need:
+echo - Treasure map pieces
+echo - Solve riddles
+echo - Brave sea monsters
+echo.
+echo This is an advanced quest that will be implemented in future updates.
+echo.
 goto :eof
 
 :play_magetower_music
