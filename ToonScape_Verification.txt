@@ -1,0 +1,11 @@
+ToonScape Game Verification 
+========================== 
+ 
+Executable: ToonScape.exe 
+Certificate: Self-Signed Development Certificate 
+Issued: 2025-08-31  2:44:30.61 
+Expires: 3 years from issue 
+Status: Self-Signed (Development Use) 
+ 
+This executable has been verified and signed 
+for ToonScape game security. 
