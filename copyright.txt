@@ -1,0 +1,3 @@
+Copyright (C) 2024, CrypticTM(CrypticTM99) - ToonScape RPG in BATCH (In-Dev Release)
+ToonScape RPG is distributed under GNU GPLv3.
+(Some assets are not under this copyright statement)
