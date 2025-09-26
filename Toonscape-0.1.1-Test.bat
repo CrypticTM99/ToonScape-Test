@@ -323,6 +323,9 @@ if "!location!"=="ALKHARID" echo 13. Bank
 if "!location!"=="MAGETOWER" echo 12. Magic Shop
 if "!location!"=="MAGETOWER" echo 13. Chat System
 if "!location!"=="MAGETOWER" echo 14. Rune Crafting
+if "!location!"=="WOLFMOUNTAIN" echo 12. Wolf Pack Territory
+if "!location!"=="WOLFMOUNTAIN" echo 13. Mountain Caves
+if "!location!"=="WOLFMOUNTAIN" echo 14. Mining Spots
 
 echo 0. Save and Exit Game
 echo.
@@ -333,6 +336,8 @@ if "!location!"=="VARROCK" (
 ) else if "!location!"=="LUMBRIDGE" (
     set /p choice="Choose option (0-14): "
 ) else if "!location!"=="MAGETOWER" (
+    set /p choice="Choose option (0-14): "
+) else if "!location!"=="WOLFMOUNTAIN" (
     set /p choice="Choose option (0-14): "
 ) else (
     set /p choice="Choose option (0-11): "
@@ -369,6 +374,10 @@ if "!location!"=="VARROCK" (
     if "%choice%"=="12" goto magic_shop
     if "%choice%"=="13" goto chat_system
     if "%choice%"=="14" goto rune_crafting
+) else if "!location!"=="WOLFMOUNTAIN" (
+    if "%choice%"=="12" goto wolf_pack_territory
+    if "%choice%"=="13" goto mountain_caves
+    if "%choice%"=="14" goto wolf_mountain_mining
 )
 
 if "%choice%"=="0" goto exit_game
@@ -1423,20 +1432,10 @@ if "!location!"=="LUMBRIDGE" (
         goto explore_area
     )
     if "!explore_choice!"=="4" (
-        echo.
-        echo You walk to the river...
-        timeout /t 1 >nul
-        echo Perfect fishing spot! The water looks calm.
-        pause >nul
-        goto explore_area
+        call :lumbridge_river_fishing
     )
     if "!explore_choice!"=="5" (
-        echo.
-        echo You enter the Lumbridge forest...
-        timeout /t 1 >nul
-        echo Many trees surround you, perfect for woodcutting.
-        pause >nul
-        goto explore_area
+        call :lumbridge_forest_woodcutting
     )
     if "!explore_choice!"=="6" (
         echo.
@@ -2059,7 +2058,10 @@ if "!location!"=="WILDERNESS" (
     echo 2. Dangerous creatures - Monsters and beasts
     echo 3. Resource nodes - Mining and woodcutting spots
     echo 4. PvP hotspots - Areas where players fight
-    echo 5. Back to main menu
+    echo 5. Ancient ruins - Mysterious structures
+    echo 6. Wilderness caves - Underground exploration
+    echo 7. Wilderness lake - Fishing and water activities
+    echo 8. Back to main menu
     echo.
     set /p explore_choice="What do you investigate? "
     
@@ -2068,34 +2070,77 @@ if "!location!"=="WILDERNESS" (
         echo You approach the wilderness wall...
         timeout /t 1 >nul
         echo The wall separates the safe world from danger.
+        echo You can see the safety of civilization beyond.
         pause >nul
         goto explore_area
     )
     if "!explore_choice!"=="2" (
-        echo.
-        echo You encounter dangerous creatures...
-        timeout /t 1 >nul
-        echo Monsters roam freely in this lawless land.
+        call :wilderness_monster_encounter
         pause >nul
         goto explore_area
     )
     if "!explore_choice!"=="3" (
-        echo.
-        echo You find resource nodes...
-        timeout /t 1 >nul
-        echo Valuable resources are scattered throughout the wilderness.
+        call :wilderness_resource_gathering
         pause >nul
         goto explore_area
     )
     if "!explore_choice!"=="4" (
-        echo.
-        echo You approach a PvP hotspot...
-        timeout /t 1 >nul
-        echo This area is known for player combat.
+        call :wilderness_pvp_hotspot
         pause >nul
         goto explore_area
     )
-    if "!explore_choice!"=="5" goto main_menu
+    if "!explore_choice!"=="5" (
+        call :wilderness_ancient_ruins
+        pause >nul
+        goto explore_area
+    )
+    if "!explore_choice!"=="6" (
+        call :wilderness_caves
+        pause >nul
+        goto explore_area
+    )
+    if "!explore_choice!"=="7" (
+        call :wilderness_lake
+        pause >nul
+        goto explore_area
+    )
+    if "!explore_choice!"=="8" goto main_menu
+    goto explore_area
+)
+
+if "!location!"=="WOLFMOUNTAIN" (
+    echo You explore the dangerous Wolf Mountain.
+    echo.
+    echo You see:
+    echo 1. Wolf Pack Territory - Dangerous wolf encounters
+    echo 2. Mountain Caves - Underground exploration
+    echo 3. Mining Spots - Rich ore deposits
+    echo 4. Wolf Den - Alpha wolf territory
+    echo 5. Mountain Peak - High altitude challenges
+    echo 6. Ancient Ruins - Mysterious structures
+    echo 7. Back to main menu
+    echo.
+    set /p explore_choice="What do you investigate? "
+    
+    if "!explore_choice!"=="1" (
+        call :wolf_pack_territory
+    )
+    if "!explore_choice!"=="2" (
+        call :mountain_caves
+    )
+    if "!explore_choice!"=="3" (
+        call :wolf_mountain_mining
+    )
+    if "!explore_choice!"=="4" (
+        call :wolf_den
+    )
+    if "!explore_choice!"=="5" (
+        call :mountain_peak
+    )
+    if "!explore_choice!"=="6" (
+        call :wolf_mountain_ruins
+    )
+    if "!explore_choice!"=="7" goto main_menu
     goto explore_area
 )
 
@@ -2197,7 +2242,8 @@ if not "!location!"=="DRAYNOR" echo 5. Draynor Village (Small village)
 if not "!location!"=="PORTSARIM" echo 6. Port Sarim (Harbor town)
 echo 7. The Wilderness (Dangerous PvP area)
 echo 8. Mage Tower (Ancient magic studies)
-echo 9. Back to main menu
+if not "!location!"=="WOLFMOUNTAIN" echo 9. Wolf Mountain (Dangerous wolf territory)
+echo 10. Back to main menu
 echo.
 set /p travel_choice="Choose location to travel to: "
 
@@ -2289,7 +2335,18 @@ if "!travel_choice!"=="8" if not "!location!"=="MAGETOWER" (
     goto main_menu
 )
 
-if "!travel_choice!"=="9" goto main_menu
+if "!travel_choice!"=="9" if not "!location!"=="WOLFMOUNTAIN" (
+    echo.
+    echo Traveling to Wolf Mountain...
+    timeout /t 3 >nul
+    set "location=WOLFMOUNTAIN"
+    echo Arrived at Wolf Mountain! You hear howling in the distance.
+    echo.
+    pause >nul
+    goto main_menu
+)
+
+if "!travel_choice!"=="10" goto main_menu
 
 echo Invalid choice!
 pause >nul
@@ -2406,25 +2463,11 @@ REM END OF BROKEN CODE SECTION
     )
 
     if "!explore_choice!"=="4" (
-        echo.
-        echo You walk to the river...
-        timeout /t 1 >nul
-        echo Perfect fishing spot! The water looks calm.
-        echo You could catch some fish here.
-        echo.
-        pause >nul
-        goto explore_area
+        call :lumbridge_river_fishing
     )
 
     if "!explore_choice!"=="5" (
-        echo.
-        echo You enter the Lumbridge forest...
-        timeout /t 1 >nul
-        echo Many trees surround you, perfect for woodcutting.
-        echo You see some low-level trees you could practice on.
-        echo.
-        pause >nul
-        goto explore_area
+        call :lumbridge_forest_woodcutting
     )
 
     if "!explore_choice!"=="6" (
@@ -3277,7 +3320,31 @@ if "!travel_choice!"=="7" (
         timeout /t 2 >nul
         set /a "wilderness_encounter=!random! %% 100"
 
-        if !wilderness_encounter! lss 40 (
+        REM Enhanced wilderness encounters based on player combat level
+        if !combat_level! geq 20 (
+            REM High-level player encounters (more dangerous)
+            if !wilderness_encounter! lss 25 (
+                REM Elite Player Killer encounter (25% chance)
+                goto :elite_pk_encounter
+            ) else if !wilderness_encounter! lss 45 (
+                REM Regular Player Killer encounter (20% chance)
+                goto :wilderness_pk_encounter
+            ) else if !wilderness_encounter! lss 60 (
+                REM Wilderness Boss encounter (15% chance)
+                goto :wilderness_boss_encounter
+            ) else if !wilderness_encounter! lss 75 (
+                REM Dangerous escape (15% chance)
+                goto :dangerous_escape
+            ) else if !wilderness_encounter! lss 90 (
+                REM Bandit ambush (15% chance)
+                goto :bandit_ambush
+            ) else (
+                REM Safe exploration with high-value loot (10% chance)
+                goto :wilderness_safe_exploration
+            )
+        ) else (
+            REM Low-level player encounters (original system)
+            if !wilderness_encounter! lss 40 (
             REM Player killer encounter
             :wilderness_pk_encounter
             cls
@@ -3421,6 +3488,7 @@ if "!travel_choice!"=="7" (
             echo.
             pause >nul
             goto main_menu
+            )
         )
     ) else (
         echo.
@@ -5902,6 +5970,1509 @@ echo.
 echo The risks of the Wilderness have paid off!
 goto :eof
 
+:elite_pk_encounter
+REM Elite Player Killer encounter for high-level players
+cls
+echo.
+echo ========================================
+echo        ELITE PLAYER KILLER ENCOUNTER!
+echo ========================================
+echo.
+echo A legendary Player Killer appears!
+echo This is one of the most dangerous PKers in the Wilderness!
+echo.
+REM Elite PKers are level 30-50
+set /a "elite_pk_level=!random! %% 21 + 30"
+set /a "elite_pk_attack=!elite_pk_level! + 5"
+set /a "elite_pk_defence=!elite_pk_level! + 3"
+set /a "elite_pk_strength=!elite_pk_level! + 4"
+
+REM Elite weapons based on level
+if !elite_pk_level! lss 35 (
+    set "elite_pk_weapon=Rune Sword"
+) else if !elite_pk_level! lss 45 (
+    set "elite_pk_weapon=Dragon Sword"
+) else (
+    set "elite_pk_weapon=Godsword"
+)
+
+echo Elite Player Killer Stats:
+echo Combat Level: !elite_pk_level!
+echo Attack: !elite_pk_attack!
+echo Defence: !elite_pk_defence!
+echo Strength: !elite_pk_strength!
+echo Weapon: !elite_pk_weapon!
+echo.
+echo [F]ight back (Very dangerous!)
+echo [R]un away (May lose significant coins)
+echo [S]urrender (Lose all items and coins)
+echo.
+set /p elite_pk_choice="What do you do? "
+
+if /i "!elite_pk_choice!"=="f" (
+    REM Fight the elite player killer
+    echo.
+    echo You draw your weapon and prepare for elite PvP combat!
+    timeout /t 1 >nul
+    echo The Elite Player Killer attacks with incredible skill!
+    echo.
+    
+    REM Set up enemy stats for combat system
+    set "enemy_name=Elite Player Killer"
+    set "enemy_level=!elite_pk_level!"
+    set /a "enemy_maxhp=!elite_pk_level! * 4 + 20"
+    set "enemy_currenthp=!enemy_maxhp!"
+    set "enemy_attack=!elite_pk_attack!"
+    set "enemy_defence=!elite_pk_defence!"
+    set "enemy_weapon=!elite_pk_weapon!"
+    
+    REM Enhanced combat with elite PKer
+    call :enhanced_combat_system
+    
+    if !enemy_currenthp! leq 0 (
+        echo.
+        echo      ELITE WILDERNESS PVP VICTORY!
+        echo You have defeated the legendary Elite Player Killer!
+        echo.
+        call :elite_pvp_loot
+        echo.
+        echo You return to safety...
+        pause >nul
+        goto main_menu
+    ) else (
+        echo.
+        echo      ELITE WILDERNESS PVP DEFEAT!
+        echo The Elite Player Killer was too powerful!
+        echo You lose items and coins as per Wilderness rules!
+        echo.
+        call :elite_wilderness_penalty
+        set "currenthp=1"
+        echo.
+        echo You respawn in Lumbridge, having learned a hard lesson...
+        echo.
+        pause >nul
+        goto main_menu
+    )
+) else if /i "!elite_pk_choice!"=="r" (
+    echo.
+    echo You attempt to flee from the Elite Player Killer!
+    set /a "escape_roll=!random! %% 100"
+    if !escape_roll! lss 30 (
+        echo You successfully escape, but lose 100 coins in the process!
+        set /a "coins-=100"
+        if !coins! lss 0 set "coins=0"
+    ) else (
+        echo The Elite Player Killer catches you!
+        call :elite_wilderness_penalty
+        set "currenthp=1"
+        echo.
+        echo You are allowed to leave the Wilderness alive.
+        pause >nul
+        goto main_menu
+    )
+) else if /i "!elite_pk_choice!"=="s" (
+    echo.
+    echo You surrender to the Elite Player Killer!
+    call :elite_wilderness_penalty
+    set "currenthp=1"
+    echo.
+    echo You are allowed to leave the Wilderness alive.
+    pause >nul
+    goto main_menu
+) else (
+    echo.
+    echo Invalid choice! The Elite Player Killer attacks while you hesitate!
+    echo You must choose: [F]ight, [R]un, or [S]urrender!
+    pause >nul
+    goto :elite_pk_encounter
+)
+echo.
+pause >nul
+goto main_menu
+
+:wilderness_boss_encounter
+REM Wilderness Boss encounter for high-level players
+cls
+echo.
+echo ========================================
+echo         WILDERNESS BOSS ENCOUNTER!
+echo ========================================
+echo.
+echo A massive Wilderness Boss appears!
+echo This ancient creature guards valuable treasures!
+echo.
+REM Boss level based on player level
+set /a "boss_level=!combat_level! + !random! %% 10 + 5"
+set /a "boss_attack=!boss_level! + 8"
+set /a "boss_defence=!boss_level! + 6"
+set /a "boss_strength=!boss_level! + 10"
+
+echo Wilderness Boss Stats:
+echo Combat Level: !boss_level!
+echo Attack: !boss_attack!
+echo Defence: !boss_defence!
+echo Strength: !boss_strength!
+echo.
+echo [F]ight the boss (High risk, high reward!)
+echo [R]un away (Safe but no rewards)
+echo.
+set /p boss_choice="What do you do? "
+
+if /i "!boss_choice!"=="f" (
+    REM Fight the wilderness boss
+    echo.
+    echo You prepare to battle the Wilderness Boss!
+    timeout /t 2 >nul
+    echo The boss roars and attacks with incredible power!
+    echo.
+    
+    REM Set up boss stats for combat system
+    set "enemy_name=Wilderness Boss"
+    set "enemy_level=!boss_level!"
+    set /a "enemy_maxhp=!boss_level! * 6 + 50"
+    set "enemy_currenthp=!enemy_maxhp!"
+    set "enemy_attack=!boss_attack!"
+    set "enemy_defence=!boss_defence!"
+    set "enemy_weapon=Ancient Claws"
+    
+    REM Boss combat with special mechanics
+    call :boss_combat_system
+    
+    if !enemy_currenthp! leq 0 (
+        echo.
+        echo      WILDERNESS BOSS VICTORY!
+        echo You have defeated the mighty Wilderness Boss!
+        echo.
+        call :wilderness_boss_loot
+        echo.
+        echo You return to safety with your treasures...
+        pause >nul
+        goto main_menu
+    ) else (
+        echo.
+        echo      WILDERNESS BOSS DEFEAT!
+        echo The boss was too powerful for you!
+        echo You lose some items and respawn in Lumbridge.
+        echo.
+        call :wilderness_penalty
+        set "currenthp=1"
+        echo.
+        pause >nul
+        goto main_menu
+    )
+) else if /i "!boss_choice!"=="r" (
+    echo.
+    echo You wisely retreat from the Wilderness Boss.
+    echo You escape safely but gain no rewards.
+    echo.
+    pause >nul
+    goto main_menu
+) else (
+    echo.
+    echo Invalid choice! The boss attacks while you hesitate!
+    echo You must choose: [F]ight or [R]un!
+    pause >nul
+    goto :wilderness_boss_encounter
+)
+
+:dangerous_escape
+REM Dangerous escape scenario for high-level players
+echo.
+echo You encounter a group of hostile bandits!
+echo They demand your valuables and attack!
+echo.
+echo [F]ight the bandits
+echo [R]un away (Lose coins but escape)
+echo [S]urrender (Lose items but stay alive)
+echo.
+set /p bandit_choice="What do you do? "
+
+if /i "!bandit_choice!"=="f" (
+    echo.
+    echo You fight back against the bandits!
+    set /a "bandit_roll=!random! %% 100"
+    if !bandit_roll! lss 60 (
+        echo You defeat the bandits and take their loot!
+        set /a "bandit_loot=!random! %% 200 + 100"
+        echo You gained !bandit_loot! coins!
+        set /a "coins+=!bandit_loot!"
+        echo You gained 100 combat experience!
+        set /a "attack_xp+=50"
+        set /a "strength_xp+=30"
+        set /a "defence_xp+=20"
+        set /a "experience+=100"
+    ) else (
+        echo The bandits overpower you!
+        echo You lose 150 coins and some items.
+        set /a "coins-=150"
+        if !coins! lss 0 set "coins=0"
+        call :wilderness_penalty
+    )
+) else if /i "!bandit_choice!"=="r" (
+    echo.
+    echo You attempt to flee from the bandits!
+    set /a "escape_roll=!random! %% 100"
+    if !escape_roll! lss 70 (
+        echo You escape but lose 100 coins in the process!
+        set /a "coins-=100"
+        if !coins! lss 0 set "coins=0"
+    ) else (
+        echo The bandits catch you!
+        echo You lose 200 coins and some items.
+        set /a "coins-=200"
+        if !coins! lss 0 set "coins=0"
+        call :wilderness_penalty
+    )
+) else if /i "!bandit_choice!"=="s" (
+    echo.
+    echo You surrender to the bandits!
+    echo They take 250 coins and some items but let you go.
+    set /a "coins-=250"
+    if !coins! lss 0 set "coins=0"
+    call :wilderness_penalty
+) else (
+    echo.
+    echo Invalid choice! The bandits attack while you hesitate!
+    echo You lose 200 coins and some items.
+    set /a "coins-=200"
+    if !coins! lss 0 set "coins=0"
+    call :wilderness_penalty
+)
+echo.
+pause >nul
+goto main_menu
+
+:bandit_ambush
+REM Bandit ambush encounter
+echo.
+echo You are ambushed by a group of bandits!
+echo They block your path and demand your valuables!
+echo.
+echo [F]ight the bandits
+echo [R]un away (May lose coins)
+echo [S]urrender (Lose items but stay alive)
+echo.
+set /p ambush_choice="What do you do? "
+
+if /i "!ambush_choice!"=="f" (
+    echo.
+    echo You fight back against the bandits!
+    set /a "ambush_roll=!random! %% 100"
+    if !ambush_roll! lss 55 (
+        echo You defeat the bandits and take their loot!
+        set /a "ambush_loot=!random! %% 150 + 75"
+        echo You gained !ambush_loot! coins!
+        set /a "coins+=!ambush_loot!"
+        echo You gained 75 combat experience!
+        set /a "attack_xp+=40"
+        set /a "strength_xp+=25"
+        set /a "defence_xp+=10"
+        set /a "experience+=75"
+    ) else (
+        echo The bandits overpower you!
+        echo You lose 125 coins and some items.
+        set /a "coins-=125"
+        if !coins! lss 0 set "coins=0"
+        call :wilderness_penalty
+    )
+) else if /i "!ambush_choice!"=="r" (
+    echo.
+    echo You attempt to flee from the bandits!
+    set /a "escape_roll=!random! %% 100"
+    if !escape_roll! lss 65 (
+        echo You escape but lose 75 coins in the process!
+        set /a "coins-=75"
+        if !coins! lss 0 set "coins=0"
+    ) else (
+        echo The bandits catch you!
+        echo You lose 150 coins and some items.
+        set /a "coins-=150"
+        if !coins! lss 0 set "coins=0"
+        call :wilderness_penalty
+    )
+) else if /i "!ambush_choice!"=="s" (
+    echo.
+    echo You surrender to the bandits!
+    echo They take 175 coins and some items but let you go.
+    set /a "coins-=175"
+    if !coins! lss 0 set "coins=0"
+    call :wilderness_penalty
+) else (
+    echo.
+    echo Invalid choice! The bandits attack while you hesitate!
+    echo You lose 150 coins and some items.
+    set /a "coins-=150"
+    if !coins! lss 0 set "coins=0"
+    call :wilderness_penalty
+)
+echo.
+pause >nul
+goto main_menu
+
+:wilderness_safe_exploration
+REM Safe exploration with high-value loot for high-level players
+echo.
+echo You manage to explore the Wilderness safely... this time.
+echo You found some extremely valuable items in the Wilderness!
+echo.
+
+REM High-value wilderness loot for high-level players
+set /a "high_loot=!random! %% 100"
+if !high_loot! lss 20 (
+    echo You found 500 coins!
+    set /a "coins+=500"
+) else if !high_loot! lss 40 (
+    echo You found a rare gem!
+    if defined inventory (
+        set "inventory=!inventory!,Rare Gem"
+    ) else (
+        set "inventory=Rare Gem"
+    )
+) else if !high_loot! lss 60 (
+    echo You found some runite ore!
+    if defined inventory (
+        set "inventory=!inventory!,Runite Ore"
+    ) else (
+        set "inventory=Runite Ore"
+    )
+) else if !high_loot! lss 80 (
+    echo You found ancient artifacts!
+    set /a "artifact_value=!random! %% 300 + 200"
+    echo They're worth !artifact_value! coins!
+    set /a "coins+=!artifact_value!"
+) else (
+    echo You found a mysterious scroll!
+    if defined inventory (
+        set "inventory=!inventory!,Mysterious Scroll"
+    ) else (
+        set "inventory=Mysterious Scroll"
+    )
+)
+echo.
+pause >nul
+goto main_menu
+
+:elite_pvp_loot
+REM Special loot for defeating Elite Player Killers
+echo.
+echo Searching the defeated Elite Player Killer...
+timeout /t 1 >nul
+
+set /a "elite_loot_roll=!random! %% 100"
+
+if !elite_loot_roll! lss 30 (
+    REM High value coin drop
+    set /a "elite_coin_drop=!enemy_level! * 20 + (!random! %% 100)"
+    echo You found !elite_coin_drop! coins on the Elite Player Killer!
+    set /a "coins+=!elite_coin_drop!"
+) else if !elite_loot_roll! lss 50 (
+    REM Elite weapon drop
+    if !enemy_level! geq 45 (
+        echo The Elite Player Killer dropped a Godsword!
+        if defined inventory (
+            set "inventory=!inventory!,Godsword"
+        ) else (
+            set "inventory=Godsword"
+        )
+    ) else if !enemy_level! geq 35 (
+        echo The Elite Player Killer dropped a Dragon Sword!
+        if defined inventory (
+            set "inventory=!inventory!,Dragon Sword"
+        ) else (
+            set "inventory=Dragon Sword"
+        )
+    ) else (
+        echo The Elite Player Killer dropped a Rune Sword!
+        if defined inventory (
+            set "inventory=!inventory!,Rune Sword"
+        ) else (
+            set "inventory=Rune Sword"
+        )
+    )
+) else if !elite_loot_roll! lss 70 (
+    REM Elite armor drop
+    echo The Elite Player Killer dropped Elite Armor!
+    if defined inventory (
+        set "inventory=!inventory!,Elite Armor"
+    ) else (
+        set "inventory=Elite Armor"
+    )
+) else if !elite_loot_roll! lss 85 (
+    REM High-level runes
+    echo The Elite Player Killer had Death Runes!
+    if defined inventory (
+        set "inventory=!inventory!,Death Rune,Death Rune,Death Rune"
+    ) else (
+        set "inventory=Death Rune,Death Rune,Death Rune"
+    )
+) else (
+    REM Rare item
+    echo The Elite Player Killer had a rare artifact!
+    if defined inventory (
+        set "inventory=!inventory!,Rare Artifact"
+    ) else (
+        set "inventory=Rare Artifact"
+    )
+)
+echo.
+echo The risks of the Elite Wilderness have paid off!
+goto :eof
+
+:elite_wilderness_penalty
+REM Enhanced penalty for surrendering to Elite Player Killers
+echo The Elite Player Killer takes most of your valuable items!
+echo.
+
+REM Count items in inventory
+set "item_count=0"
+if defined inventory (
+    for %%a in (!inventory!) do set /a "item_count+=1"
+)
+
+REM Remove more items for elite encounters
+if !item_count! gtr 0 (
+    set /a "items_to_remove=!item_count! * 3 / 4"
+    if !items_to_remove! lss 1 set "items_to_remove=1"
+    
+    for /l %%i in (1,1,!items_to_remove!) do (
+        call :remove_random_item
+    )
+    
+    echo You lost !items_to_remove! items to the Elite Player Killer!
+) else (
+    echo You had no items to lose.
+)
+
+REM Take more coins
+set /a "coin_penalty=!coins! * 2 / 3"
+if !coin_penalty! lss 100 set "coin_penalty=100"
+set /a "coins-=!coin_penalty!"
+if !coins! lss 0 set "coins=0"
+echo You lost !coin_penalty! coins to the Elite Player Killer!
+goto :eof
+
+:wilderness_boss_loot
+REM Special loot for defeating Wilderness Boss
+echo.
+echo Searching the defeated Wilderness Boss...
+timeout /t 2 >nul
+
+set /a "boss_loot_roll=!random! %% 100"
+
+if !boss_loot_roll! lss 25 (
+    REM Massive coin drop
+    set /a "boss_coin_drop=!enemy_level! * 50 + (!random! %% 500)"
+    echo You found !boss_coin_drop! coins in the boss's treasure!
+    set /a "coins+=!boss_coin_drop!"
+) else if !boss_loot_roll! lss 45 (
+    REM Boss weapon
+    echo The boss dropped a Boss Weapon!
+    if defined inventory (
+        set "inventory=!inventory!,Boss Weapon"
+    ) else (
+        set "inventory=Boss Weapon"
+    )
+) else if !boss_loot_roll! lss 65 (
+    REM Boss armor
+    echo The boss dropped Boss Armor!
+    if defined inventory (
+        set "inventory=!inventory!,Boss Armor"
+    ) else (
+        set "inventory=Boss Armor"
+    )
+) else if !boss_loot_roll! lss 80 (
+    REM Rare materials
+    echo The boss dropped rare crafting materials!
+    if defined inventory (
+        set "inventory=!inventory!,Rare Materials"
+    ) else (
+        set "inventory=Rare Materials"
+    )
+) else (
+    REM Legendary item
+    echo The boss dropped a legendary item!
+    if defined inventory (
+        set "inventory=!inventory!,Legendary Item"
+    ) else (
+        set "inventory=Legendary Item"
+    )
+)
+echo.
+echo You have claimed the boss's treasure!
+goto :eof
+
+:remove_random_item
+REM Remove a random item from inventory
+if not defined inventory goto :eof
+setlocal enabledelayedexpansion
+set "temp_inventory=!inventory!"
+set "item_count=0"
+for %%a in (!inventory!) do set /a "item_count+=1"
+if !item_count! equ 0 goto :eof
+set /a "random_item=!random! %% !item_count! + 1"
+set "current_num=0"
+set "new_inventory="
+for %%a in (!temp_inventory!) do (
+    set /a "current_num+=1"
+    if !current_num! neq !random_item! (
+        if defined new_inventory (
+            set "new_inventory=!new_inventory!,%%a"
+        ) else (
+            set "new_inventory=%%a"
+        )
+    )
+    set "temp_inventory=%%b"
+)
+endlocal & set "inventory=%new_inventory%"
+goto :eof
+
+:enhanced_combat_system
+REM Enhanced combat system for elite encounters
+echo.
+echo ========================================
+echo        ENHANCED PVP COMBAT!
+echo ========================================
+echo.
+echo Your HP: !currenthp!/!maxhp!
+echo !enemy_name! HP: !enemy_currenthp!/!enemy_maxhp!
+echo.
+
+REM Player attacks first
+call :calculate_damage !attack! !enemy_defence!
+if !damage! gtr 0 (
+    echo You attack the !enemy_name! with your weapon!
+    timeout /t 1 >nul
+    echo You deal !damage! damage!
+    set /a "enemy_currenthp-=!damage!"
+    
+    if !enemy_currenthp! leq 0 (
+        echo The !enemy_name! has been defeated!
+        goto :eof
+    )
+) else (
+    echo Your attack misses the !enemy_name!!
+)
+
+REM Enemy attacks back
+if !enemy_currenthp! gtr 0 (
+    echo.
+    call :calculate_damage_direct !enemy_attack! !defence!
+    set "enemy_damage=!damage!"
+    
+    if !enemy_damage! gtr 0 (
+        echo The !enemy_name! attacks you with its !enemy_weapon!!
+        timeout /t 1 >nul
+        echo You take !enemy_damage! damage!
+        set /a "currenthp-=!enemy_damage!"
+        
+        if !currenthp! leq 0 (
+            echo.
+            echo You have been defeated by the !enemy_name!!
+            goto :eof
+        )
+    ) else (
+        echo The !enemy_name!'s attack misses you!
+    )
+)
+goto :eof
+
+:boss_combat_system
+REM Boss combat system with special mechanics
+echo.
+echo ========================================
+echo        BOSS COMBAT!
+echo ========================================
+echo.
+echo Your HP: !currenthp!/!maxhp!
+echo !enemy_name! HP: !enemy_currenthp!/!enemy_maxhp!
+echo.
+
+REM Player attacks first
+call :calculate_damage !attack! !enemy_defence!
+if !damage! gtr 0 (
+    echo You attack the !enemy_name! with your weapon!
+    timeout /t 1 >nul
+    echo You deal !damage! damage!
+    set /a "enemy_currenthp-=!damage!"
+    
+    if !enemy_currenthp! leq 0 (
+        echo The !enemy_name! has been defeated!
+        goto :eof
+    )
+) else (
+    echo Your attack misses the !enemy_name!!
+)
+
+REM Boss attacks back with enhanced damage
+if !enemy_currenthp! gtr 0 (
+    echo.
+    call :calculate_damage_direct !enemy_attack! !defence!
+    set "enemy_damage=!damage!"
+    
+    REM Boss gets damage bonus
+    set /a "enemy_damage+=2"
+    
+    if !enemy_damage! gtr 0 (
+        echo The !enemy_name! attacks you with incredible power!
+        timeout /t 1 >nul
+        echo You take !enemy_damage! damage!
+        set /a "currenthp-=!enemy_damage!"
+        
+        if !currenthp! leq 0 (
+            echo.
+            echo You have been defeated by the !enemy_name!!
+            goto :eof
+        )
+    ) else (
+        echo The !enemy_name!'s attack misses you!
+    )
+)
+goto :eof
+
+:wilderness_monster_encounter
+REM Wilderness monster encounter
+echo.
+echo ========================================
+echo        WILDERNESS MONSTER ENCOUNTER!
+echo ========================================
+echo.
+echo You encounter dangerous creatures in the wilderness!
+echo.
+
+REM Random monster selection
+set /a "monster_roll=!random! %% 100"
+
+if !monster_roll! lss 25 (
+    REM Giant Spider
+    echo A Giant Spider blocks your path!
+    echo It hisses menacingly and prepares to attack.
+    echo.
+    echo [F]ight the spider
+    echo [R]un away
+    echo.
+    set /p monster_choice="What do you do? "
+    
+    if /i "!monster_choice!"=="f" (
+        echo.
+        echo You engage the Giant Spider in combat!
+        set "enemy_name=Giant Spider"
+        set "enemy_level=12"
+        set /a "enemy_maxhp=25"
+        set "enemy_currenthp=25"
+        set "enemy_attack=8"
+        set "enemy_defence=6"
+        set "enemy_weapon=Poisonous Fangs"
+        
+        call :enhanced_combat_system
+        
+        if !enemy_currenthp! leq 0 (
+            echo.
+            echo You defeated the Giant Spider!
+            echo You gained 50 combat experience!
+            set /a "attack_xp+=25"
+            set /a "strength_xp+=15"
+            set /a "defence_xp+=10"
+            set /a "experience+=50"
+            
+            REM Spider loot
+            set /a "spider_loot=!random! %% 3"
+            if !spider_loot! equ 0 (
+                echo You found Spider Silk!
+                if defined inventory (
+                    set "inventory=!inventory!,Spider Silk"
+                ) else (
+                    set "inventory=Spider Silk"
+                )
+            )
+        ) else (
+            echo The Giant Spider defeats you!
+            echo You lose 30 coins and respawn in Lumbridge.
+            set /a "coins-=30"
+            if !coins! lss 0 set "coins=0"
+            set "currenthp=1"
+        )
+    ) else if /i "!monster_choice!"=="r" (
+        echo.
+        echo You successfully flee from the Giant Spider!
+        echo You lose 10 coins in the escape.
+        set /a "coins-=10"
+        if !coins! lss 0 set "coins=0"
+    ) else (
+        echo Invalid choice! The spider attacks while you hesitate!
+        echo You take 5 damage!
+        set /a "currenthp-=5"
+    )
+) else if !monster_roll! lss 50 (
+    REM Wild Boar
+    echo A Wild Boar charges at you!
+    echo It snorts angrily and lowers its tusks.
+    echo.
+    echo [F]ight the boar
+    echo [R]un away
+    echo.
+    set /p monster_choice="What do you do? "
+    
+    if /i "!monster_choice!"=="f" (
+        echo.
+        echo You engage the Wild Boar in combat!
+        set "enemy_name=Wild Boar"
+        set "enemy_level=8"
+        set /a "enemy_maxhp=18"
+        set "enemy_currenthp=18"
+        set "enemy_attack=6"
+        set "enemy_defence=4"
+        set "enemy_weapon=Tusks"
+        
+        call :enhanced_combat_system
+        
+        if !enemy_currenthp! leq 0 (
+            echo.
+            echo You defeated the Wild Boar!
+            echo You gained 35 combat experience!
+            set /a "attack_xp+=20"
+            set /a "strength_xp+=10"
+            set /a "defence_xp+=5"
+            set /a "experience+=35"
+            
+            REM Boar loot
+            set /a "boar_loot=!random! %% 2"
+            if !boar_loot! equ 0 (
+                echo You found Raw Boar Meat!
+                if defined inventory (
+                    set "inventory=!inventory!,Raw Boar Meat"
+                ) else (
+                    set "inventory=Raw Boar Meat"
+                )
+            )
+        ) else (
+            echo The Wild Boar defeats you!
+            echo You lose 20 coins and respawn in Lumbridge.
+            set /a "coins-=20"
+            if !coins! lss 0 set "coins=0"
+            set "currenthp=1"
+        )
+    ) else if /i "!monster_choice!"=="r" (
+        echo.
+        echo You successfully flee from the Wild Boar!
+        echo You lose 5 coins in the escape.
+        set /a "coins-=5"
+        if !coins! lss 0 set "coins=0"
+    ) else (
+        echo Invalid choice! The boar attacks while you hesitate!
+        echo You take 3 damage!
+        set /a "currenthp-=3"
+    )
+) else if !monster_roll! lss 75 (
+    REM Bandit
+    echo A Bandit emerges from behind a rock!
+    echo "Hand over your valuables!" he demands.
+    echo.
+    echo [F]ight the bandit
+    echo [R]un away
+    echo [S]urrender (Lose coins but stay alive)
+    echo.
+    set /p monster_choice="What do you do? "
+    
+    if /i "!monster_choice!"=="f" (
+        echo.
+        echo You engage the Bandit in combat!
+        set "enemy_name=Bandit"
+        set "enemy_level=15"
+        set /a "enemy_maxhp=30"
+        set "enemy_currenthp=30"
+        set "enemy_attack=10"
+        set "enemy_defence=8"
+        set "enemy_weapon=Iron Sword"
+        
+        call :enhanced_combat_system
+        
+        if !enemy_currenthp! leq 0 (
+            echo.
+            echo You defeated the Bandit!
+            echo You gained 75 combat experience!
+            set /a "attack_xp+=40"
+            set /a "strength_xp+=25"
+            set /a "defence_xp+=10"
+            set /a "experience+=75"
+            
+            REM Bandit loot
+            set /a "bandit_coins=!random! %% 50 + 25"
+            echo You found !bandit_coins! coins on the bandit!
+            set /a "coins+=!bandit_coins!"
+        ) else (
+            echo The Bandit defeats you!
+            echo You lose 50 coins and some items.
+            set /a "coins-=50"
+            if !coins! lss 0 set "coins=0"
+            call :wilderness_penalty
+            set "currenthp=1"
+        )
+    ) else if /i "!monster_choice!"=="r" (
+        echo.
+        echo You attempt to flee from the Bandit!
+        set /a "escape_roll=!random! %% 100"
+        if !escape_roll! lss 60 (
+            echo You successfully escape!
+            echo You lose 25 coins in the escape.
+            set /a "coins-=25"
+            if !coins! lss 0 set "coins=0"
+        ) else (
+            echo The Bandit catches you!
+            echo You lose 40 coins and some items.
+            set /a "coins-=40"
+            if !coins! lss 0 set "coins=0"
+            call :wilderness_penalty
+        )
+    ) else if /i "!monster_choice!"=="s" (
+        echo.
+        echo You surrender to the Bandit!
+        set /a "surrender_coins=!coins! / 3"
+        echo The bandit takes !surrender_coins! coins and lets you go.
+        set /a "coins-=!surrender_coins!"
+        if !coins! lss 0 set "coins=0"
+    ) else (
+        echo Invalid choice! The bandit attacks while you hesitate!
+        echo You lose 30 coins and some items.
+        set /a "coins-=30"
+        if !coins! lss 0 set "coins=0"
+        call :wilderness_penalty
+    )
+) else (
+    REM Safe exploration
+    echo You explore the wilderness carefully...
+    echo You don't encounter any dangerous creatures this time.
+    echo You found some useful items!
+    
+    set /a "safe_loot=!random! %% 100"
+    if !safe_loot! lss 30 (
+        echo You found 25 coins!
+        set /a "coins+=25"
+    ) else if !safe_loot! lss 60 (
+        echo You found a Health Potion!
+        if defined inventory (
+            set "inventory=!inventory!,Health Potion"
+        ) else (
+            set "inventory=Health Potion"
+        )
+    ) else (
+        echo You found some Wilderness Herbs!
+        if defined inventory (
+            set "inventory=!inventory!,Wilderness Herbs"
+        ) else (
+            set "inventory=Wilderness Herbs"
+        )
+    )
+)
+goto :eof
+
+:wilderness_resource_gathering
+REM Wilderness resource gathering with tool requirements
+echo.
+echo ========================================
+echo        WILDERNESS RESOURCE GATHERING!
+echo ========================================
+echo.
+echo You find various resource nodes in the wilderness.
+echo.
+
+echo Available resources:
+echo 1. Mining spots - Various ores and gems
+echo 2. Woodcutting areas - Ancient trees
+echo 3. Fishing spots - Wilderness lake
+echo 4. Herb gathering - Medicinal plants
+echo 5. Back to exploration
+echo.
+set /p resource_choice="What do you gather? "
+
+if "!resource_choice!"=="1" (
+    call :wilderness_mining
+) else if "!resource_choice!"=="2" (
+    call :wilderness_woodcutting
+) else if "!resource_choice!"=="3" (
+    call :wilderness_fishing
+) else if "!resource_choice!"=="4" (
+    call :wilderness_herb_gathering
+) else if "!resource_choice!"=="5" (
+    goto :eof
+) else (
+    echo Invalid choice!
+)
+goto :eof
+
+:wilderness_mining
+REM Wilderness mining with pickaxe requirement
+echo.
+echo You approach the mining spots...
+echo.
+
+REM Check if player has a pickaxe
+call :count_item "Pickaxe"
+if !item_count! equ 0 (
+    echo You need a pickaxe to mine here!
+    echo You can buy one from the general store or smith one yourself.
+    echo.
+    goto :eof
+)
+
+echo You begin mining in the wilderness...
+timeout /t 2 >nul
+
+REM Random mining results
+set /a "mining_roll=!random! %% 100"
+
+if !mining_roll! lss 20 (
+    echo You found Iron Ore!
+    if defined inventory (
+        set "inventory=!inventory!,Iron Ore"
+    ) else (
+        set "inventory=Iron Ore"
+    )
+    echo You gained 25 Mining experience!
+    set /a "mining_xp+=25"
+    set /a "experience+=25"
+) else if !mining_roll! lss 40 (
+    echo You found Coal!
+    if defined inventory (
+        set "inventory=!inventory!,Coal"
+    ) else (
+        set "inventory=Coal"
+    )
+    echo You gained 30 Mining experience!
+    set /a "mining_xp+=30"
+    set /a "experience+=30"
+) else if !mining_roll! lss 60 (
+    echo You found Silver Ore!
+    if defined inventory (
+        set "inventory=!inventory!,Silver Ore"
+    ) else (
+        set "inventory=Silver Ore"
+    )
+    echo You gained 40 Mining experience!
+    set /a "mining_xp+=40"
+    set /a "experience+=40"
+) else if !mining_roll! lss 80 (
+    echo You found Gold Ore!
+    if defined inventory (
+        set "inventory=!inventory!,Gold Ore"
+    ) else (
+        set "inventory=Gold Ore"
+    )
+    echo You gained 50 Mining experience!
+    set /a "mining_xp+=50"
+    set /a "experience+=50"
+) else if !mining_roll! lss 95 (
+    echo You found a rare gem!
+    if defined inventory (
+        set "inventory=!inventory!,Rare Gem"
+    ) else (
+        set "inventory=Rare Gem"
+    )
+    echo You gained 75 Mining experience!
+    set /a "mining_xp+=75"
+    set /a "experience+=75"
+) else (
+    echo You found nothing valuable this time.
+    echo You gained 10 Mining experience!
+    set /a "mining_xp+=10"
+    set /a "experience+=10"
+)
+
+REM Check for level up
+call :check_level_up mining !mining_xp!
+goto :eof
+
+:wilderness_woodcutting
+REM Wilderness woodcutting
+echo.
+echo You approach the ancient trees...
+echo.
+
+REM Check if player has an axe
+call :count_item "Axe"
+if !item_count! equ 0 (
+    echo You need an axe to cut wood here!
+    echo You can buy one from the general store or smith one yourself.
+    echo.
+    goto :eof
+)
+
+echo You begin cutting the ancient trees...
+timeout /t 2 >nul
+
+REM Random woodcutting results
+set /a "woodcutting_roll=!random! %% 100"
+
+if !woodcutting_roll! lss 30 (
+    echo You cut some Oak Logs!
+    if defined inventory (
+        set "inventory=!inventory!,Oak Logs"
+    ) else (
+        set "inventory=Oak Logs"
+    )
+    echo You gained 20 Woodcutting experience!
+    set /a "woodcutting_xp+=20"
+    set /a "experience+=20"
+) else if !woodcutting_roll! lss 60 (
+    echo You cut some Willow Logs!
+    if defined inventory (
+        set "inventory=!inventory!,Willow Logs"
+    ) else (
+        set "inventory=Willow Logs"
+    )
+    echo You gained 30 Woodcutting experience!
+    set /a "woodcutting_xp+=30"
+    set /a "experience+=30"
+) else if !woodcutting_roll! lss 85 (
+    echo You cut some Maple Logs!
+    if defined inventory (
+        set "inventory=!inventory!,Maple Logs"
+    ) else (
+        set "inventory=Maple Logs"
+    )
+    echo You gained 45 Woodcutting experience!
+    set /a "woodcutting_xp+=45"
+    set /a "experience+=45"
+) else (
+    echo You cut some Yew Logs!
+    if defined inventory (
+        set "inventory=!inventory!,Yew Logs"
+    ) else (
+        set "inventory=Yew Logs"
+    )
+    echo You gained 60 Woodcutting experience!
+    set /a "woodcutting_xp+=60"
+    set /a "experience+=60"
+)
+
+REM Check for level up
+call :check_level_up woodcutting !woodcutting_xp!
+goto :eof
+
+:wilderness_fishing
+REM Wilderness fishing
+echo.
+echo You approach the wilderness lake...
+echo.
+
+REM Check if player has a fishing rod
+call :count_item "Fishing Rod"
+if !item_count! equ 0 (
+    echo You need a fishing rod to fish here!
+    echo You can buy one from the general store or craft one yourself.
+    echo.
+    goto :eof
+)
+
+echo You begin fishing in the wilderness lake...
+timeout /t 2 >nul
+
+REM Random fishing results
+set /a "fishing_roll=!random! %% 100"
+
+if !fishing_roll! lss 25 (
+    echo You caught a Trout!
+    if defined inventory (
+        set "inventory=!inventory!,Trout"
+    ) else (
+        set "inventory=Trout"
+    )
+    echo You gained 20 Fishing experience!
+    set /a "fishing_xp+=20"
+    set /a "experience+=20"
+) else if !fishing_roll! lss 50 (
+    echo You caught a Salmon!
+    if defined inventory (
+        set "inventory=!inventory!,Salmon"
+    ) else (
+        set "inventory=Salmon"
+    )
+    echo You gained 30 Fishing experience!
+    set /a "fishing_xp+=30"
+    set /a "experience+=30"
+) else if !fishing_roll! lss 75 (
+    echo You caught a Pike!
+    if defined inventory (
+        set "inventory=!inventory!,Pike"
+    ) else (
+        set "inventory=Pike"
+    )
+    echo You gained 40 Fishing experience!
+    set /a "fishing_xp+=40"
+    set /a "experience+=40"
+) else if !fishing_roll! lss 95 (
+    echo You caught a rare fish!
+    if defined inventory (
+        set "inventory=!inventory!,Rare Fish"
+    ) else (
+        set "inventory=Rare Fish"
+    )
+    echo You gained 60 Fishing experience!
+    set /a "fishing_xp+=60"
+    set /a "experience+=60"
+) else (
+    echo You caught nothing this time.
+    echo You gained 5 Fishing experience!
+    set /a "fishing_xp+=5"
+    set /a "experience+=5"
+)
+
+REM Check for level up
+call :check_level_up fishing !fishing_xp!
+goto :eof
+
+:wilderness_herb_gathering
+REM Wilderness herb gathering
+echo.
+echo You search for medicinal herbs...
+echo.
+
+echo You begin gathering herbs in the wilderness...
+timeout /t 2 >nul
+
+REM Random herb gathering results
+set /a "herb_roll=!random! %% 100"
+
+if !herb_roll! lss 30 (
+    echo You found Marrentill!
+    if defined inventory (
+        set "inventory=!inventory!,Marrentill"
+    ) else (
+        set "inventory=Marrentill"
+    )
+    echo You gained 15 Herblore experience!
+    set /a "herblore_xp+=15"
+    set /a "experience+=15"
+) else if !herb_roll! lss 60 (
+    echo You found Tarromin!
+    if defined inventory (
+        set "inventory=!inventory!,Tarromin"
+    ) else (
+        set "inventory=Tarromin"
+    )
+    echo You gained 25 Herblore experience!
+    set /a "herblore_xp+=25"
+    set /a "experience+=25"
+) else if !herb_roll! lss 85 (
+    echo You found Harralander!
+    if defined inventory (
+        set "inventory=!inventory!,Harralander"
+    ) else (
+        set "inventory=Harralander"
+    )
+    echo You gained 35 Herblore experience!
+    set /a "herblore_xp+=35"
+    set /a "experience+=35"
+) else (
+    echo You found a rare herb!
+    if defined inventory (
+        set "inventory=!inventory!,Rare Herb"
+    ) else (
+        set "inventory=Rare Herb"
+    )
+    echo You gained 50 Herblore experience!
+    set /a "herblore_xp+=50"
+    set /a "experience+=50"
+)
+
+REM Check for level up
+call :check_level_up herblore !herblore_xp!
+goto :eof
+
+:wilderness_pvp_hotspot
+REM Wilderness PvP hotspot
+echo.
+echo ========================================
+echo        WILDERNESS PVP HOTSPOT!
+echo ========================================
+echo.
+echo You approach a known PvP hotspot...
+echo This area is notorious for player combat and high-stakes battles.
+echo.
+
+echo [E]ngage in PvP combat
+echo [O]bserve the area
+echo [L]eave the hotspot
+echo.
+set /p hotspot_choice="What do you do? "
+
+if /i "!hotspot_choice!"=="e" (
+    echo.
+    echo You prepare for PvP combat in the hotspot!
+    echo This will trigger a random PvP encounter...
+    timeout /t 2 >nul
+    call :wilderness_pk_encounter
+) else if /i "!hotspot_choice!"=="o" (
+    echo.
+    echo You observe the PvP hotspot from a safe distance...
+    echo You see evidence of recent battles and valuable loot scattered about.
+    echo You gain 10 experience from observing combat techniques.
+    set /a "experience+=10"
+) else if /i "!hotspot_choice!"=="l" (
+    echo.
+    echo You wisely leave the PvP hotspot.
+    echo You return to safer areas of the wilderness.
+) else (
+    echo Invalid choice!
+)
+goto :eof
+
+:wilderness_ancient_ruins
+REM Wilderness ancient ruins exploration
+echo.
+echo ========================================
+echo        WILDERNESS ANCIENT RUINS!
+echo ========================================
+echo.
+echo You discover ancient ruins in the wilderness...
+echo These mysterious structures hold secrets and treasures.
+echo.
+
+echo [E]xplore the ruins
+echo [S]earch for treasure
+echo [L]eave the ruins
+echo.
+set /p ruins_choice="What do you do? "
+
+if /i "!ruins_choice!"=="e" (
+    echo.
+    echo You carefully explore the ancient ruins...
+    timeout /t 2 >nul
+    
+    set /a "ruins_roll=!random! %% 100"
+    
+    if !ruins_roll! lss 30 (
+        echo You find ancient artifacts!
+        if defined inventory (
+            set "inventory=!inventory!,Ancient Artifacts"
+        ) else (
+            set "inventory=Ancient Artifacts"
+        )
+        echo You gained 50 experience!
+        set /a "experience+=50"
+    ) else if !ruins_roll! lss 60 (
+        echo You discover a hidden chamber with coins!
+        set /a "ruins_coins=!random! %% 100 + 50"
+        echo You found !ruins_coins! coins!
+        set /a "coins+=!ruins_coins!"
+        echo You gained 30 experience!
+        set /a "experience+=30"
+    ) else if !ruins_roll! lss 85 (
+        echo You find ancient runes!
+        if defined inventory (
+            set "inventory=!inventory!,Ancient Runes"
+        ) else (
+            set "inventory=Ancient Runes"
+        )
+        echo You gained 40 experience!
+        set /a "experience+=40"
+    ) else (
+        echo You find nothing of value in the ruins.
+        echo You gained 10 experience from exploring.
+        set /a "experience+=10"
+    )
+) else if /i "!ruins_choice!"=="s" (
+    echo.
+    echo You search for treasure in the ruins...
+    timeout /t 2 >nul
+    
+    set /a "treasure_roll=!random! %% 100"
+    
+    if !treasure_roll! lss 25 (
+        echo You find a treasure chest!
+        set /a "treasure_coins=!random! %% 200 + 100"
+        echo You found !treasure_coins! coins!
+        set /a "coins+=!treasure_coins!"
+        echo You gained 75 experience!
+        set /a "experience+=75"
+    ) else if !treasure_roll! lss 50 (
+        echo You find ancient jewelry!
+        if defined inventory (
+            set "inventory=!inventory!,Ancient Jewelry"
+        ) else (
+            set "inventory=Ancient Jewelry"
+        )
+        echo You gained 60 experience!
+        set /a "experience+=60"
+    ) else if !treasure_roll! lss 75 (
+        echo You find a mysterious scroll!
+        if defined inventory (
+            set "inventory=!inventory!,Mysterious Scroll"
+        ) else (
+            set "inventory=Mysterious Scroll"
+        )
+        echo You gained 45 experience!
+        set /a "experience+=45"
+    ) else (
+        echo You find nothing valuable in your search.
+        echo You gained 15 experience from searching.
+        set /a "experience+=15"
+    )
+) else if /i "!ruins_choice!"=="l" (
+    echo.
+    echo You leave the ancient ruins.
+    echo You return to the wilderness.
+) else (
+    echo Invalid choice!
+)
+goto :eof
+
+:wilderness_caves
+REM Wilderness caves exploration
+echo.
+echo ========================================
+echo        WILDERNESS CAVES!
+echo ========================================
+echo.
+echo You discover a cave entrance in the wilderness...
+echo The cave looks dark and mysterious.
+echo.
+
+echo [E]nter the cave
+echo [P]eer inside
+echo [L]eave the cave
+echo.
+set /p cave_choice="What do you do? "
+
+if /i "!cave_choice!"=="e" (
+    echo.
+    echo You enter the wilderness cave...
+    timeout /t 2 >nul
+    
+    set /a "cave_roll=!random! %% 100"
+    
+    if !cave_roll! lss 20 (
+        echo You encounter a cave monster!
+        echo A Giant Bat attacks you!
+        echo.
+        echo [F]ight the bat
+        echo [R]un away
+        echo.
+        set /p bat_choice="What do you do? "
+        
+        if /i "!bat_choice!"=="f" (
+            echo.
+            echo You fight the Giant Bat!
+            set "enemy_name=Giant Bat"
+            set "enemy_level=10"
+            set /a "enemy_maxhp=20"
+            set "enemy_currenthp=20"
+            set "enemy_attack=7"
+            set "enemy_defence=5"
+            set "enemy_weapon=Sharp Claws"
+            
+            call :enhanced_combat_system
+            
+            if !enemy_currenthp! leq 0 (
+                echo.
+                echo You defeated the Giant Bat!
+                echo You gained 40 combat experience!
+                set /a "attack_xp+=20"
+                set /a "strength_xp+=15"
+                set /a "defence_xp+=5"
+                set /a "experience+=40"
+            ) else (
+                echo The Giant Bat defeats you!
+                echo You lose 25 coins and respawn in Lumbridge.
+                set /a "coins-=25"
+                if !coins! lss 0 set "coins=0"
+                set "currenthp=1"
+            )
+        ) else if /i "!bat_choice!"=="r" (
+            echo.
+            echo You flee from the Giant Bat!
+            echo You escape safely but gain no rewards.
+        ) else (
+            echo Invalid choice! The bat attacks while you hesitate!
+            echo You take 4 damage!
+            set /a "currenthp-=4"
+        )
+    ) else if !cave_roll! lss 50 (
+        echo You find valuable minerals in the cave!
+        if defined inventory (
+            set "inventory=!inventory!,Cave Minerals"
+        ) else (
+            set "inventory=Cave Minerals"
+        )
+        echo You gained 35 experience!
+        set /a "experience+=35"
+    ) else if !cave_roll! lss 80 (
+        echo You discover a hidden treasure in the cave!
+        set /a "cave_coins=!random! %% 150 + 75"
+        echo You found !cave_coins! coins!
+        set /a "coins+=!cave_coins!"
+        echo You gained 50 experience!
+        set /a "experience+=50"
+    ) else (
+        echo You explore the cave but find nothing of value.
+        echo You gained 20 experience from exploring.
+        set /a "experience+=20"
+    )
+) else if /i "!cave_choice!"=="p" (
+    echo.
+    echo You peer inside the cave...
+    echo You can see it's dark and potentially dangerous.
+    echo You decide not to enter without proper preparation.
+    echo You gained 5 experience from observing.
+    set /a "experience+=5"
+) else if /i "!cave_choice!"=="l" (
+    echo.
+    echo You leave the cave entrance.
+    echo You return to the wilderness.
+) else (
+    echo Invalid choice!
+)
+goto :eof
+
+:wilderness_lake
+REM Wilderness lake activities
+echo.
+echo ========================================
+echo        WILDERNESS LAKE!
+echo ========================================
+echo.
+echo You approach a peaceful lake in the wilderness...
+echo The water looks clear and inviting.
+echo.
+
+echo [F]ish in the lake
+echo [D]rink from the lake
+echo [S]wim in the lake
+echo [L]eave the lake
+echo.
+set /p lake_choice="What do you do? "
+
+if /i "!lake_choice!"=="f" (
+    call :wilderness_fishing
+) else if /i "!lake_choice!"=="d" (
+    echo.
+    echo You drink from the clear lake water...
+    echo You feel refreshed and restored!
+    set /a "heal_amount=!random! %% 10 + 5"
+    set /a "currenthp+=!heal_amount!"
+    if !currenthp! gtr !maxhp! set "currenthp=!maxhp!"
+    echo You restored !heal_amount! hitpoints!
+    echo You gained 10 experience!
+    set /a "experience+=10"
+) else if /i "!lake_choice!"=="s" (
+    echo.
+    echo You swim in the wilderness lake...
+    timeout /t 2 >nul
+    echo You feel refreshed and energized!
+    set /a "heal_amount=!random! %% 15 + 10"
+    set /a "currenthp+=!heal_amount!"
+    if !currenthp! gtr !maxhp! set "currenthp=!maxhp!"
+    echo You restored !heal_amount! hitpoints!
+    echo You gained 20 experience!
+    set /a "experience+=20"
+) else if /i "!lake_choice!"=="l" (
+    echo.
+    echo You leave the wilderness lake.
+    echo You return to the wilderness.
+) else (
+    echo Invalid choice!
+)
+goto :eof
+
 :handle_purchase
 REM Parameters: %1 = choice number, %2 = location
 set "choice=%1"
@@ -7181,55 +8752,103 @@ pause >nul
 goto train_skills
 
 :train_firemaking
-REM Check if player has logs to burn
-call :count_item "Logs"
-if !item_count! lss 1 (
+REM Enhanced firemaking with tinderbox requirement and minigame
+echo.
+echo ========================================
+echo           FIREMAKING TRAINING
+echo ========================================
+echo.
+
+REM Check if player has a tinderbox
+call :count_item "Tinderbox"
+if !item_count! equ 0 (
+    echo You need a tinderbox to start fires!
+    echo You can buy one from the general store for 5 coins.
     echo.
+    pause >nul
+    goto train_skills
+)
+
+REM Check for different types of logs
+call :count_item "Oak Logs"
+set "has_oak=!item_count!"
+call :count_item "Willow Logs"
+set "has_willow=!item_count!"
+call :count_item "Maple Logs"
+set "has_maple=!item_count!"
+call :count_item "Yew Logs"
+set "has_yew=!item_count!"
+call :count_item "Logs"
+set "has_regular=!item_count!"
+
+REM Determine what logs are available
+set "log_type="
+set "log_name="
+set "log_xp=0"
+set "log_level_req=0"
+
+if !has_yew! gtr 0 if !firemaking! geq 60 (
+    set "log_type=Yew Logs"
+    set "log_name=Yew"
+    set "log_xp=200"
+    set "log_level_req=60"
+) else if !has_maple! gtr 0 if !firemaking! geq 45 (
+    set "log_type=Maple Logs"
+    set "log_name=Maple"
+    set "log_xp=135"
+    set "log_level_req=45"
+) else if !has_willow! gtr 0 if !firemaking! geq 15 (
+    set "log_type=Willow Logs"
+    set "log_name=Willow"
+    set "log_xp=90"
+    set "log_level_req=15"
+) else if !has_oak! gtr 0 if !firemaking! geq 15 (
+    set "log_type=Oak Logs"
+    set "log_name=Oak"
+    set "log_xp=60"
+    set "log_level_req=15"
+) else if !has_regular! gtr 0 (
+    set "log_type=Logs"
+    set "log_name=Regular"
+    set "log_xp=40"
+    set "log_level_req=1"
+)
+
+if "!log_type!"=="" (
     echo You need logs to burn for firemaking!
+    echo Available log types and requirements:
+    echo - Regular Logs: Level 1+ (40 XP)
+    echo - Oak Logs: Level 15+ (60 XP)
+    echo - Willow Logs: Level 15+ (90 XP)
+    echo - Maple Logs: Level 45+ (135 XP)
+    echo - Yew Logs: Level 60+ (200 XP)
+    echo.
     echo Get some logs from woodcutting first.
     echo.
     pause >nul
     goto train_skills
 )
 
+echo You have !log_type! available for burning.
+echo !log_name! logs require Firemaking level !log_level_req! and give !log_xp! XP.
 echo.
-echo You gather some logs and prepare to light a fire...
-timeout /t 2 >nul
 
-REM Firemaking success based on firemaking level
-set /a "fire_success=!random! %% 100"
-set /a "success_chance=50 + !firemaking! * 2"
+echo [B]urn !log_name! logs
+echo [C]hoose different logs
+echo [B]ack to skills
+echo.
+set /p fire_choice="What do you do? "
 
-if !fire_success! lss !success_chance! (
-    echo You successfully light the fire!
-    echo The flames dance brightly and you gain ashes.
-    echo.
-    echo You gained 40 Firemaking experience!
-
-    REM Add ashes to inventory
-    if defined inventory (
-        set "inventory=!inventory!,Ashes"
-    ) else (
-        set "inventory=Ashes"
-    )
-
-    REM Remove logs
-    call :remove_item "Logs"
-
-    set /a "firemaking_xp+=40"
-    set /a "experience+=40"
-    call :check_level_up firemaking !firemaking_xp!
+if /i "!fire_choice!"=="b" (
+    call :firemaking_minigame "!log_type!" "!log_xp!" "!log_name!"
+) else if /i "!fire_choice!"=="c" (
+    goto :train_firemaking
+) else if /i "!fire_choice!"=="back" (
+    goto train_skills
 ) else (
-    echo The fire fails to light properly.
-    echo You lose the logs but gain some experience from trying.
-    echo.
-    echo You gained 10 Firemaking experience!
-
-    REM Remove logs anyway
-    call :remove_item "Logs"
-
-    set /a "firemaking_xp+=10"
-    set /a "experience+=10"
+    echo Invalid choice!
+    pause >nul
+    goto :train_firemaking
 )
 
 echo.
@@ -9153,6 +10772,23 @@ if "!location!"=="LUMBRIDGE" (
     echo  ^|  [OBJ] Player Combat  [OBJ] Dangerous Beasts  ^|
     echo  ^|  [OBJ] High Stakes    [OBJ] Lawless Land      ^|
     echo  +================================================+
+) else if "!location!"=="WOLFMOUNTAIN" (
+    echo.
+    echo  +================================================+
+    echo  ^|             WOLF MOUNTAIN                     ^|
+    echo  ^|                                                ^|
+    echo  ^|  [O]  You             [O]  Wolves             ^|
+    echo  ^|  [NPC] Pack Leader    [NPC] Alpha Wolf        ^|
+    echo  ^|  [NPC] Dangerous      [NPC] Ferocious         ^|
+    echo  ^|                                                ^|
+    echo  ^|  [OBJ] Mountain       [OBJ] Wolf Den          ^|
+    echo  ^|  [OBJ] Caves          [OBJ] Pack Territory    ^|
+    echo  ^|  [OBJ] Peak           [OBJ] Ancient Ruins     ^|
+    echo  ^|                                                ^|
+    echo  ^|  [OBJ] Mining Spots   [OBJ] Rich Ores         ^|
+    echo  ^|  [OBJ] High Altitude  [OBJ] Dangerous Paths   ^|
+    echo  ^|  [OBJ] Wolf Territory [OBJ] Wild Beasts       ^|
+    echo  +================================================+
 )
 goto :eof
 
@@ -10939,6 +12575,8 @@ if "!music_enabled!"=="1" (
         call :play_wilderness_music
     ) else if "!location!"=="MAGETOWER" (
         call :play_magetower_music
+    ) else if "!location!"=="WOLFMOUNTAIN" (
+        call :play_wolf_mountain_music
     ) else (
         call :play_combat_music
     )
@@ -11528,18 +13166,83 @@ goto :eof
 
 :check_dragon_slayer_completion
 REM Check if Dragon Slayer quest can be completed
-REM This is a placeholder for the actual dragon slayer completion
-echo.
-echo You haven't completed the Dragon Slayer quest yet.
-echo This quest requires you to travel to Crandor and defeat the dragon.
-echo.
-echo You'll need:
-echo - Strong armor and weapons
-echo - Food and potions
-echo - A boat to Crandor (from Port Sarim)
-echo.
-echo This is an advanced quest that will be implemented in future updates.
-echo.
+REM Check if player has defeated the dragon (simplified - just check combat level and some items)
+if !combat_level! geq 30 (
+    REM Check if player has some basic combat equipment
+    call :count_item "Iron Sword"
+    set "has_sword=!item_count!"
+    call :count_item "Iron Armor"
+    set "has_armor=!item_count!"
+    call :count_item "Lobster"
+    set "has_food=!item_count!"
+    
+    if !has_sword! gtr 0 if !has_armor! gtr 0 if !has_food! gtr 0 (
+        echo.
+        echo Congratulations! You have prepared well and are ready to face the dragon!
+        echo You travel to Crandor and engage in an epic battle with the dragon.
+        echo.
+        echo After a fierce fight, you emerge victorious!
+        echo The dragon's scales shimmer as it falls, and you claim your reward.
+        echo.
+        echo "Incredible! You've done what few dare to attempt!" says the Guildmaster.
+        echo "Here's your reward:"
+        echo.
+        echo You gained 18,650 XP in all combat skills!
+        echo You received a Dragon Slayer Cape!
+        echo You gained 5,000 coins!
+        echo.
+        
+        REM Award rewards
+        set /a "attack_xp+=18650"
+        set /a "strength_xp+=18650"
+        set /a "defence_xp+=18650"
+        set /a "hitpoints_xp+=18650"
+        set /a "ranged_xp+=18650"
+        set /a "magic_xp+=18650"
+        set /a "experience+=111900"
+        set /a "coins+=5000"
+        set "quest_dragon_slayer=2"
+        
+        REM Add Dragon Slayer Cape to inventory
+        if defined inventory (
+            set "inventory=!inventory!,Dragon Slayer Cape"
+        ) else (
+            set "inventory=Dragon Slayer Cape"
+        )
+        
+        REM Remove some food as consumed in battle
+        call :remove_item "Lobster"
+        
+        REM Check for level ups
+        call :check_level_up attack !attack_xp!
+        call :check_level_up strength !strength_xp!
+        call :check_level_up defence !defence_xp!
+        call :check_level_up hitpoints !hitpoints_xp!
+        call :check_level_up ranged !ranged_xp!
+        call :check_level_up magic !magic_xp!
+        
+        echo.
+        echo Quest completed successfully!
+        echo You are now known as a true Dragon Slayer!
+    ) else (
+        echo.
+        echo You need better equipment to face the dragon!
+        echo You need: Iron Sword, Iron Armor, and Lobster (food)
+        echo.
+        echo Current equipment:
+        if !has_sword! gtr 0 (echo - Iron Sword: ✓) else (echo - Iron Sword: ✗)
+        if !has_armor! gtr 0 (echo - Iron Armor: ✓) else (echo - Iron Armor: ✗)
+        if !has_food! gtr 0 (echo - Lobster: ✓) else (echo - Lobster: ✗)
+        echo.
+        echo You can get these items from shops or by crafting them.
+    )
+) else (
+    echo.
+    echo You need to reach combat level 30 before attempting this quest!
+    echo Your current combat level: !combat_level!
+    echo Required combat level: 30
+    echo.
+)
 goto :eof
 
 :lost_city_quest_giver
@@ -12069,34 +13772,148 @@ REM ============================================
 
 :check_lost_city_completion
 REM Check if Lost City quest can be completed
-REM This is a placeholder for the actual lost city completion
-echo.
-echo You haven't completed the Lost City quest yet.
-echo This quest requires you to craft special items and cut ancient trees.
-echo.
-echo You'll need:
-echo - High crafting and woodcutting skills
-echo - Special crafting materials
-echo - Ancient tree locations
-echo.
-echo This is an advanced quest that will be implemented in future updates.
-echo.
+REM Check if player has the required items to find the lost city
+call :count_item "Dramen Branch"
+set "has_branch=!item_count!"
+call :count_item "Crystal Key"
+set "has_key=!item_count!"
+call :count_item "Ancient Rune"
+set "has_rune=!item_count!"
+
+if !has_branch! gtr 0 if !has_key! gtr 0 if !has_rune! gtr 0 (
+    echo.
+    echo Excellent! You have gathered all the necessary items to find Zanaris!
+    echo You use the Dramen Branch to craft a staff, the Crystal Key to unlock"
+    echo "the ancient portal, and the Ancient Rune to activate the magic.
+    echo.
+    echo As you place the rune in the ancient stone, a portal opens before you!
+    echo The lost city of Zanaris materializes in a shimmer of light.
+    echo.
+    echo "Incredible! You've found it!" exclaims the adventurer.
+    echo "The lost city of Zanaris is real! Here's your reward:"
+    echo.
+    echo You gained 5,000 XP in Crafting and Woodcutting!
+    echo You received a Dramen Staff!
+    echo You gained 2,000 coins!
+    echo.
+    
+    REM Award rewards
+    set /a "crafting_xp+=5000"
+    set /a "woodcutting_xp+=5000"
+    set /a "experience+=10000"
+    set /a "coins+=2000"
+    set "quest_lost_city=2"
+    
+    REM Add Dramen Staff to inventory
+    if defined inventory (
+        set "inventory=!inventory!,Dramen Staff"
+    ) else (
+        set "inventory=Dramen Staff"
+    )
+    
+    REM Remove quest items
+    call :remove_item "Dramen Branch"
+    call :remove_item "Crystal Key"
+    call :remove_item "Ancient Rune"
+    
+    REM Check for level ups
+    call :check_level_up crafting !crafting_xp!
+    call :check_level_up woodcutting !woodcutting_xp!
+    
+    echo.
+    echo Quest completed successfully!
+    echo You have discovered the legendary lost city of Zanaris!
+) else (
+    echo.
+    echo You need to gather the required items to find the lost city!
+    echo You need: Dramen Branch, Crystal Key, and Ancient Rune
+    echo.
+    echo Current items:
+    if !has_branch! gtr 0 (echo - Dramen Branch: ✓) else (echo - Dramen Branch: ✗)
+    if !has_key! gtr 0 (echo - Crystal Key: ✓) else (echo - Crystal Key: ✗)
+    if !has_rune! gtr 0 (echo - Ancient Rune: ✓) else (echo - Ancient Rune: ✗)
+    echo.
+    echo You can find these items by:
+    echo - Cutting ancient trees in the swamp (Dramen Branch)
+    echo - Solving puzzles in the swamp ruins (Crystal Key)
+    echo - Mining special essence nodes (Ancient Rune)
+    echo.
+)
 goto :eof
 
 :check_restless_ghost_completion
 REM Check if Restless Ghost quest can be completed
-REM This is a placeholder for the actual ghost completion
-echo.
-echo You haven't completed the Restless Ghost quest yet.
-echo This quest requires you to help a ghost find peace.
-echo.
-echo You'll need:
-echo - Prayer skills
-echo - Amulet of Ghostspeak
-echo - Visit the graveyard
-echo.
-echo This is an advanced quest that will be implemented in future updates.
-echo.
+REM Check if player has the required items to help the ghost
+call :count_item "Amulet of Ghostspeak"
+set "has_amulet=!item_count!"
+call :count_item "Holy Water"
+set "has_holy_water=!item_count!"
+call :count_item "Blessed Candle"
+set "has_candle=!item_count!"
+
+if !has_amulet! gtr 0 if !has_holy_water! gtr 0 if !has_candle! gtr 0 (
+    echo.
+    echo You approach the restless ghost with the necessary spiritual items.
+    echo Using the Amulet of Ghostspeak, you can now communicate with the spirit.
+    echo.
+    echo Ghost: "Thank you for coming... I've been trapped here for so long."
+    echo "I need help finding my way to the afterlife. Can you help me?"
+    echo.
+    echo You use the Holy Water to cleanse the area and light the Blessed Candle.
+    echo The ghost's form begins to glow with a peaceful light.
+    echo.
+    echo "I can see the way now... thank you, kind soul. I can finally rest."
+    echo The ghost fades away with a smile, finally at peace.
+    echo.
+    echo Father Aereck: "Bless you! You've helped a lost soul find peace."
+    echo "Here's your reward:"
+    echo.
+    echo You gained 125 Prayer XP!
+    echo You received an Amulet of Ghostspeak!
+    echo You gained 500 coins!
+    echo.
+    
+    REM Award rewards
+    set /a "prayer_xp+=125"
+    set /a "experience+=125"
+    set /a "coins+=500"
+    set "quest_restless_ghost=2"
+    
+    REM Add Amulet of Ghostspeak to inventory (if not already there)
+    if !has_amulet! equ 0 (
+        if defined inventory (
+            set "inventory=!inventory!,Amulet of Ghostspeak"
+        ) else (
+            set "inventory=Amulet of Ghostspeak"
+        )
+    )
+    
+    REM Remove quest items
+    call :remove_item "Holy Water"
+    call :remove_item "Blessed Candle"
+    
+    REM Check for level up
+    call :check_level_up prayer !prayer_xp!
+    
+    echo.
+    echo Quest completed successfully!
+    echo You have helped a lost soul find peace in the afterlife!
+) else (
+    echo.
+    echo You need the proper spiritual items to help the ghost!
+    echo You need: Amulet of Ghostspeak, Holy Water, and Blessed Candle
+    echo.
+    echo Current items:
+    if !has_amulet! gtr 0 (echo - Amulet of Ghostspeak: ✓) else (echo - Amulet of Ghostspeak: ✗)
+    if !has_holy_water! gtr 0 (echo - Holy Water: ✓) else (echo - Holy Water: ✗)
+    if !has_candle! gtr 0 (echo - Blessed Candle: ✓) else (echo - Blessed Candle: ✗)
+    echo.
+    echo You can obtain these items by:
+    echo - Getting the Amulet of Ghostspeak from Father Aereck
+    echo - Blessing water at the altar (Holy Water)
+    echo - Crafting candles and blessing them (Blessed Candle)
+    echo.
+)
 goto :eof
 
 :check_imp_catcher_completion
@@ -12161,50 +13978,252 @@ goto :eof
 
 :check_white_knight_completion
 REM Check if White Knight quest can be completed
-REM This is a placeholder for the actual white knight completion
-echo.
-echo You haven't completed the White Knight quest yet.
-echo This quest requires you to investigate dark magic reports.
-echo.
-echo You'll need:
-echo - Combat skills
-echo - Investigation abilities
-echo - Report back to Sir Tiffy
-echo.
-echo This is an advanced quest that will be implemented in future updates.
-echo.
+REM Check if player has investigated the dark magic and gathered evidence
+call :count_item "Dark Magic Scroll"
+set "has_scroll=!item_count!"
+call :count_item "Suspicious Potion"
+set "has_potion=!item_count!"
+call :count_item "Cultist Robe"
+set "has_robe=!item_count!"
+
+if !has_scroll! gtr 0 if !has_potion! gtr 0 if !has_robe! gtr 0 (
+    echo.
+    echo You return to Sir Tiffy with evidence of the dark magic activities.
+    echo You present the Dark Magic Scroll, Suspicious Potion, and Cultist Robe.
+    echo.
+    echo Sir Tiffy: "Excellent work, brave knight! This is exactly what we needed."
+    echo "These items prove that dark cultists have been operating in the area."
+    echo "You've done the White Knights a great service."
+    echo.
+    echo "As a reward for your bravery and dedication, I present you with:"
+    echo.
+    echo You gained 1,000 XP in all combat skills!
+    echo You received White Knight Armor!
+    echo You gained 1,500 coins!
+    echo.
+    
+    REM Award rewards
+    set /a "attack_xp+=1000"
+    set /a "strength_xp+=1000"
+    set /a "defence_xp+=1000"
+    set /a "hitpoints_xp+=1000"
+    set /a "ranged_xp+=1000"
+    set /a "magic_xp+=1000"
+    set /a "experience+=6000"
+    set /a "coins+=1500"
+    set "quest_white_knight=2"
+    
+    REM Add White Knight Armor to inventory
+    if defined inventory (
+        set "inventory=!inventory!,White Knight Armor"
+    ) else (
+        set "inventory=White Knight Armor"
+    )
+    
+    REM Remove quest items
+    call :remove_item "Dark Magic Scroll"
+    call :remove_item "Suspicious Potion"
+    call :remove_item "Cultist Robe"
+    
+    REM Check for level ups
+    call :check_level_up attack !attack_xp!
+    call :check_level_up strength !strength_xp!
+    call :check_level_up defence !defence_xp!
+    call :check_level_up hitpoints !hitpoints_xp!
+    call :check_level_up ranged !ranged_xp!
+    call :check_level_up magic !magic_xp!
+    
+    echo.
+    echo Quest completed successfully!
+    echo You are now recognized as a true White Knight!
+) else (
+    echo.
+    echo You need to gather more evidence of the dark magic activities!
+    echo You need: Dark Magic Scroll, Suspicious Potion, and Cultist Robe
+    echo.
+    echo Current evidence:
+    if !has_scroll! gtr 0 (echo - Dark Magic Scroll: ✓) else (echo - Dark Magic Scroll: ✗)
+    if !has_potion! gtr 0 (echo - Suspicious Potion: ✓) else (echo - Suspicious Potion: ✗)
+    if !has_robe! gtr 0 (echo - Cultist Robe: ✓) else (echo - Cultist Robe: ✗)
+    echo.
+    echo You can find these items by:
+    echo - Investigating suspicious areas around Falador
+    echo - Defeating dark cultists in combat
+    echo - Searching abandoned buildings and ruins
+    echo.
+)
 goto :eof
 
 :check_prince_ali_completion
 REM Check if Prince Ali Rescue quest can be completed
-REM This is a placeholder for the actual prince ali completion
-echo.
-echo You haven't completed the Prince Ali Rescue quest yet.
-echo This quest requires you to rescue Prince Ali from kidnappers.
-echo.
-echo You'll need:
-echo - Stealth and combat skills
-echo - Information gathering
-echo - Rescue planning
-echo.
-echo This is an advanced quest that will be implemented in future updates.
-echo.
+REM Check if player has gathered the necessary items for the rescue
+call :count_item "Kidnapper's Note"
+set "has_note=!item_count!"
+call :count_item "Palace Key"
+set "has_key=!item_count!"
+call :count_item "Disguise Kit"
+set "has_disguise=!item_count!"
+
+if !has_note! gtr 0 if !has_key! gtr 0 if !has_disguise! gtr 0 (
+    echo.
+    echo You have gathered all the necessary information and items for the rescue!
+    echo You use the Kidnapper's Note to locate Prince Ali, the Palace Key to access"
+    echo "the secret location, and the Disguise Kit to avoid detection.
+    echo.
+    echo You successfully infiltrate the kidnapper's hideout and find Prince Ali.
+    echo After a brief but intense rescue operation, you free the prince!
+    echo.
+    echo Prince Ali: "Thank you, brave adventurer! I thought I'd never see freedom again."
+    echo "The kingdom will be forever grateful for your heroism."
+    echo.
+    echo Osman: "Incredible work! You've saved the kingdom from a great crisis."
+    echo "Here's your reward:"
+    echo.
+    echo You gained 1,000 coins!
+    echo You gained 500 XP in all skills!
+    echo You received a Royal Decree!
+    echo.
+    
+    REM Award rewards
+    set /a "coins+=1000"
+    set /a "attack_xp+=500"
+    set /a "strength_xp+=500"
+    set /a "defence_xp+=500"
+    set /a "hitpoints_xp+=500"
+    set /a "ranged_xp+=500"
+    set /a "magic_xp+=500"
+    set /a "experience+=3000"
+    set "quest_prince_ali=2"
+    
+    REM Add Royal Decree to inventory
+    if defined inventory (
+        set "inventory=!inventory!,Royal Decree"
+    ) else (
+        set "inventory=Royal Decree"
+    )
+    
+    REM Remove quest items
+    call :remove_item "Kidnapper's Note"
+    call :remove_item "Palace Key"
+    call :remove_item "Disguise Kit"
+    
+    REM Check for level ups
+    call :check_level_up attack !attack_xp!
+    call :check_level_up strength !strength_xp!
+    call :check_level_up defence !defence_xp!
+    call :check_level_up hitpoints !hitpoints_xp!
+    call :check_level_up ranged !ranged_xp!
+    call :check_level_up magic !magic_xp!
+    
+    echo.
+    echo Quest completed successfully!
+    echo You have saved Prince Ali and earned the kingdom's gratitude!
+) else (
+    echo.
+    echo You need to gather more information and items for the rescue!
+    echo You need: Kidnapper's Note, Palace Key, and Disguise Kit
+    echo.
+    echo Current items:
+    if !has_note! gtr 0 (echo - Kidnapper's Note: ✓) else (echo - Kidnapper's Note: ✗)
+    if !has_key! gtr 0 (echo - Palace Key: ✓) else (echo - Palace Key: ✗)
+    if !has_disguise! gtr 0 (echo - Disguise Kit: ✓) else (echo - Disguise Kit: ✗)
+    echo.
+    echo You can find these items by:
+    echo - Investigating suspicious areas around Al Kharid
+    echo - Defeating kidnappers in combat
+    echo - Searching for clues in the palace
+    echo.
+)
 goto :eof
 
 :check_pirates_treasure_completion
 REM Check if Pirate's Treasure quest can be completed
-REM This is a placeholder for the actual pirate treasure completion
-echo.
-echo You haven't completed the Pirate's Treasure quest yet.
-echo This quest requires you to find a pirate's treasure.
-echo.
-echo You'll need:
-echo - Treasure map pieces
-echo - Solve riddles
-echo - Brave sea monsters
-echo.
-echo This is an advanced quest that will be implemented in future updates.
-echo.
+REM Check if player has gathered all the treasure map pieces and solved the riddles
+call :count_item "Treasure Map Piece 1"
+set "has_piece1=!item_count!"
+call :count_item "Treasure Map Piece 2"
+set "has_piece2=!item_count!"
+call :count_item "Treasure Map Piece 3"
+set "has_piece3=!item_count!"
+call :count_item "Ancient Compass"
+set "has_compass=!item_count!"
+
+if !has_piece1! gtr 0 if !has_piece2! gtr 0 if !has_piece3! gtr 0 if !has_compass! gtr 0 (
+    echo.
+    echo You have gathered all the treasure map pieces and the ancient compass!
+    echo You piece together the map and use the compass to navigate to the treasure island.
+    echo.
+    echo After a perilous journey across the seas, you arrive at the mysterious island.
+    echo You follow the map's clues and solve the ancient riddles carved in stone.
+    echo.
+    echo Suddenly, a massive sea monster emerges from the depths!
+    echo You engage in an epic battle, using your wits and courage to defeat it.
+    echo.
+    echo With the sea monster defeated, you discover the hidden treasure cave!
+    echo Inside, you find a massive chest filled with gold, jewels, and ancient artifacts.
+    echo.
+    echo Redbeard Frank: "Arr, matey! You've done it! You found the legendary treasure!"
+    echo "You're a true pirate now! Here's your share of the loot:"
+    echo.
+    echo You gained 2,000 coins!
+    echo You received a Pirate's Hat!
+    echo You gained 1,000 XP in all skills!
+    echo You found Ancient Artifacts worth 500 coins!
+    echo.
+    
+    REM Award rewards
+    set /a "coins+=2500"
+    set /a "attack_xp+=1000"
+    set /a "strength_xp+=1000"
+    set /a "defence_xp+=1000"
+    set /a "hitpoints_xp+=1000"
+    set /a "ranged_xp+=1000"
+    set /a "magic_xp+=1000"
+    set /a "experience+=6000"
+    set "quest_pirates_treasure=2"
+    
+    REM Add Pirate's Hat to inventory
+    if defined inventory (
+        set "inventory=!inventory!,Pirate's Hat"
+    ) else (
+        set "inventory=Pirate's Hat"
+    )
+    
+    REM Remove quest items
+    call :remove_item "Treasure Map Piece 1"
+    call :remove_item "Treasure Map Piece 2"
+    call :remove_item "Treasure Map Piece 3"
+    call :remove_item "Ancient Compass"
+    
+    REM Check for level ups
+    call :check_level_up attack !attack_xp!
+    call :check_level_up strength !strength_xp!
+    call :check_level_up defence !defence_xp!
+    call :check_level_up hitpoints !hitpoints_xp!
+    call :check_level_up ranged !ranged_xp!
+    call :check_level_up magic !magic_xp!
+    
+    echo.
+    echo Quest completed successfully!
+    echo You are now a legendary treasure hunter and pirate!
+) else (
+    echo.
+    echo You need to gather more pieces of the treasure map and find the ancient compass!
+    echo You need: Treasure Map Piece 1, 2, 3, and Ancient Compass
+    echo.
+    echo Current items:
+    if !has_piece1! gtr 0 (echo - Treasure Map Piece 1: ✓) else (echo - Treasure Map Piece 1: ✗)
+    if !has_piece2! gtr 0 (echo - Treasure Map Piece 2: ✓) else (echo - Treasure Map Piece 2: ✗)
+    if !has_piece3! gtr 0 (echo - Treasure Map Piece 3: ✓) else (echo - Treasure Map Piece 3: ✗)
+    if !has_compass! gtr 0 (echo - Ancient Compass: ✓) else (echo - Ancient Compass: ✗)
+    echo.
+    echo You can find these items by:
+    echo - Exploring coastal areas and shipwrecks
+    echo - Defeating sea monsters and pirates
+    echo - Solving puzzles in ancient ruins
+    echo - Trading with other adventurers
+    echo.
+)
 goto :eof
 
 :play_magetower_music
@@ -12251,5 +14270,1071 @@ echo  ^|  ^|           MAGICAL STUDIES              ^|  ^|
 echo  ^|  ^|  [Shop] [Chat] [Craft] [Study]        ^|  ^|
 echo  ^|  +==========================================+  ^|
 echo  +================================================+
+goto :eof
+
+:firemaking_minigame
+REM Parameters: %1 = log type, %2 = XP amount, %3 = log name
+set "log_type=%~1"
+set "log_xp=%~2"
+set "log_name=%~3"
+
+cls
+call :draw_location_header
+echo.
+echo ========================================
+echo         FIREMAKING MINIGAME
+echo ========================================
+echo.
+echo You prepare to light a fire using your tinderbox...
+echo.
+echo Log Type: !log_type!
+echo Base XP: !log_xp!
+echo.
+echo The firemaking minigame requires timing and skill!
+echo You must press the correct keys at the right time to succeed.
+echo.
+echo Instructions:
+echo - Watch for the timing prompts
+echo - Press the correct key when prompted
+echo - Better timing = more XP and success chance
+echo - Poor timing = less XP or failure
+echo.
+echo Press any key to start the minigame...
+pause >nul
+
+REM Initialize minigame variables
+set "fire_progress=0"
+set "timing_score=0"
+set "total_attempts=0"
+set "successful_attempts=0"
+set "minigame_xp=0"
+
+:firemaking_loop
+if !fire_progress! geq 100 goto firemaking_complete
+
+REM Random timing challenge
+set /a "challenge_type=!random! %% 4 + 1"
+set /a "timing_window=!random! %% 3 + 1"
+
+if !challenge_type! equ 1 (
+    echo.
+    echo [FIREMAKING CHALLENGE: Ignition]
+    echo Press 'F' when the prompt appears to ignite the tinder...
+    timeout /t !timing_window! >nul
+    echo.
+    echo *** IGNITE NOW! ***
+    set /p timing_input="Press 'F' quickly: "
+    if /i "!timing_input!"=="F" (
+        set /a "timing_score+=25"
+        set /a "successful_attempts+=1"
+        echo ✓ Good timing! The tinder catches fire!
+    ) else (
+        echo ✗ Missed timing! The tinder smolders...
+    )
+) else if !challenge_type! equ 2 (
+    echo.
+    echo [FIREMAKING CHALLENGE: Fuel Management]
+    echo Press 'A' to add fuel at the right moment...
+    timeout /t !timing_window! >nul
+    echo.
+    echo *** ADD FUEL NOW! ***
+    set /p timing_input="Press 'A' quickly: "
+    if /i "!timing_input!"=="A" (
+        set /a "timing_score+=20"
+        set /a "successful_attempts+=1"
+        echo ✓ Perfect! The fire burns brighter!
+    ) else (
+        echo ✗ Too late! The fire dims...
+    )
+) else if !challenge_type! equ 3 (
+    echo.
+    echo [FIREMAKING CHALLENGE: Air Flow]
+    echo Press 'B' to control air flow for optimal burning...
+    timeout /t !timing_window! >nul
+    echo.
+    echo *** CONTROL AIR NOW! ***
+    set /p timing_input="Press 'B' quickly: "
+    if /i "!timing_input!"=="B" (
+        set /a "timing_score+=30"
+        set /a "successful_attempts+=1"
+        echo ✓ Excellent! The fire roars with life!
+    ) else (
+        echo ✗ Poor control! The fire struggles...
+    )
+) else (
+    echo.
+    echo [FIREMAKING CHALLENGE: Fire Maintenance]
+    echo Press 'M' to maintain the fire's intensity...
+    timeout /t !timing_window! >nul
+    echo.
+    echo *** MAINTAIN FIRE NOW! ***
+    set /p timing_input="Press 'M' quickly: "
+    if /i "!timing_input!"=="M" (
+        set /a "timing_score+=15"
+        set /a "successful_attempts+=1"
+        echo ✓ Good maintenance! The fire stays strong!
+    ) else (
+        echo ✗ Neglected! The fire weakens...
+    )
+)
+
+set /a "total_attempts+=1"
+set /a "fire_progress+=20"
+
+REM Update visual progress
+set "progress_bar="
+set /a "bars=!fire_progress! / 5"
+for /l %%i in (1,1,!bars!) do set "progress_bar=!progress_bar!█"
+for /l %%i in (!bars!,1,20) do set "progress_bar=!progress_bar!░"
+
+echo.
+echo Fire Progress: [!progress_bar!] !fire_progress!%%
+echo Timing Score: !timing_score!/100
+echo.
+
+if !fire_progress! lss 100 (
+    echo Press any key for next challenge...
+    pause >nul
+    goto firemaking_loop
+)
+
+:firemaking_complete
+echo.
+echo ========================================
+echo        FIREMAKING COMPLETE!
+echo ========================================
+echo.
+
+REM Calculate final results
+set /a "success_rate=!successful_attempts! * 100 / !total_attempts!"
+set /a "timing_bonus=!timing_score! / 4"
+
+if !success_rate! geq 80 (
+    if !timing_bonus! geq 20 (
+        echo 🎉 PERFECT FIRE! Masterful firemaking technique!
+        set /a "minigame_xp=!log_xp! + 50"
+        set "fire_quality=Perfect"
+    ) else (
+        echo 🔥 EXCELLENT FIRE! Great firemaking skills!
+        set /a "minigame_xp=!log_xp! + 25"
+        set "fire_quality=Excellent"
+    )
+) else if !success_rate! geq 60 (
+    echo 🔥 GOOD FIRE! Decent firemaking technique!
+    set /a "minigame_xp=!log_xp! + 10"
+    set "fire_quality=Good"
+) else if !success_rate! geq 40 (
+    echo 🔥 AVERAGE FIRE! Basic firemaking skills.
+    set /a "minigame_xp=!log_xp!"
+    set "fire_quality=Average"
+) else (
+    echo 🔥 POOR FIRE! Needs more practice.
+    set /a "minigame_xp=!log_xp! / 2"
+    set "fire_quality=Poor"
+)
+
+echo.
+echo Results:
+echo - Fire Quality: !fire_quality!
+echo - Success Rate: !success_rate!%%
+echo - Timing Score: !timing_score!/100
+echo - Base XP: !log_xp!
+echo - Bonus XP: !timing_bonus!
+echo - Total XP Gained: !minigame_xp!
+echo.
+
+REM Apply XP and remove log
+set /a "firemaking_xp+=!minigame_xp!"
+set /a "experience+=!minigame_xp!"
+call :remove_item "!log_type!"
+call :add_item "Ashes"
+
+REM Check for level up
+call :check_level_up firemaking !firemaking_xp!
+
+REM Special rewards for perfect fires
+if "!fire_quality!"=="Perfect" (
+    set /a "bonus_chance=!random! %% 100"
+    if !bonus_chance! lss 15 (
+        echo.
+        echo 🎁 BONUS REWARD! Your perfect fire technique earned extra rewards!
+        call :add_item "Fire Essence"
+        set /a "coins+=25"
+        echo You found Fire Essence and 25 coins!
+    )
+)
+
+echo.
+echo The !log_name! logs have been consumed and turned to ashes.
+echo Your firemaking skills have improved!
+echo.
+echo Press any key to continue...
+pause >nul
+goto :eof
+
+:lumbridge_forest_woodcutting
+cls
+call :draw_location_header
+echo.
+echo ========================================
+echo         LUMBRIDGE FOREST
+echo ========================================
+echo.
+echo You enter the Lumbridge forest...
+timeout /t 1 >nul
+echo.
+echo Many trees surround you, perfect for woodcutting.
+echo You can see different types of trees available for chopping.
+echo.
+
+REM Check if player has axe
+call :count_item "Axe"
+if !item_count! lss 1 (
+    echo You need an axe to chop wood!
+    echo Visit the shop to buy one.
+    echo.
+    echo Press any key to return to exploration...
+    pause >nul
+    goto explore_area
+)
+
+echo Choose a tree to chop:
+echo.
+echo 1. Regular Trees (Level 1+ Woodcutting)
+echo    - Gives: Regular Logs (40 XP each)
+echo    - Easy to cut, good for beginners
+echo.
+echo 2. Oak Trees (Level 15+ Woodcutting Required)
+echo    - Gives: Oak Logs (60 XP each)
+echo    - Harder to cut, better rewards
+echo.
+echo 3. Back to Lumbridge exploration
+echo.
+set /p tree_choice="Choose option: "
+
+if "!tree_choice!"=="1" (
+    call :chop_regular_trees
+) else if "!tree_choice!"=="2" (
+    call :chop_oak_trees
+) else if "!tree_choice!"=="3" (
+    goto explore_area
+) else (
+    echo Invalid choice!
+    pause >nul
+    goto lumbridge_forest_woodcutting
+)
+goto :eof
+
+:chop_regular_trees
+echo.
+echo You approach a regular tree...
+echo You start chopping with your axe...
+timeout /t 2 >nul
+
+REM Calculate XP based on woodcutting level
+set /a "base_xp=40"
+set /a "level_bonus=!woodcutting! / 5"
+set /a "total_xp=!base_xp! + !level_bonus!"
+
+echo You successfully chop down the tree!
+echo You gained !total_xp! Woodcutting experience!
+
+REM Add XP
+set /a "woodcutting_xp+=!total_xp!"
+set /a "experience+=!total_xp!"
+
+REM Add logs to inventory
+call :add_item "Logs"
+
+REM Check for level up
+call :check_level_up woodcutting !woodcutting_xp!
+
+echo.
+echo You obtained Regular Logs!
+echo.
+echo Press any key to continue...
+pause >nul
+goto lumbridge_forest_woodcutting
+
+:chop_oak_trees
+REM Check woodcutting level requirement
+if !woodcutting! lss 15 (
+    echo.
+    echo You need at least level 15 Woodcutting to chop oak trees!
+    echo Your current level: !woodcutting!
+    echo Required level: 15
+    echo.
+    echo Press any key to continue...
+    pause >nul
+    goto lumbridge_forest_woodcutting
+)
+
+echo.
+echo You approach a sturdy oak tree...
+echo You start chopping with your axe...
+timeout /t 3 >nul
+
+REM Calculate XP based on woodcutting level
+set /a "base_xp=60"
+set /a "level_bonus=!woodcutting! / 3"
+set /a "total_xp=!base_xp! + !level_bonus!"
+
+echo You successfully chop down the oak tree!
+echo You gained !total_xp! Woodcutting experience!
+
+REM Add XP
+set /a "woodcutting_xp+=!total_xp!"
+set /a "experience+=!total_xp!"
+
+REM Add oak logs to inventory
+call :add_item "Oak Logs"
+
+REM Check for level up
+call :check_level_up woodcutting !woodcutting_xp!
+
+echo.
+echo You obtained Oak Logs!
+echo.
+echo Press any key to continue...
+pause >nul
+goto lumbridge_forest_woodcutting
+
+:lumbridge_river_fishing
+cls
+call :draw_location_header
+echo.
+echo ========================================
+echo         LUMBRIDGE RIVER
+echo ========================================
+echo.
+echo You walk to the river...
+timeout /t 1 >nul
+echo.
+echo Perfect fishing spot! The water looks calm.
+echo You can see fish swimming in the clear water.
+echo.
+
+REM Check if player has fishing rod
+call :count_item "Fishing Rod"
+if !item_count! lss 1 (
+    echo You need a fishing rod to fish!
+    echo Visit the shop to buy one.
+    echo.
+    echo Press any key to return to exploration...
+    pause >nul
+    goto explore_area
+)
+
+echo Choose your fishing activity:
+echo.
+echo 1. Fish for Sardines (Level 1+ Fishing)
+echo    - Common catch, good for beginners
+echo    - Gives: Raw Sardine (25 XP each)
+echo.
+echo 2. Fish for Trout (Level 15+ Fishing Required)
+echo    - Uncommon catch, better rewards
+echo    - Gives: Raw Trout (40 XP each)
+echo.
+echo 3. Fish for Salmon (Level 30+ Fishing Required)
+echo    - Rare catch, excellent rewards
+echo    - Gives: Raw Salmon (70 XP each)
+echo.
+echo 4. Cook Raw Fish (Requires Tinderbox + Logs)
+echo    - Cook raw fish into edible food
+echo    - Gives: Cooking XP + Health restoration
+echo.
+echo 5. Back to Lumbridge exploration
+echo.
+set /p fishing_choice="Choose option: "
+
+if "!fishing_choice!"=="1" (
+    call :fish_sardines
+) else if "!fishing_choice!"=="2" (
+    call :fish_trout
+) else if "!fishing_choice!"=="3" (
+    call :fish_salmon
+) else if "!fishing_choice!"=="4" (
+    call :cook_fish
+) else if "!fishing_choice!"=="5" (
+    goto explore_area
+) else (
+    echo Invalid choice!
+    pause >nul
+    goto lumbridge_river_fishing
+)
+goto :eof
+
+:fish_sardines
+echo.
+echo You cast your line into the river...
+echo You wait patiently for a bite...
+timeout /t 2 >nul
+
+REM Calculate catch chance and XP
+set /a "catch_roll=!random! %% 100"
+set /a "base_xp=25"
+set /a "level_bonus=!fishing! / 4"
+set /a "total_xp=!base_xp! + !level_bonus!"
+
+if !catch_roll! lss 70 (
+    echo You feel a tug! You reel in a fish!
+    echo You caught a Raw Sardine!
+    echo You gained !total_xp! Fishing experience!
+    
+    REM Add XP
+    set /a "fishing_xp+=!total_xp!"
+    set /a "experience+=!total_xp!"
+    
+    REM Add raw fish to inventory
+    call :add_item "Raw Sardine"
+    
+    REM Check for level up
+    call :check_level_up fishing !fishing_xp!
+) else (
+    echo The fish got away! Better luck next time.
+    echo You gained 5 Fishing experience for trying.
+    set /a "fishing_xp+=5"
+    set /a "experience+=5"
+)
+
+echo.
+echo Press any key to continue...
+pause >nul
+goto lumbridge_river_fishing
+
+:fish_trout
+REM Check fishing level requirement
+if !fishing! lss 15 (
+    echo.
+    echo You need at least level 15 Fishing to catch trout!
+    echo Your current level: !fishing!
+    echo Required level: 15
+    echo.
+    echo Press any key to continue...
+    pause >nul
+    goto lumbridge_river_fishing
+)
+
+echo.
+echo You cast your line into deeper water...
+echo You wait for a larger fish to bite...
+timeout /t 3 >nul
+
+REM Calculate catch chance and XP
+set /a "catch_roll=!random! %% 100"
+set /a "base_xp=40"
+set /a "level_bonus=!fishing! / 3"
+set /a "total_xp=!base_xp! + !level_bonus!"
+
+if !catch_roll! lss 50 (
+    echo You feel a strong tug! You reel in a fish!
+    echo You caught a Raw Trout!
+    echo You gained !total_xp! Fishing experience!
+    
+    REM Add XP
+    set /a "fishing_xp+=!total_xp!"
+    set /a "experience+=!total_xp!"
+    
+    REM Add raw fish to inventory
+    call :add_item "Raw Trout"
+    
+    REM Check for level up
+    call :check_level_up fishing !fishing_xp!
+) else (
+    echo The trout escaped! They're quite tricky.
+    echo You gained 8 Fishing experience for trying.
+    set /a "fishing_xp+=8"
+    set /a "experience+=8"
+)
+
+echo.
+echo Press any key to continue...
+pause >nul
+goto lumbridge_river_fishing
+
+:fish_salmon
+REM Check fishing level requirement
+if !fishing! lss 30 (
+    echo.
+    echo You need at least level 30 Fishing to catch salmon!
+    echo Your current level: !fishing!
+    echo Required level: 30
+    echo.
+    echo Press any key to continue...
+    pause >nul
+    goto lumbridge_river_fishing
+)
+
+echo.
+echo You cast your line into the deepest part of the river...
+echo You wait for a prized salmon to bite...
+timeout /t 4 >nul
+
+REM Calculate catch chance and XP
+set /a "catch_roll=!random! %% 100"
+set /a "base_xp=70"
+set /a "level_bonus=!fishing! / 2"
+set /a "total_xp=!base_xp! + !level_bonus!"
+
+if !catch_roll! lss 30 (
+    echo You feel a massive tug! You fight to reel it in!
+    echo You caught a Raw Salmon!
+    echo You gained !total_xp! Fishing experience!
+    
+    REM Add XP
+    set /a "fishing_xp+=!total_xp!"
+    set /a "experience+=!total_xp!"
+    
+    REM Add raw fish to inventory
+    call :add_item "Raw Salmon"
+    
+    REM Check for level up
+    call :check_level_up fishing !fishing_xp!
+) else (
+    echo The salmon was too strong and broke free!
+    echo You gained 12 Fishing experience for trying.
+    set /a "fishing_xp+=12"
+    set /a "experience+=12"
+)
+
+echo.
+echo Press any key to continue...
+pause >nul
+goto lumbridge_river_fishing
+
+:cook_fish
+echo.
+echo ========================================
+echo           COOKING FISH
+echo ========================================
+echo.
+
+REM Check for tinderbox
+call :count_item "Tinderbox"
+if !item_count! lss 1 (
+    echo You need a tinderbox to cook fish!
+    echo Visit the shop to buy one.
+    echo.
+    echo Press any key to continue...
+    pause >nul
+    goto lumbridge_river_fishing
+)
+
+REM Check for logs
+call :count_item "Logs"
+if !item_count! lss 1 (
+    echo You need logs to make a fire for cooking!
+    echo Get some logs from the forest first.
+    echo.
+    echo Press any key to continue...
+    pause >nul
+    goto lumbridge_river_fishing
+)
+
+echo Choose fish to cook:
+echo.
+echo 1. Cook Raw Sardine → Cooked Sardine
+echo 2. Cook Raw Trout → Cooked Trout
+echo 3. Cook Raw Salmon → Cooked Salmon
+echo 4. Back to fishing menu
+echo.
+set /p cook_choice="Choose option: "
+
+if "!cook_choice!"=="1" (
+    call :cook_specific_fish "Raw Sardine" "Cooked Sardine" 30
+) else if "!cook_choice!"=="2" (
+    call :cook_specific_fish "Raw Trout" "Cooked Trout" 50
+) else if "!cook_choice!"=="3" (
+    call :cook_specific_fish "Raw Salmon" "Cooked Salmon" 90
+) else if "!cook_choice!"=="4" (
+    goto lumbridge_river_fishing
+) else (
+    echo Invalid choice!
+    pause >nul
+    goto cook_fish
+)
+goto :eof
+
+:cook_specific_fish
+REM Parameters: %1 = raw fish name, %2 = cooked fish name, %3 = base XP
+set "raw_fish=%~1"
+set "cooked_fish=%~2"
+set "base_xp=%~3"
+
+REM Check if player has the raw fish
+call :count_item "!raw_fish!"
+if !item_count! lss 1 (
+    echo.
+    echo You don't have any !raw_fish! to cook!
+    echo Go fishing first to catch some.
+    echo.
+    echo Press any key to continue...
+    pause >nul
+    goto cook_fish
+)
+
+echo.
+echo You light a fire using your tinderbox and logs...
+timeout /t 2 >nul
+echo You place the !raw_fish! over the fire...
+timeout /t 3 >nul
+
+REM Calculate cooking XP
+set /a "cooking_bonus=!cooking! / 5"
+set /a "total_cooking_xp=!base_xp! + !cooking_bonus!"
+
+REM Check for cooking success (higher cooking level = better success rate)
+set /a "cook_roll=!random! %% 100"
+set /a "success_chance=60 + !cooking!
+
+if !cook_roll! lss !success_chance! (
+    echo You successfully cook the !raw_fish!!
+    echo You gained !total_cooking_xp! Cooking experience!
+    
+    REM Add XP
+    set /a "cooking_xp+=!total_cooking_xp!"
+    set /a "experience+=!total_cooking_xp!"
+    
+    REM Remove raw fish and add cooked fish
+    call :remove_item "!raw_fish!"
+    call :add_item "!cooked_fish!"
+    
+    REM Remove one log for the fire
+    call :remove_item "Logs"
+    
+    REM Check for level up
+    call :check_level_up cooking !cooking_xp!
+    
+    echo.
+    echo You obtained !cooked_fish!!
+    echo This fish can now be eaten to restore health!
+) else (
+    echo You burn the !raw_fish!!
+    echo You gained 10 Cooking experience for trying.
+    
+    REM Add small XP and remove raw fish
+    set /a "cooking_xp+=10"
+    set /a "experience+=10"
+    call :remove_item "!raw_fish!"
+    call :remove_item "Logs"
+
+    echo.
+    echo The fish is ruined and cannot be eaten.
+)
+
+echo.
+echo Press any key to continue...
+pause >nul
+goto lumbridge_river_fishing
+
+REM ============================================
+REM     WOLF MOUNTAIN FUNCTIONS
+REM ============================================
+
+:wolf_pack_territory
+cls
+echo.
+echo ========================================
+echo      WOLF PACK TERRITORY
+echo ========================================
+echo.
+echo You enter the dangerous wolf pack territory...
+echo The air is thick with the scent of wolves.
+echo You can hear growling and howling in the distance.
+echo This is the heart of the wolf pack territory.
+echo.
+echo [Searching for wolf tracks...]
+timeout /t 2 >nul
+
+REM Random encounter chance
+set /a "wolf_chance=%random% %% 100"
+if !wolf_chance! lss 60 (
+    echo.
+    echo ⚠️  A pack of wolves emerges from the territory! ⚠️
+    echo The alpha wolf leads the pack with fierce determination.
+    echo You must fight the entire wolf pack!
+    echo.
+    echo Press any key to begin combat...
+    pause >nul
+    
+    REM Wolf pack combat
+    set "enemy_name=Wolf Pack"
+    set "enemy_hp=80"
+    set "enemy_attack=6"
+    set "enemy_defence=3"
+    set "enemy_special=Pack Tactics"
+    
+    call :start_combat "!enemy_name!" "!enemy_hp!" "!enemy_attack!" "!enemy_defence!" "!enemy_special!"
+) else (
+    echo.
+    echo The wolf pack territory is quiet for now.
+    echo You can explore the area safely.
+    echo.
+    echo You gain 20 Defence experience from exploring the territory.
+    
+    REM Add experience
+    set /a "defence_xp+=20"
+    set /a "experience+=20"
+    call :check_level_up "defence" "!defence_xp!"
+    
+    echo.
+    echo Press any key to continue...
+    pause >nul
+    goto explore_area
+)
+goto :eof
+
+:mountain_caves
+cls
+echo.
+echo ========================================
+echo         MOUNTAIN CAVES
+echo ========================================
+echo.
+echo You enter the dark mountain caves...
+echo The air is cool and damp inside.
+echo You can hear water dripping from stalactites.
+echo The caves seem to go deep into the mountain.
+echo.
+echo [Exploring the cave system...]
+timeout /t 2 >nul
+
+REM Random cave encounter
+set /a "cave_chance=%random% %% 100"
+if !cave_chance! lss 40 (
+    echo.
+    echo ⚠️  A cave wolf emerges from the shadows! ⚠️
+    echo The wolf is larger and more aggressive than surface wolves.
+    echo It blocks your path deeper into the caves!
+    echo.
+    echo Press any key to begin combat...
+    pause >nul
+    
+    REM Cave wolf combat
+    set "enemy_name=Cave Wolf"
+    set "enemy_hp=45"
+    set "enemy_attack=5"
+    set "enemy_defence=2"
+    set "enemy_special=Cave Ambush"
+    
+    call :start_combat "!enemy_name!" "!enemy_hp!" "!enemy_attack!" "!enemy_defence!" "!enemy_special!"
+) else if !cave_chance! lss 70 (
+    echo.
+    echo You discover a hidden chamber with ancient markings!
+    echo The walls are covered in mysterious symbols.
+    echo You gain 30 Mining experience from studying the cave formations.
+    
+    REM Add experience
+    set /a "mining_xp+=30"
+    set /a "experience+=30"
+    call :check_level_up "mining" "!mining_xp!"
+    
+    echo.
+    echo Press any key to continue...
+    pause >nul
+    goto explore_area
+) else (
+    echo.
+    echo You explore the caves safely and find some interesting rock formations.
+    echo You gain 15 Defence experience from navigating the cave system.
+    
+    REM Add experience
+    set /a "defence_xp+=15"
+    set /a "experience+=15"
+    call :check_level_up "defence" "!defence_xp!"
+    
+    echo.
+    echo Press any key to continue...
+    pause >nul
+    goto explore_area
+)
+goto :eof
+
+:wolf_mountain_mining
+cls
+echo.
+echo ========================================
+echo      WOLF MOUNTAIN MINING
+echo ========================================
+echo.
+echo You approach the rich mining spots on Wolf Mountain...
+echo The rocks here contain valuable ore deposits.
+echo You can see veins of different metals in the mountain walls.
+echo.
+echo [Examining the mining spots...]
+timeout /t 2 >nul
+
+REM Mining success chance based on mining level
+set /a "mining_success=!mining! * 10"
+set /a "mining_roll=%random% %% 100"
+
+if !mining_roll! lss !mining_success! (
+    echo.
+    echo You successfully mine some valuable ore!
+    echo.
+    
+    REM Random ore type
+    set /a "ore_type=%random% %% 4"
+    if !ore_type!==0 (
+        echo You found Iron Ore!
+        call :add_item "Iron Ore"
+        set /a "mining_xp+=25"
+    ) else if !ore_type!==1 (
+        echo You found Coal!
+        call :add_item "Coal"
+        set /a "mining_xp+=20"
+    ) else if !ore_type!==2 (
+        echo You found Silver Ore!
+        call :add_item "Silver Ore"
+        set /a "mining_xp+=35"
+    ) else (
+        echo You found Gold Ore!
+        call :add_item "Gold Ore"
+        set /a "mining_xp+=50"
+    )
+    
+    set /a "experience+=!mining_xp!"
+    call :check_level_up "mining" "!mining_xp!"
+    
+    echo.
+    echo Press any key to continue...
+    pause >nul
+    goto explore_area
+) else (
+    echo.
+    echo You try to mine but the rocks are too hard.
+    echo You need a higher Mining level to extract ore from this area.
+    echo.
+    echo You gain 5 Mining experience for trying.
+    
+    set /a "mining_xp+=5"
+    set /a "experience+=5"
+    call :check_level_up "mining" "!mining_xp!"
+    
+    echo.
+    echo Press any key to continue...
+    pause >nul
+    goto explore_area
+)
+goto :eof
+
+:wolf_den
+cls
+echo.
+echo ========================================
+echo           WOLF DEN
+echo ========================================
+echo.
+echo You approach the dangerous wolf den...
+echo This is the alpha wolf's territory.
+echo The den is surrounded by bones and wolf tracks.
+echo You can hear deep growling from within.
+echo.
+echo [Approaching the den entrance...]
+timeout /t 2 >nul
+
+REM Alpha wolf encounter
+set /a "alpha_chance=%random% %% 100"
+if !alpha_chance! lss 80 (
+    echo.
+    echo ⚠️  The Alpha Wolf emerges from the den! ⚠️
+    echo This is the leader of the wolf pack!
+    echo It's much larger and more dangerous than regular wolves.
+    echo.
+    echo Press any key to begin combat...
+    pause >nul
+    
+    REM Alpha wolf combat
+    set "enemy_name=Alpha Wolf"
+    set "enemy_hp=120"
+    set "enemy_attack=8"
+    set "enemy_defence=4"
+    set "enemy_special=Pack Leader"
+    
+    call :start_combat "!enemy_name!" "!enemy_hp!" "!enemy_attack!" "!enemy_defence!" "!enemy_special!"
+) else (
+    echo.
+    echo The wolf den is empty for now.
+    echo You can explore the area safely.
+    echo.
+    echo You find some wolf pelts and bones.
+    echo You gain 25 Defence experience from exploring the den.
+    
+    REM Add experience and items
+    call :add_item "Wolf Pelt"
+    call :add_item "Wolf Bone"
+    set /a "defence_xp+=25"
+    set /a "experience+=25"
+    call :check_level_up "defence" "!defence_xp!"
+    
+    echo.
+    echo Press any key to continue...
+    pause >nul
+    goto explore_area
+)
+goto :eof
+
+:mountain_peak
+cls
+echo.
+echo ========================================
+echo         MOUNTAIN PEAK
+echo ========================================
+echo.
+echo You climb to the highest point of Wolf Mountain...
+echo The view from here is breathtaking.
+echo You can see for miles in every direction.
+echo The air is thin and cold at this altitude.
+echo.
+echo [Reaching the mountain peak...]
+timeout /t 2 >nul
+
+REM High altitude challenges
+set /a "peak_chance=%random% %% 100"
+if !peak_chance! lss 30 (
+    echo.
+    echo ⚠️  A Mountain Eagle swoops down to attack! ⚠️
+    echo The eagle is defending its territory at the peak.
+    echo It's a fierce aerial predator!
+    echo.
+    echo Press any key to begin combat...
+    pause >nul
+    
+    REM Mountain eagle combat
+    set "enemy_name=Mountain Eagle"
+    set "enemy_hp=60"
+    set "enemy_attack=7"
+    set "enemy_defence=3"
+    set "enemy_special=Aerial Strike"
+    
+    call :start_combat "!enemy_name!" "!enemy_hp!" "!enemy_attack!" "!enemy_defence!" "!enemy_special!"
+) else if !peak_chance! lss 60 (
+    echo.
+    echo You discover an ancient shrine at the peak!
+    echo The shrine is covered in mysterious runes.
+    echo You feel a strange energy emanating from it.
+    echo.
+    echo You gain 40 Prayer experience from the shrine's power.
+    
+    REM Add experience
+    set /a "prayer_xp+=40"
+    set /a "experience+=40"
+    call :check_level_up "prayer" "!prayer_xp!"
+    
+    echo.
+    echo Press any key to continue...
+    pause >nul
+    goto explore_area
+) else (
+    echo.
+    echo You reach the peak safely and enjoy the magnificent view.
+    echo The climb was challenging but rewarding.
+    echo.
+    echo You gain 30 Defence experience from the difficult climb.
+    
+    REM Add experience
+    set /a "defence_xp+=30"
+    set /a "experience+=30"
+    call :check_level_up "defence" "!defence_xp!"
+    
+    echo.
+    echo Press any key to continue...
+    pause >nul
+    goto explore_area
+)
+goto :eof
+
+:wolf_mountain_ruins
+cls
+echo.
+echo ========================================
+echo       ANCIENT RUINS
+echo ========================================
+echo.
+echo You discover mysterious ancient ruins on Wolf Mountain...
+echo The structures are covered in strange symbols and carvings.
+echo They appear to be much older than any human settlement.
+echo The air around the ruins feels charged with energy.
+echo.
+echo [Examining the ancient structures...]
+timeout /t 2 >nul
+
+REM Ruins exploration
+set /a "ruins_chance=%random% %% 100"
+if !ruins_chance! lss 25 (
+    echo.
+    echo ⚠️  A Guardian Spirit emerges from the ruins! ⚠️
+    echo The spirit is protecting the ancient site.
+    echo It's a powerful magical entity!
+    echo.
+    echo Press any key to begin combat...
+    pause >nul
+    
+    REM Guardian spirit combat
+    set "enemy_name=Guardian Spirit"
+    set "enemy_hp=100"
+    set "enemy_attack=9"
+    set "enemy_defence=5"
+    set "enemy_special=Spirit Blast"
+    
+    call :start_combat "!enemy_name!" "!enemy_hp!" "!enemy_attack!" "!enemy_defence!" "!enemy_special!"
+) else if !ruins_chance! lss 50 (
+    echo.
+    echo You discover an ancient altar with glowing runes!
+    echo The altar radiates powerful magical energy.
+    echo You feel your magical abilities enhanced.
+    echo.
+    echo You gain 50 Magic experience from the altar's power.
+    
+    REM Add experience
+    set /a "magic_xp+=50"
+    set /a "experience+=50"
+    call :check_level_up "magic" "!magic_xp!"
+    
+    echo.
+    echo Press any key to continue...
+    pause >nul
+    goto explore_area
+) else if !ruins_chance! lss 75 (
+    echo.
+    echo You find ancient artifacts among the ruins!
+    echo These items are valuable and mysterious.
+    echo.
+    echo You gain: Ancient Rune, Mysterious Crystal, Old Scroll
+    
+    REM Add items
+    call :add_item "Ancient Rune"
+    call :add_item "Mysterious Crystal"
+    call :add_item "Old Scroll"
+    
+    echo.
+    echo You gain 35 Crafting experience from studying the artifacts.
+    
+    REM Add experience
+    set /a "crafting_xp+=35"
+    set /a "experience+=35"
+    call :check_level_up "crafting" "!crafting_xp!"
+    
+    echo.
+    echo Press any key to continue...
+    pause >nul
+    goto explore_area
+) else (
+    echo.
+    echo You explore the ruins safely and learn about their history.
+    echo The ancient structures tell stories of a forgotten civilization.
+    echo.
+    echo You gain 25 Crafting experience from studying the ruins.
+    
+    REM Add experience
+    set /a "crafting_xp+=25"
+    set /a "experience+=25"
+    call :check_level_up "crafting" "!crafting_xp!"
+    
+    echo.
+    echo Press any key to continue...
+    pause >nul
+    goto explore_area
+)
 goto :eof
 
