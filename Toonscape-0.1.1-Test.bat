@@ -16,7 +16,7 @@ set /a "random_seed=%random%"
 set "random=!random_seed!"
 
 REM ============================================
-REM      VERSION 0.1.6
+REM      VERSION 0.1.7
 REM ============================================
 REM A complete RuneScape-like experience in batch!
 
@@ -15337,4 +15337,5 @@ if !ruins_chance! lss 25 (
     goto explore_area
 )
 goto :eof
+
 
